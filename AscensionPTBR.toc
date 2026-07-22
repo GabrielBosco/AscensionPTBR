@@ -1,0 +1,27 @@
+## Interface: 30300
+## Title: AscensionPTBR |cff33ff99Português (Brasil)|r
+## Notes: Tradução para Português do Brasil do Project Ascension, sem arquivos de voz.
+## Author: HideXs; adaptação e conversão PT-BR
+## Version: 1.4.0
+## X-GitHub-Repo: HideXs/AscensionES
+## X-GitHub-Releases: https://github.com/HideXs/AscensionES/releases/latest
+## SavedVariables: AscensionESDB
+
+data\Patterns.lua
+data\CustomUI.lua
+data\UIStrings.lua
+data\Achievements.lua
+data\SpellNames.lua
+data\SpellDescs.lua
+data\SpellTips.lua
+data\SpellRanks.lua
+data\ItemNames.lua
+data\ItemDescs.lua
+data\UnitNames.lua
+data\Quests.lua
+data\Gossip.lua
+data\Errors.lua
+data\Chat.lua
+Core.lua
+Errors.lua
+Chat.lua
