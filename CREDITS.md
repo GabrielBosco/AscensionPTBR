@@ -12,7 +12,7 @@ Todo crédito relacionado à criação original, estrutura, código-base, pesqui
 
 **AscensionPTBR**  
 Responsável pela adaptação: <GabrielBosco>  
-Repositório: <>
+Repositório: <https://github.com/GabrielBosco/AscensionPTBR/>
 
 A adaptação brasileira trabalha sobre o conteúdo do AscensionES para oferecer localização em Português do Brasil, mantendo a autoria original e respeitando as condições concedidas por HideXs.
 
