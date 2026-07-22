@@ -16,12 +16,16 @@ data\SpellDescs.lua
 data\SpellTips.lua
 data\SpellRanks.lua
 data\ItemNames.lua
+data\ItemNamesExtra.lua
 data\ItemDescs.lua
 data\UnitNames.lua
 data\Quests.lua
 data\Gossip.lua
+data\GossipExtra.lua
 data\Errors.lua
 data\Chat.lua
 Core.lua
 Errors.lua
+data\Voices.lua
+Voice.lua
 Chat.lua
