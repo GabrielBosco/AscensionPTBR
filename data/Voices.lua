@@ -1,7 +1,7 @@
 -- Gerado a partir do patch-6.MPQ pt-BR fornecido pelo usuario.
 -- Contem apenas o indice dos arquivos de voz extraidos para a pasta do addon.
-AscensionES = AscensionES or {}
-AscensionES.VoiceFiles = {
+AscensionPTBR = AscensionPTBR or {}
+AscensionPTBR.VoiceFiles = {
     ["BloodElfFemale"] = {
         ["err_2h_equipped"] = {"sounds\\BloodElf\\BloodElfFemale_Err_2h_Equipped.wav"},
         ["err_2h_skillnotfound"] = {"sounds\\BloodElf\\BloodElfFemale_Err_2h_SkillNotFound01.wav","sounds\\BloodElf\\BloodElfFemale_Err_2h_SkillNotFound02.wav"},

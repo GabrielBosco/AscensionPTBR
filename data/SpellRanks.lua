@@ -1,5 +1,5 @@
-AscensionES = AscensionES or {}
-AscensionES.RankEN2ES = {}
+AscensionPTBR = AscensionPTBR or {}
+AscensionPTBR.RankEN2ES = {}
 ;(function(T)
 T[" - SLS DK"]="- SLS DK"
 T[" Inactive"]="Inativo"
@@ -2106,4 +2106,4 @@ T["warrior proc sls"]="Ativação do guerreiro sls"
 T["x"]="x"
 T["x3"]="x3"
 T["zzOLDRank 4"]="zzOLDRango 4"
-end)(AscensionES.RankEN2ES)
+end)(AscensionPTBR.RankEN2ES)

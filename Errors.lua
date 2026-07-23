@@ -1,4 +1,4 @@
-local AES = AscensionES
+local AES = AscensionPTBR
 AES.ErrExact = AES.ErrExact or {}
 AES.ErrPatterns = AES.ErrPatterns or {}
 
@@ -31,7 +31,7 @@ local function Disable()
 end
 
 function AES.SetErrorsEnabled(on)
-    if AscensionESDB then AscensionESDB.errores = on end
+    if AscensionPTBRDB then AscensionPTBRDB.errores = on end
     if on then Enable() else Disable() end
 end
 
@@ -41,14 +41,14 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("UI_ERROR_MESSAGE")
 f:RegisterEvent("UI_INFO_MESSAGE")
 f:SetScript("OnEvent", function(self, event, arg1)
-    if event == "ADDON_LOADED" and (arg1 == "AscensionPTBR" or arg1 == "AscensionES") then
-        AscensionESDB = AscensionESDB or {}
-        if AscensionESDB.errores == nil then
-            AscensionESDB.errores = true
+    if event == "ADDON_LOADED" and arg1 == "AscensionPTBR" then
+        AscensionPTBRDB = AscensionPTBRDB or {}
+        if AscensionPTBRDB.errores == nil then
+            AscensionPTBRDB.errores = true
         end
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
-        if AscensionESDB and AscensionESDB.errores then Enable() end
+        if AscensionPTBRDB and AscensionPTBRDB.errores then Enable() end
     elseif event == "UI_ERROR_MESSAGE" then
         if not active then return end
         if arg1 and UIErrorsFrame then

@@ -1,4 +1,4 @@
-local AES = AscensionES
+local AES = AscensionPTBR
 AES.ChatExact = AES.ChatExact or {}
 AES.ChatPatterns = AES.ChatPatterns or {}
 
@@ -23,6 +23,13 @@ local function TranslateLinks(msg)
     end))
 end
 
+
+local function SafeReplace(msg, pattern, replacement)
+    local ok, out = pcall(string.gsub, msg, pattern, replacement)
+    if ok then return out end
+    return nil
+end
+
 local function TranslateChat(msg)
     local es = AES.ChatExact[msg]
     if es then return es end
@@ -31,8 +38,8 @@ local function TranslateChat(msg)
         if bucket then
             for _, p in ipairs(bucket) do
                 if msg:match(p[1]) then
-                    local out = msg:gsub(p[1], p[2])
-                    return out
+                    local out = SafeReplace(msg, p[1], p[2])
+                    if out then return out end
                 end
             end
         end
@@ -50,7 +57,8 @@ local function TranslateChatStrict(msg)
     if bucket then
         for _, p in ipairs(bucket) do
             if msg:match(p[1]) then
-                return (msg:gsub(p[1], p[2]))
+                local out = SafeReplace(msg, p[1], p[2])
+                if out then return out end
             end
         end
     end
@@ -59,7 +67,7 @@ end
 AES.TranslateSystemTextStrict = TranslateChatStrict
 
 local function Filter(self, event, msg, ...)
-    if not (AscensionESDB and AscensionESDB.chat) or type(msg) ~= "string" then
+    if not (AscensionPTBRDB and AscensionPTBRDB.chat) or type(msg) ~= "string" then
         return false
     end
     local out = TranslateChat(msg)
@@ -73,7 +81,7 @@ end
 local registered = false
 
 function AES.SetChatEnabled(on)
-    if AscensionESDB then AscensionESDB.chat = on end
+    if AscensionPTBRDB then AscensionPTBRDB.chat = on end
     if on and not registered and ChatFrame_AddMessageEventFilter then
         for _, ev in ipairs(EVENTS) do
             ChatFrame_AddMessageEventFilter(ev, Filter)
@@ -86,13 +94,13 @@ end
 local f = CreateFrame("Frame")
 f:RegisterEvent("ADDON_LOADED")
 f:SetScript("OnEvent", function(self, event, arg1)
-    if arg1 ~= "AscensionPTBR" and arg1 ~= "AscensionES" then return end
+    if arg1 ~= "AscensionPTBR" then return end
     self:UnregisterEvent("ADDON_LOADED")
-    AscensionESDB = AscensionESDB or {}
-    if AscensionESDB.chat == nil then
-        AscensionESDB.chat = true
+    AscensionPTBRDB = AscensionPTBRDB or {}
+    if AscensionPTBRDB.chat == nil then
+        AscensionPTBRDB.chat = true
     end
-    if AscensionESDB and AscensionESDB.chat then
+    if AscensionPTBRDB and AscensionPTBRDB.chat then
         AES.SetChatEnabled(true)
     end
 end)

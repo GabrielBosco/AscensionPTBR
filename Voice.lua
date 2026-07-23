@@ -1,5 +1,5 @@
 local ADDON_NAME = ...
-local AES = AscensionES
+local AES = AscensionPTBR
 AES.VoiceFiles = AES.VoiceFiles or {}
 
 -- O caminho e montado automaticamente usando o nome real da pasta/addon.
@@ -99,8 +99,8 @@ local function BuildMaps()
 end
 
 local function EnsureDB()
-    AscensionESDB = AscensionESDB or {}
-    return AscensionESDB
+    AscensionPTBRDB = AscensionPTBRDB or {}
+    return AscensionPTBRDB
 end
 
 local function VoiceEnabled()

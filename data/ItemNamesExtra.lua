@@ -1,7 +1,7 @@
 -- Complemento de nomes pt-BR ausentes no ItemNames original.
 -- Base por ID do WotLK; carregue este arquivo depois de ItemNames.lua.
-AscensionES = AscensionES or {}
-AscensionES.ItemName = AscensionES.ItemName or {}
+AscensionPTBR = AscensionPTBR or {}
+AscensionPTBR.ItemName = AscensionPTBR.ItemName or {}
 ;(function(T)
 T[875]="Evocação de Cavalo Castanho"
 T[886]="Espada Curta de Metal Preto"
@@ -1650,4 +1650,4 @@ T[52361]="Formulário de Autorização"
 T[52713]="Discurso de Guerra do Ataque a Gnomeregan"
 T[53476]="Capote de Gnomeregan"
 T[54468]="Naftalina Fedorenta"
-end)(AscensionES.ItemName)
+end)(AscensionPTBR.ItemName)
