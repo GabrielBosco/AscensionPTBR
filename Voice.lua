@@ -8,6 +8,7 @@ local playerKey
 local msgMap = {}
 local fmtMatchers = {}
 local lastPlay = 0
+local originalErrorSpeech
 
 local KEY2ERR = {
     ERR_OUT_OF_MANA = "err_nomana",
@@ -109,12 +110,33 @@ local function VoiceEnabled()
     return db.voice
 end
 
+local function ReadErrorSpeechCVar()
+    if not GetCVar then return nil end
+    local value = GetCVar("Sound_EnableErrorSpeech")
+    if value == nil then return nil end
+    return tostring(value)
+end
+
+local function ApplyVoiceCVar(enabled, recapture)
+    if not SetCVar then return end
+
+    if enabled then
+        if recapture or originalErrorSpeech == nil then
+            originalErrorSpeech = ReadErrorSpeechCVar()
+        end
+        SetCVar("Sound_EnableErrorSpeech", 0)
+    elseif originalErrorSpeech ~= nil then
+        SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
+        originalErrorSpeech = nil
+    end
+end
+
 function AES.SetVoiceEnabled(on)
     local db = EnsureDB()
-    db.voice = not not on
-    if SetCVar then
-        SetCVar("Sound_EnableErrorSpeech", db.voice and 0 or 1)
-    end
+    local wasEnabled = db.voice ~= false
+    local enabled = not not on
+    db.voice = enabled
+    ApplyVoiceCVar(enabled, enabled and not wasEnabled)
 end
 
 local function PlayError(errType, force)
@@ -162,15 +184,22 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("UI_ERROR_MESSAGE")
+frame:RegisterEvent("PLAYER_LOGOUT")
 frame:SetScript("OnEvent", function(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
-        EnsureDB()
+        local db = EnsureDB()
+        db.voiceOriginalErrorSpeech = nil -- remove valor persistente de versões antigas
         BuildMaps()
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
         BuildMaps()
-        if VoiceEnabled() and SetCVar then
-            SetCVar("Sound_EnableErrorSpeech", 0)
+        if VoiceEnabled() then
+            ApplyVoiceCVar(true, false)
+        end
+    elseif event == "PLAYER_LOGOUT" then
+        if originalErrorSpeech ~= nil and SetCVar then
+            SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
+            originalErrorSpeech = nil
         end
     elseif event == "UI_ERROR_MESSAGE" then
         if not VoiceEnabled() then return end

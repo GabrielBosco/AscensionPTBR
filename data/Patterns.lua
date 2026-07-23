@@ -87,6 +87,23 @@ AscensionPTBR.LinePatterns = {
     { "^%+(%d+) Intellect$", "+%1 de Intelecto" },
     { "^%+(%d+) Spirit$", "+%1 de Espírito" },
 
+    -- Painel personalizado de atributos do Project Ascension.
+    { "^Strength:%s*(.+)$", "Força: %1" },
+    { "^Agility:%s*(.+)$", "Agilidade: %1" },
+    { "^Intellect:%s*(.+)$", "Intelecto: %1" },
+    { "^Spirit:%s*(.+)$", "Espírito: %1" },
+    { "^Stamina:%s*(.+)$", "Vigor: %1" },
+    { "^Increase[s]? Critical Hit chance by ([%d%.,]+)%%%.?$", "Aumenta em %1%% a chance de acerto crítico." },
+    { "^Increase[s]? Spell Critical Hit chance by ([%d%.,]+)%%%.?$", "Aumenta em %1%% a chance de acerto crítico com feitiços." },
+    { "^Increase[s]? Armor by ([%d%.,]+)%.?$", "Aumenta a armadura em %1." },
+    { "^Increase[s]? Dodge Chance by ([%d%.,]+)%%%.?$", "Aumenta em %1%% a chance de esquiva." },
+    { "^Increase[s]? Parry Chance by ([%d%.,]+)%%%.?$", "Aumenta em %1%% a chance de aparo." },
+    { "^Increase[s]? Block Chance by ([%d%.,]+)%%%.?$", "Aumenta em %1%% a chance de bloqueio." },
+    { "^Increase[s]? Attack Power by ([%d%.,]+)%.?$", "Aumenta o poder de ataque em %1." },
+    { "^Increase[s]? Spell Power by ([%d%.,]+)%.?$", "Aumenta o poder mágico em %1." },
+    { "^Increase[s]? Health by ([%d%.,]+)%.?$", "Aumenta a vida em %1." },
+    { "^Increase[s]? Mana by ([%d%.,]+)%.?$", "Aumenta a mana em %1." },
+
     { "^%+(%d+) Spell Power$", "+%1 de Poder Mágico" },
     { "^%+(%d+) Spell Penetration$", "+%1 de Penetração de Feitiço" },
     { "^%+(%d+) Attack Power$", "+%1 de Poder de Ataque" },

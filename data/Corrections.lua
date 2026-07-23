@@ -46,3 +46,64 @@ if Q then
     end
 end
 
+
+
+-- Otimizacao/revisao 1.3: correcoes pontuais e seguras sobre dados legados.
+do
+    local S = A.SpellNameEN2ES
+    if S then
+        S["Amber Shardhide"] = "Pele de Estilhaço Âmbar"
+        S["Amber Spiteful Frog"] = "Sapo Âmbar Rancoroso"
+        S["Amethyst Glintshell"] = "Carapaça Brilhante de Ametista"
+        S["Captain's Resolve"] = "Determinação do Capitão"
+        S["Captain’s Resolve"] = "Determinação do Capitão"
+        S["Corroded Carapace: Physical"] = "Carapaça Corroída: Dano Físico"
+        S["Elder Hide"] = "Couro Ancião"
+    end
+
+    local I = A.ItemDesc
+    if I then
+        I[30721] = "*ATENÇÃO* Fantasmas não gostam de ser vistos."
+        I[37027] = "AVISO: NÃO ABRIR, QUEBRAR, COMER, VESTIR, BEBER NEM CHEIRAR."
+        I[50301] = "ATENÇÃO: Não há garantia de que realmente contenha uma mascote."
+        I[54218] = "ATENÇÃO: Não há garantia de que realmente contenha uma montaria."
+    end
+end
+
+-- Revisão de prioridade alta 1.3.0c: correções humanas de resíduos
+-- espanhóis e traduções híbridas encontradas na auditoria.
+do
+    local S = A.SpellNameEN2ES
+    if S then
+        S["Fetch Shrunken Dragon's Claw"] = "Buscar a Garra de Dragão Encolhida"
+        S["I'm not afraid cause yeah I'm gliding"] = "Não tenho medo, pois estou planando"
+        S["Ironman - Skills Before Kills"] = "Homem de Ferro — Habilidades Antes das Baixas"
+        S["Shudder Before The Scythe"] = "Estremecer Diante da Foice"
+        S["Sigil of The Nightmare Before Winter Veil"] = "Selo do Pesadelo Antes do Véu de Inverno"
+    end
+
+    local I = A.ItemDesc
+    if I then
+        I[30417] = "Fede, é nojento e grande demais para você, mas é o que você procura."
+        I[30759] = "Pode lançar outra flecha antes que a primeira alcance o alvo."
+        I[33040] = "Renn o consertou, mas ninguém sabe quanto tempo vai durar."
+        I[34600] = "É melhor devolvê-la a Glrglrglr o quanto antes!"
+        I[34710] = "Lance um e procure abrigo!"
+        I[39318] = "É melhor devolvê-la a Har'koa o quanto antes!"
+        I[40536] = "Aviso: pode explodir prematuramente se for submetido a um pulso eletromagnético."
+        I[44511] = "Embora você já tenha lido este molde, os elementos o danificaram tanto que seu conteúdo foi perdido."
+        I[98074] = "Ensina a evocar este companheiro.\n\n|cFFFFD100Bip, bop. Cogsley ao seu dispor. Precisa de ajuda na Tormenta de Mana? Posso reparar seus itens e comprar suas mercadorias.|r\n\n|cFFFFD100Cogsley funciona somente na Tormenta de Mana.|r\n\nEste é um companheiro não combatente."
+        I[355168] = "Antes do ataque da Horda, as forças de Stromgarde usavam bestas como esta para eliminar membros da Camarilha que se aventurassem ao alcance da ponte."
+        I[777992] = "Estes itens não são mais usados e podem ser excluídos. Você pode escolher novamente seus feitiços iniciais pelo Avanço do Personagem (atalho N) antes de alcançar o nível 10."
+        I[824385] = "Não pertenço a nenhuma filosofia; pertenço ao mundo real. A realidade não se ajusta a ideologias. Elas são abstrações convenientes que adotamos por medo de fazer perguntas sem a promessa de respostas."
+        I[1389901] = I[824385]
+    end
+
+    local C = A.AchCritEN2ES
+    if C then
+        C["Complete 130 quests in Boren Tundra"] = "Conclua 130 missões na Tundra Boreana."
+        C["Complete 100 Storm Peaks Quests"] = "Conclua 100 missões nos Picos Tempestuosos."
+        C["Complete 2000 quests"] = "Conclua 2.000 missões."
+    end
+end
+
