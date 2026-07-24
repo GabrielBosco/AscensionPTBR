@@ -62,7 +62,7 @@
 
 ---
 
-# AscensionPTBR 1.5.2 — Revisão de missões, lote 1
+# AscensionPTBR 1.2.1 — Revisão de missões, lote 1
 
 - Primeiro lote cumulativo da revisão linguística por blocos de aproximadamente 10 mil campos.
 - **9.998 campos** revisados, cobrindo **2.191 missões**, dos IDs 2 a 4507.
@@ -73,7 +73,7 @@
 
 ---
 
-# AscensionPTBR 1.5.1 — Correção de qualidade das missões
+# AscensionPTBR 1.2.0 — Correção de qualidade das missões
 
 - Reescrita humana da sequência de missões `255123` a `255126` usando o inglês original como fonte.
 - Correção completa da missão **A gula de Glutton**, incluindo título, descrição, objetivo, andamento e conclusão.
@@ -84,7 +84,7 @@
 
 ---
 
-# AscensionPTBR 1.5.0 — Missões e árvores de talentos
+# AscensionPTBR 1.1 — Missões e árvores de talentos
 
 ## Revisão das missões
 
@@ -121,7 +121,7 @@
 
 ---
 
-# AscensionPTBR 1.4.0 — Revisão do sistema de missões
+# AscensionPTBR 1.0 — Revisão do sistema de missões
 
 ## Interface de missões
 
