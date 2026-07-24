@@ -23,6 +23,8 @@ AES.UnitSubEN      = AES.UnitSubEN or {}
 AES.LinePatterns   = AES.LinePatterns or {}
 AES.ValueWords     = AES.ValueWords or {}
 AES.UIStrings      = AES.UIStrings or {}
+AES.TalentUIExact  = AES.TalentUIExact or {}
+AES.TalentUIGlobals = AES.TalentUIGlobals or {}
 AES.AchName        = AES.AchName or {}
 AES.AchNameEN      = AES.AchNameEN or {}
 AES.AchDesc        = AES.AchDesc or {}
@@ -375,7 +377,8 @@ local function TranslateQuestTooltipText(text)
         return AES.QuestRenderPT and AES.QuestRenderPT(v) or v
     end
 
-    local direct = QUEST_TOOLTIP_STATIC[text]
+    local direct = (AES.QuestUIExact and AES.QuestUIExact[text])
+        or QUEST_TOOLTIP_STATIC[text]
         or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text])
         or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text])
     if direct and direct ~= false then return render(direct) end
@@ -384,7 +387,8 @@ local function TranslateQuestTooltipText(text)
     -- Conserva recuo, hífen e espaços, substituindo somente o texto.
     local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
     if body and body ~= "" then
-        local translated = (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[body])
+        local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
+            or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[body])
             or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
             or QUEST_TOOLTIP_STATIC[body]
         if translated and translated ~= false then return prefix .. render(translated) end
@@ -892,14 +896,16 @@ local function ApplyUIStrings()
 end
 
 function TranslateStaticText(t)
-    local es = (AES.CustomUI and AES.CustomUI[t])
+    local es = (AES.TalentUIExact and AES.TalentUIExact[t])
+        or (AES.CustomUI and AES.CustomUI[t])
         or (AES.ServerUI and AES.ServerUI[t])
         or (AES.UIStringsByEN and AES.UIStringsByEN[t])
     if es then return es end
 
     local base, tail = t:match("^(.-)%s*(:?)%s*$")
     if base and base ~= t and base ~= "" then
-        es = (AES.CustomUI and AES.CustomUI[base])
+        es = (AES.TalentUIExact and AES.TalentUIExact[base])
+            or (AES.CustomUI and AES.CustomUI[base])
             or (AES.ServerUI and AES.ServerUI[base])
             or (AES.UIStringsByEN and AES.UIStringsByEN[base])
         if es then return es .. (tail or "") end
@@ -907,7 +913,8 @@ function TranslateStaticText(t)
 
     local c0, inner, r0 = t:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)%s*$")
     if inner and inner ~= "" and not inner:find("|c") then
-        local es2 = (AES.CustomUI and AES.CustomUI[inner])
+        local es2 = (AES.TalentUIExact and AES.TalentUIExact[inner])
+            or (AES.CustomUI and AES.CustomUI[inner])
             or (AES.ServerUI and AES.ServerUI[inner])
             or (AES.UIStringsByEN and AES.UIStringsByEN[inner])
         if es2 then return c0 .. es2 .. r0 end
@@ -925,6 +932,26 @@ function TranslateStaticText(t)
     if db and db.spells and AES.SpellNameEN2ES and #t >= 4 and t:match("^%u") then
         local esSpell = AES.SpellNameEN2ES[t]
         if esSpell and esSpell ~= t then return esSpell end
+    end
+    return nil
+end
+
+
+AES.TranslateStaticText = TranslateStaticText
+AES.TranslateDescriptionString = function(text)
+    if type(text) ~= "string" or text == "" then return nil end
+    if text:find("\n", 1, true) then
+        local multi = TranslateMultilineText(text)
+        if multi and multi ~= text then return multi end
+    end
+    for words = 8, 3, -1 do
+        local pref = PrefijoDe(text, words)
+        local indexes = pref ~= "" and AES.DescByPrefix and AES.DescByPrefix[pref]
+        local translated = indexes and MatchPairSet(text, indexes, AES.DescPairs)
+        if translated and translated ~= text then return translated end
+        indexes = pref ~= "" and AES.TipByPrefix and AES.TipByPrefix[pref]
+        translated = indexes and MatchPairSet(text, indexes, AES.TipPairs)
+        if translated and translated ~= text then return translated end
     end
     return nil
 end
@@ -1064,7 +1091,9 @@ local function HookStaticPanels()
                             "WarmodeMapFrame", "AscensionWeeklyKeystoneFrame",
                             "ChannelFrame",
 
-                            "CharacterAdvancement", "Collections",
+                            "CharacterAdvancement", "CharacterAdvancementFrame", "AscensionCharacterAdvancement",
+                            "ClassTalentFrame", "RaceTalentFrame", "RacialTalentFrame",
+                            "SpecializationFrame", "MentorSpecializationFrame", "Collections",
                             "WildCardRapidRollingFrame", "DraftHelpFrame",
                             "SkillCardsFrame", "VanityCollectionFrame" }) do
         local f = _G[name]
@@ -1780,6 +1809,158 @@ local function QuestGuardSet(fs, es, en)
     pcall(fs.SetText, fs, QuestRenderES(es))
 end
 
+
+-- Camada exclusiva da interface de missões. O Ascension recria diversos
+-- textos depois do evento original; por isso traduzimos e também observamos
+-- cada FontString das janelas de missão.
+local questUIFSHooked = setmetatable({}, { __mode = "k" })
+local questUIRootHooked = setmetatable({}, { __mode = "k" })
+local inQuestUIFSHook = false
+
+local QUEST_UI_ROOT_NAMES = {
+    "QuestFrame", "QuestLogFrame", "QuestInfoFrame",
+    "QuestFrameGreetingPanel", "QuestFrameDetailPanel",
+    "QuestFrameProgressPanel", "QuestFrameRewardPanel",
+    "QuestLogDetailScrollChildFrame", "QuestWatchFrame", "WatchFrame",
+    "ObjectiveTrackerFrame", "QuestTrackerFrame",
+    "AscensionQuestFrame", "AscensionQuestLogFrame",
+    "AscensionObjectiveTracker", "AscensionQuestTracker",
+}
+
+local QUEST_UI_EXPLICIT_NAMES = {
+    "QuestLogTitleText", "QuestLogFrameTitleText", "QuestLogNoQuestsText",
+    "QuestLogQuestDescription", "QuestLogObjectivesText",
+    "QuestLogRewardTitleText", "QuestLogItemChooseText",
+    "QuestLogItemReceiveText", "QuestLogSpellLearnText",
+    "QuestInfoDescriptionHeader", "QuestInfoObjectivesHeader",
+    "QuestInfoRewardsHeader", "QuestInfoItemChooseText",
+    "QuestInfoItemReceiveText", "QuestInfoSpellReceiveText",
+    "QuestProgressRequiredItemsText", "QuestProgressTitleText",
+    "QuestFrameAcceptButton", "QuestFrameDeclineButton",
+    "QuestFrameCompleteButton", "QuestFrameCompleteQuestButton",
+    "QuestLogFrameAbandonButton", "QuestLogFramePushQuestButton",
+    "QuestLogFrameTrackButton", "QuestLogFrameCancelButton",
+}
+
+local function TranslateQuestUIText(text)
+    if not (db and db.quests) or type(text) ~= "string" or text == "" then return nil end
+    local exact = (AES.QuestUIExact and AES.QuestUIExact[text])
+        or QUEST_TOOLTIP_STATIC[text]
+    if exact then return exact end
+
+    local title = AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text]
+    if title and title ~= false then return QuestRenderES(title) end
+    local objective = AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text]
+    if objective and objective ~= false then return QuestRenderES(objective) end
+
+    local static = TranslateStaticText and TranslateStaticText(text)
+    if static and static ~= text then return static end
+
+    local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
+    if body and body ~= "" then
+        local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
+            or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[body])
+            or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
+        if translated and translated ~= false then
+            return prefix .. QuestRenderES(translated)
+        end
+    end
+    return nil
+end
+AES.TranslateQuestUIText = TranslateQuestUIText
+
+local function HookQuestUIFS(fs)
+    if not (fs and fs.SetText) or questUIFSHooked[fs] then return end
+    questUIFSHooked[fs] = true
+    for _, method in ipairs({ "SetText", "SetFormattedText" }) do
+        if fs[method] then
+            pcall(hooksecurefunc, fs, method, function(self)
+                if inQuestUIFSHook or not (db and db.quests) then return end
+                local text = self.GetText and self:GetText()
+                local pt = text and TranslateQuestUIText(text)
+                if pt and pt ~= text then
+                    inQuestUIFSHook = true
+                    pcall(self.SetText, self, pt)
+                    inQuestUIFSHook = false
+                end
+            end)
+        end
+    end
+end
+
+local function WalkQuestUI(root, depth, seen)
+    if not (root and root.GetRegions and root.GetChildren) then return end
+    depth = depth or 0
+    if depth > 10 then return end
+    seen = seen or {}
+    if seen[root] then return end
+    seen[root] = true
+
+    local okRegions, regions = pcall(function() return { root:GetRegions() } end)
+    if okRegions then
+        for _, region in ipairs(regions) do
+            if region and region.IsObjectType and region:IsObjectType("FontString") then
+                HookQuestUIFS(region)
+                local text = region.GetText and region:GetText()
+                local pt = text and TranslateQuestUIText(text)
+                if pt and pt ~= text then pcall(region.SetText, region, pt) end
+            end
+        end
+    end
+
+    local okChildren, children = pcall(function() return { root:GetChildren() } end)
+    if okChildren then
+        for _, child in ipairs(children) do
+            WalkQuestUI(child, depth + 1, seen)
+        end
+    end
+end
+
+local function ApplyQuestGlobalStrings()
+    for globalName, translated in pairs(AES.QuestUIGlobals or {}) do
+        if type(rawget(_G, globalName)) == "string" then
+            rawset(_G, globalName, translated)
+        end
+    end
+end
+
+local function HookQuestUIRoots()
+    for _, name in ipairs(QUEST_UI_ROOT_NAMES) do
+        local root = _G[name]
+        if root and root.HookScript and not questUIRootHooked[root] then
+            questUIRootHooked[root] = true
+            local hookRoot = root
+            hookRoot:HookScript("OnShow", function()
+                if db and db.quests then pcall(WalkQuestUI, hookRoot, 0, {}) end
+            end)
+        end
+    end
+end
+
+local function TranslateQuestChrome()
+    if not (db and db.quests) then return end
+    ApplyQuestGlobalStrings()
+    HookQuestUIRoots()
+
+    local seen = {}
+    for _, name in ipairs(QUEST_UI_ROOT_NAMES) do
+        local root = _G[name]
+        if root then pcall(WalkQuestUI, root, 0, seen) end
+    end
+    for _, name in ipairs(QUEST_UI_EXPLICIT_NAMES) do
+        local object = _G[name]
+        if object then
+            if object.IsObjectType and object:IsObjectType("FontString") then
+                HookQuestUIFS(object)
+            end
+            local text = object.GetText and object:GetText()
+            local pt = text and TranslateQuestUIText(text)
+            if pt and pt ~= text and object.SetText then pcall(object.SetText, object, pt) end
+        end
+    end
+end
+AES.TranslateQuestChrome = TranslateQuestChrome
+
 local function TranslateQuestInfo()
     if not (db and db.quests) then return end
     local id
@@ -1815,8 +1996,10 @@ local function TranslateQuestInfo()
                               "QuestInfoRewardsHeader", "QuestInfoSpellReceiveText" }) do
         local fs = _G[fsName]
         local t = fs and fs.GetText and fs:GetText()
-        local es = t and ((AES.UIStringsByEN and AES.UIStringsByEN[t])
-            or (AES.CustomUI and AES.CustomUI[t]))
+        local es = t and ((AES.QuestUIExact and AES.QuestUIExact[t])
+            or (AES.UIStringsByEN and AES.UIStringsByEN[t])
+            or (AES.CustomUI and AES.CustomUI[t])
+            or (AES.ServerUI and AES.ServerUI[t]))
         if es then pcall(fs.SetText, fs, es) end
     end
     local qd = AES.QuestData[id]
@@ -1824,6 +2007,7 @@ local function TranslateQuestInfo()
     QuestGuardSet(_G["QuestInfoDescriptionText"], qd.d, qd.dEN)
     QuestGuardSet(_G["QuestInfoObjectivesText"], qd.o, qd.oEN)
     QuestGuardSet(_G["QuestInfoRewardText"], qd.c, qd.cEN)
+    TranslateQuestChrome()
 end
 
 local function TranslateQuestItemButtons()
@@ -1877,6 +2061,7 @@ local function TranslateQuestProgress()
     if qd then
         QuestGuardSet(_G["QuestProgressText"], qd.p, qd.pEN)
     end
+    TranslateQuestChrome()
 end
 
 local function TranslateQuestButtons(prefix, count)
@@ -1911,6 +2096,7 @@ end
 
 local greetDelay
 local function TranslateGreetings()
+    TranslateQuestChrome()
     TranslateQuestButtons("QuestTitleButton", 32)
     TranslateQuestButtons("GossipTitleButton", 32)
     TranslateTitlesIn(GossipFrame)
@@ -1973,6 +2159,7 @@ local function DelayedQuestPass()
         shots = shots + 1
         TranslateQuestInfo()
         TranslateQuestProgress()
+        TranslateQuestChrome()
         pcall(ReflowQuestPanels)
         pcall(TranslateQuestItemButtons)
         if shots >= 2 then
@@ -2007,8 +2194,12 @@ questFrame:RegisterEvent("QUEST_COMPLETE")
 questFrame:RegisterEvent("QUEST_GREETING")
 questFrame:RegisterEvent("GOSSIP_SHOW")
 questFrame:RegisterEvent("QUEST_ITEM_UPDATE")
+questFrame:RegisterEvent("QUEST_LOG_UPDATE")
+questFrame:RegisterEvent("QUEST_WATCH_UPDATE")
+questFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 questFrame:SetScript("OnEvent", function(self, event)
     if not (db and db.quests) then return end
+    TranslateQuestChrome()
     if event == "QUEST_DETAIL" or event == "QUEST_COMPLETE" then
         local elapsed = 0
         local sexer = CreateFrame("Frame")
@@ -2395,10 +2586,16 @@ local function TranslateQuestLogTitles()
 end
 
 if type(QuestLog_Update) == "function" then
-    hooksecurefunc("QuestLog_Update", TranslateQuestLogTitles)
+    hooksecurefunc("QuestLog_Update", function()
+        TranslateQuestLogTitles()
+        TranslateQuestChrome()
+    end)
 end
 if QuestLogFrame and QuestLogFrame.HookScript then
-    QuestLogFrame:HookScript("OnShow", TranslateQuestLogTitles)
+    QuestLogFrame:HookScript("OnShow", function()
+        TranslateQuestLogTitles()
+        TranslateQuestChrome()
+    end)
 end
 
 -- Compatibilidade com o painel avançado de objetivos do Ascension e com
@@ -3058,6 +3255,9 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         db._v = 4
     end
 
+    ApplyQuestGlobalStrings()
+    TranslateQuestChrome()
+
     HookTooltip(GameTooltip)
     HookTooltip(ItemRefTooltip)
 
@@ -3160,4 +3360,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.3.0c/2026-07-23"
+AscensionPTBR.__firma = "AscensionPTBR/1.4.0/2026-07-24"

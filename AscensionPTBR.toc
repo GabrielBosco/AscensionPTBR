@@ -2,7 +2,7 @@
 ## Title: AscensionPTBR |cff33ff99Português (Brasil)|r
 ## Notes: Tradução em Português do Brasil para o Project Ascension, com suporte opcional às vozes ptBR.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
-## Version: 1.2.1
+## Version: 1.2.2
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## SavedVariables: AscensionPTBRDB
@@ -12,6 +12,8 @@ data\Patterns.lua
 data\CustomUI.lua
 data\ServerUI.lua
 data\UIStrings.lua
+data\TalentUI.lua
+data\QuestUI.lua
 data\Achievements.lua
 data\SpellNames.lua
 data\SpellDescs.lua
@@ -28,6 +30,7 @@ data\Gossip.lua
 data\Errors.lua
 data\Chat.lua
 Core.lua
+data\TalentRuntime.lua
 Errors.lua
 data\Voices.lua
 Voice.lua
