@@ -1,4 +1,4 @@
-# AscensionPTBR 1.6.0 — Revisão final das missões, lotes 4 a 6
+# AscensionPTBR 1.2.2 — Revisão final das missões, lotes 4 a 6
 
 - Conclusão dos três lotes restantes e da varredura final de títulos isolados.
 - **29.173 campos revisados nesta etapa**, cobrindo **7.156 missões** e **157 títulos isolados**.
