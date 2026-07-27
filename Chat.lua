@@ -2,6 +2,9 @@ local AES = AscensionPTBR
 AES.ChatExact = AES.ChatExact or {}
 AES.ChatPatterns = AES.ChatPatterns or {}
 
+AES.ChatExact["If you find yourself stuck and unable to move, please try the auto-unstuck feature prior to petitioning a GM. In most cases, this should solve the problem. Activating the auto-unstuck command will first attempt to use your hearthstone to port you back to your inn. If this is not possible, it will attempt to nudge your character out of position.\n\nPlease note this option can only be used every 5 minutes. Using the auto-unstuck option will log your character and location so that we can verify and fix the location in the future."] =
+    "Se você ficar preso e não conseguir se mover, use a ferramenta de desbloqueio automático antes de recorrer a um MJ. Isso resolve o problema na maioria dos casos. O comando tentará primeiro usar sua Pedra de Regresso para levar você à estalagem; se isso não for possível, tentará mover seu personagem para fora do local.\n\nEsta opção só pode ser usada a cada 5 minutos. O uso será registrado com o personagem e o local para que o problema possa ser verificado e corrigido."
+
 local EVENTS = {
     "CHAT_MSG_SYSTEM", "CHAT_MSG_LOOT", "CHAT_MSG_MONEY",
     "CHAT_MSG_SKILL", "CHAT_MSG_COMBAT_XP_GAIN", "CHAT_MSG_COMBAT_HONOR_GAIN",

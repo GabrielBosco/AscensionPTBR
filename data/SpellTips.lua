@@ -4241,7 +4241,7 @@ T[4247]={"^Propelling forward%. Immune to movement impairing effects%.%s*$","Pro
 T[4248]={"^Your next Infernal Strike is free of cost and deals (.-)%% increased damage%.%s*$","Seu próximo acerto Infernal é gratuito e causa {{1}}% de dano adicional."}
 T[4249]={"^At 3 stacks, all stacks are consumed to reduce the cooldown of Skulltaker by (.-) sec%.%s*$","Com 3 acúmulos, todas são consumidas para reduzir o tempo de recarga de {{1}} s."}
 T[4250]={"^Your next Boltslinger ability knocks the target back%.%s*$","Sua próxima habilidade Boltslinger empurra o alvo."}
-T[4251]={"^Ranged haste increased by (.-)%%%.%s*$","Pospresão à distância aumentada em {{1}}%."}
+T[4251]={"^Ranged haste increased by (.-)%%%.%s*$","Pospressão à distância aumentada em {{1}}%."}
 T[4252]={"^You may use Quickdraw!%s*$","Você pode usar Velocidade rápida!"}
 T[4253]={"^Attack speed increased by (.-)%%%. Movement Speed increased by (.-)%%%. Attacks deal (.-) Shadow Damage%.%s*$","Velocidade de ataque aumentada em {{1}}%. Velocidade de movimento aumentada em {{2}}%. Os ataques causam {{3}} dano de Sombra."}
 T[4254]={"^Knocked up by a geyser!%s*$","Te tem lançado para cima com um géiser!"}
@@ -6666,7 +6666,7 @@ T[6675]={"^The frost orb is going to explode if it is not destroyed first%.%s*$"
 T[6676]={"^The fire orb is going to explode if it is not destroyed first%.%s*$","A esfera de Fogo vai a explodir se não se destrói primeiro."}
 T[6677]={"^Shadow orbs with tooltip hidden, for use on NPCs%s*$","Esferas de Sombras com a ferramenta de informações oculta, para usar em PNJS"}
 T[6678]={"^This creature has lost a portion of its power%.\n\nMaximum Health reduced by (.-)%%\n\nStacks up to 4 times%s*$","Esta criatura tem perdido uma parte de seu poder.\n\nVida máxima reduzida em {{1}}%\n\nAcumula até 4 vezes"}
-T[6679]={"^This creature has an aura of immense arcane power%. Even from here, you can tell it is extremely dangerous to fight it directly, but perhaps there is a way to cut off its source of power before you engage it%.%.%.%s*$","Esta criatura tem uma aura de poder arcano imenso. Inclusive a partir de aqui, pode notar que é extremamente perigoso enfrentar a ela diretamente, mas tal vez há uma maneira de cortar seu fonte de poder antes de que te enfrentes a ela."}
+T[6679]={"^This creature has an aura of immense arcane power%. Even from here, you can tell it is extremely dangerous to fight it directly, but perhaps there is a way to cut off its source of power before you engage it%.%.%.%s*$","Esta criatura tem uma aura de poder arcano imenso. Inclusive a partir daqui, pode notar que é extremamente perigoso enfrentar a ela diretamente, mas tal vez há uma maneira de cortar seu fonte de poder antes de que te enfrentes a ela."}
 T[6680]={"^Damage dealt increased by (.-)%%\nHealth increased by (.-)%%\n\nThe longer you use this power, the harder it is to live without it%.%.%.%s*$","O dano causado aumenta em {{1}}%\nA vida aumenta em {{2}}%\n\nQuanto mais tempo use este poder, mais difícil é viver sem ele."}
 T[6681]={"^(.-) Shadow damage inflicted every (.-) second%.\nYou cannot act%.%s*$","{{1}} Dano de Sombra infligido a cada {{2}} segundo.\nVocê não pode agir."}
 T[6682]={"^Taking (.-)%% additional Shadow and Physical damage%.%s*$","Recebe {{1}}% mais dano de Sombra e Físico."}
@@ -11330,7 +11330,7 @@ T[11354]={"^Empowered by the Aspect of Venoxis%.%s*$","Fortalecido pelo Aspecto 
 T[11355]={"^Empowered by the Aspect of Mar'li%.%s*$","Fortalecido pelo Aspecto de Mar'li."}
 T[11356]={"^Empowered by the Aspect of Thekal%.%s*$","Fortalecido pelo Aspecto de Thekal."}
 T[11357]={"^Empowered by the Aspect of Arlokk%.%s*$","Fortalecido pelo Aspecto de Arlokk."}
-T[11358]={"^You are surely doomed%.%s*$","Está condenadamente perdido."}
+T[11358]={"^You are surely doomed%.%s*$","Está condenadamentperdeu."}
 T[11359]={"^Stunned%. Taking (.-) physical damage every second%.%s*$","Atordoado. Recebe {{1}} de dano físico a cada segundo."}
 T[11360]={"^Seems happy and full!%s*$","Parece feliz e satisfeito!"}
 T[11361]={"^Shadow damage inflicted every second%.\nSileneced%.%s*$","Dano de Sombra causado a cada segundo.\nSilenciado."}
@@ -15518,7 +15518,7 @@ T[15551]={"^The Crypt Guard entered a frenzy, increasing Physical damage dealt b
 T[15552]={"^Grand Widow Faerlina got sprayed with the blood of a Worshipper, satisfying her hunger for blood%. For now%.%s*$","A Grande Viúva Faerlina se banhó com o sangue de um Adorador, satisfaciendo seu fome de sangue. Por agora."}
 T[15553]={"^Inflicts (.-)%% Weapon damage as Nature damage to the target, removing all Poisons, inflicting additional damage equal to the removed Poisons remaining damage%.%s*$","Causa dano da arma de {{1}}% como dano de Natureza o alvo, eliminando todos os Venenos e causando dano adicional igual o dano restante dos venenos elimineraçãos."}
 T[15554]={"^Inflicts Fire damage to an enemy, then additional Fire damage every second for up to (.-)%. Stacking up to 100 times%.%s*$","Causa dano de Fogo a um inimigo, depois causa dano adicional de Fogo a cada segundo por até {{1}}. Acumula até 100 vezes."}
-T[15555]={"^Forces the Worshipper to sacrifice himself, splattering his blood all over the floor, causing a Bloodbath%.%s*$","Força ao Adorador a sacrificarse, espalhando seu sangue por todo solo, causando uma Massacre Sanguenta."}
+T[15555]={"^Forces the Worshipper to sacrifice himself, splattering his blood all over the floor, causing a Bloodbath%.%s*$","Força ao Adorador a sacrificarse, espalhando seu sangue por todo solo, causando um massacre Sanguenta."}
 T[15556]={"^Maexxna entered a frenzy, increasing Physical damage dealt by (.-)%% and attack speed by (.-)%%%.%s*$","Maexxna entrou em uma frenesi, aumentando o dano físico causado em {{1}}% e a velocidade de ataque em {{2}}%."}
 T[15557]={"^Inflicts (.-)%% Weapon damage as Shadow damage and reduces the targets Physical damage dealt by (.-)%% for (.-)%.%s*$","Causa {{1}}% Dano da arma como dano de Sombra e reduz o dano físico causado pelo alvo em {{2}}% durante {{3}}."}
 T[15558]={"^Increases all threat generated by (.-)%%, increases the Death Knight Understudies armor and health by an amount based on the controlling players armor and health and makes him immune to critical strikes%.\n\nGrants 100%% of the controlling players armor%.\n\nGrants health equal to 10 times the controlling players  health%.\n\nThis effect lingers on after the Deathknight Understudy regains control%.%s*$","Aumenta toda a ameaça gerada em {{1}}%, aumenta a armadura e vida do Espectro de Aprendiz de Morte em uma quantidade baseada na armadura e vida do jogador controladora e o há imune aos acertos críticos.\n\nProporciona 100% da armadura do jogador controladora.\n\nProporciona vida igual a 10 vezes a vida do jogador controladora.\n\nEste efeito persiste depois de que o Espectro de Aprendiz de Morte recupere o controle."}
@@ -17809,7 +17809,7 @@ T[17850]={"^Next Auto shot triggers (.-)%% ranged weapon damage as Shadowfrost d
 T[17851]={"^Your Judgements against a target affected by your Frost Fever or Blood Plague extend those diseases by (.-) sec, up to (.-) sec beyond their normal maximum, and grant |cFFFFFFFFRuneforged Verdict|r%.%s*$","Seus Julgamentos contrum alvo afetado por seu Febre Geloda ou Peste de Sangue estendem essas doenças em {{1}} s, até chegar a {{2}} s além de seu máximo normal e concedem |cFFFFFFFFVeredicto Forjado|r."}
 T[17852]={"^Increases direct damage of your next Frost Strike, Heart Strike or Obliterate by (.-)%%%.%s*$","Aumenta o dano direto de seu próximo acerto Gelo, acerto do Coração ou Obliterar em {{1}}%."}
 T[17853]={"^Your Paladin melee abilities apply Ebon Corruption%.\nYour Death Knight melee abilities apply Ebon Corruption%.\n\nWhile Ebon Corruption has 5 stacks, those abilities trigger additional Shadow damage%.%s*$","Suas habilidades de corpo a corpo do Paladino aplicam Corrupção Ébena.\nSuas habilidades de corpo a corpo do Guerreiro Lich aplicam Corrupção Ébena.\n\nEnquanto Corrupção Ébena tenha 5 acúmulos, essas habilidades Acionan dano adicional de Sombras."}
-T[17854]={"^Blood Boil grants |cFFFFFFFFSanguine Pressure|r%.%s*$","Presão Sanguínea concede |cFFFFFFFFpresão sanguínea|r."}
+T[17854]={"^Blood Boil grants |cFFFFFFFFSanguine Pressure|r%.%s*$","Pressão Sanguínea concede |cFFFFFFFFpressão sanguínea|r."}
 T[17855]={"^Increases your Physical damage done to bleeding enemies by (.-)%%%.%s*$","Aumenta seu dano físico causado a inimigos com hemorragia em {{1}}%."}
 T[17856]={"^Chains of Ice brands the target with |cFFFFFFFFWinter's Lock|r%.%s*$","Correntes de Gelo marca o alvo com |cFFFFFFFFlhave do inverno|r."}
 T[17857]={"^While your Gargoyle is active, Grave Coil commands it to fire |cFFFFFFFFGargoyle's Command|r at your target%.%s*$","Enquanto seu Gargoyle estiver ativo, a Espiral de Tumbao ordena que dispare |cFFFFFFFFGargoyle's Command|r a seu alvo."}
@@ -18142,7 +18142,7 @@ T[18184]={"^This dark power is too thick to destroy%. Perhaps it would feel less
 T[18185]={"^Miel Loot Lock 1%s*$","Mel Saque Bloqueio 1"}
 T[18186]={"^Miel Loot Lock 2%s*$","Mel Saque Bloqueio 2"}
 T[18187]={"^Aggro Sinners Hack%s*$","Aggro Pecadores Hack"}
-T[18188]={"^Kurgoth Gift Lost%s*$","Kurgoth Presente Perdido"}
+T[18188]={"^Kurgoth Gift Lost%s*$","Kurgoth Presentperdeu"}
 T[18189]={"^Resplendent Light%s*$","Luz Resplandecente"}
 T[18190]={"^Vai Sakir Ritual Placeholder Name%s*$","Vai Sakir Ritual Nome Lugar"}
 T[18191]={"^Drawining Vai Sakir's Ritual%.\n\nProgress %- (.-)/20%s*$","Dibujando Ritual de Vai Sakir.\n\nProgresso - {{1}}/20"}
@@ -18523,7 +18523,7 @@ T[18566]={"^Jungle Secrets%s*$","Segredos da Selva"}
 T[18567]={"^Enables the use of abilities that can be used in Spider Form or Beetle Form or Vizier Form%.%s*$","Permite o uso de habilidades que podem usar em Forma arácnida, Forma besouro ou Forma vizir."}
 T[18568]={"^Enables the use of abilities that can be used in Spider Form or Beetle Form or Weaver Form%.%s*$","Permite o uso de habilidades que podem usar em Forma arácnida, Forma besouro ou Forma Tecelãoa."}
 T[18569]={"^Deals Nature Damage%s*$","Causa dano de Natureza"}
-T[18570]={"^At 5 stacks, |cffffffffAnimate: Zombies|r is free of cost and has a (.-)%% reduced cast time and global cooldown%.%s*$","Com 5 acúmulos, |cffffffffAnimar: Zombis|r é gratuito e tem um tempo de canalização reduzido em {{1}}% e o tempo de recarga global."}
+T[18570]={"^At 5 stacks, |cffffffffAnimate: Zombies|r is free of cost and has a (.-)%% reduced cast time and global cooldown%.%s*$","Com 5 acúmulos, |cffffffffAnimar: Zumbis|r é gratuito e tem um tempo de canalização reduzido em {{1}}% e o tempo de recarga global."}
 T[18571]={"^At 3 stacks you will fire off a Gizmotronic Spark!%s*$","Com 3 acúmulos, dispararás uma Fagulha Gizmotrónica!"}
 T[18572]={"^Your next 3 Atherann's Anguish now cost (.-)%% less health%.%s*$","Seus próximos 3 Angústia de Atherann agora custa {{1}}%-menos vida."}
 T[18573]={"^(.-)%% of mana regeneration will continue while casting%. Periodic damage dealt regenerates mana%.%s*$","{{1}}% de regeneração de mana continuará enquanto lance. O dano periódico causado regenera mana."}
@@ -20844,7 +20844,7 @@ T[20888]={"^Deals Shadow damage over time to the current target%.%s*$","Causa da
 T[20889]={"^Extra holy damage dealt on hit%.%s*$","Dano Sagrado adicional causado em acerto."}
 T[20890]={"^The horseman is empowered, their next ability will be accompanied by a devastating amount of Shadow damage!%s*$","O cavaleiro está fortalecedo, sua próxima habilidade estará acompadiciona por uma devastadora quantidade dano de Sombra!"}
 T[20891]={"^You successfully thwarted the horseman's attempt to fell you! However, all that pent up energy has to go somewhere%.%.%.\nDamage increased by (.-)%%%.%s*$","Conseguiu frustrar o tentativa do cavaleiro de derribarte! Sembargo, toda essa energia tem que ir a alguns lugar.\nAumenta o dano em {{1}}%."}
-T[20892]={"^You feel your innards fill with vile ooze and bubbling bile, building pressure in your gizzards%.%.%.\n\nDeals (.-)%% maximum health damage every (.-) sec, bursting after (.-), reducing all nearby allies damage and healing done%.%s*$","Sente que seus entranhas se lhenan de uma repugnante sustância viscosa e bilis burbujeante, construindo presão em seu gástrago...\n\nCausa dano equivalente ao {{1}}% da vida máxima a cada {{2}} s, estalhando depois de {{3}}, reduzindo o dano e a cura realizados por todos os aliados próximos."}
+T[20892]={"^You feel your innards fill with vile ooze and bubbling bile, building pressure in your gizzards%.%.%.\n\nDeals (.-)%% maximum health damage every (.-) sec, bursting after (.-), reducing all nearby allies damage and healing done%.%s*$","Sente que seus entranhas se lhenan de uma repugnante sustância viscosa e bilis burbujeante, construindo pressão em seu gástrago...\n\nCausa dano equivalente ao {{1}}% da vida máxima a cada {{2}} s, estalhando depois de {{3}}, reduzindo o dano e a cura realizados por todos os aliados próximos."}
 T[20893]={"^Grobbulus' Stitched Giant rises from the dead once more and closes in on your party%.%.%.%s*$","O Gigante Costurado de Grobbulus volta à vida uma vez mais e se acerca seu grupo."}
 T[20894]={"^Thaddius begins charging up a bolt of energy to fire at your party%. Not stopping him may have dire consequences%.%.%.%s*$","Thaddius Começa a carregar uma descarga de energia para dispararla contra seu grupo. Não detenerlo pode ter consecuências graves."}
 T[20895]={"^Feugen begins to channel energy and sets his focus on Thaddius!%s*$","Feugen Começa a canalizar energia e se centra em Thaddius!"}
@@ -25400,7 +25400,7 @@ T[25460]={"^Shares damage with her sister!%s*$","Compartilha dano com seu irmã!
 T[25461]={"^Honor gained from kills increased by (.-)%%%.%s*$","Honra recebido por mortes aumenta em {{1}}%."}
 T[25462]={"^Flame begins to spread from your body!%s*$","As chamas começam a extenderse por seu corpo!"}
 T[25463]={"^Summons a Legion Flame%.%s*$","Invoca uma chama da Legião."}
-T[25464]={"^Unable to generate Steam Pressure%.%s*$","Não é possível gerar presão de vapor."}
+T[25464]={"^Unable to generate Steam Pressure%.%s*$","Não é possível gerar pressão de vapor."}
 T[25465]={"^Inflicts (.-) Shadow damage every (.-) sec for (.-)%.%s*$","Causa {{1}} p. de dano de Sombra a cada {{2}} s durante {{3}}."}
 T[25466]={"^Increases magic damage dealt by (.-)%%%.%s*$","Aumenta o dano mágico causado {{1}}%."}
 T[25467]={"^Ardent Defender recently prevented your death%.%s*$","Defensor candente tem evidadeo recentemente seu morte."}
@@ -117184,3 +117184,87 @@ T["zoomed out s"]={2518}
 T["zul jin falls into a rage reducing his"]={15702}
 T["zul jin fell into a blood rage increasing"]={5728,5888,15700,16043}
 end)(AscensionPTBR.TipByPrefix)
+
+
+-- Tooltips incorporados da base AscensionES 1.5.6 (pt-BR)
+local A = AscensionPTBR
+if A then
+do
+    local T = A.TipPairs
+    if T then
+        local n = #T
+        n = n + 1; T[n] = {"^Daño infligido aumentado un (.-)%%%.\nVelocidad de ataque y de lanzamiento aumentada un (.-)%%%.%s*$","Dano causado aumentado em {{1}}%.\nVelocidade de ataque e de lançamento aumentada em {{2}}%."}
+        n = n + 1; T[n] = {"^Daño recibido reducido un (.-)%%%.%s*$","Dano recebido reduzido em {{1}}%."}
+        n = n + 1; T[n] = {"^Inflige daño de Fuego a los enemigos cercanos%.%s*$","Causa dano de Fogo aos inimigos próximos."}
+        n = n + 1; T[n] = {"^Marked by the witch%. If you get too close to another player, the whisper detonates%.%s*$","Marcado pela bruxa. Se você se aproximar demais de outro jogador, o sussurro explodirá."}
+        n = n + 1; T[n] = {"^Taunts the target to attack you, but has no effect if the target is already attacking you%.%s*$","Provoca o alvo para atacar você, mas não tem efeito se já está atacando você."}
+        n = n + 1; T[n] = {"^The breeze caresses your delicate spores%. What if you take a little rest%?%s*$","A brisa acaricia seus delicados esporos. Que tal descansar um pouco?"}
+        n = n + 1; T[n] = {"^The ceiling above you is collapsing%.%s*$","O teto acima de você está desabando."}
+        n = n + 1; T[n] = {"^Valdros lanzará su poderoso martillo contra ti, destruyendo todos los árboles a su paso%.%s*$","Valdros lançará seu poderoso martelo contra você, destruindo todas as árvores em seu caminho."}
+        n = n + 1; T[n] = {"^You feel the caress of the Sleeper%. Your eyelids threaten to close%. If you stop moving, this cursed place will begin to drain your spirit%.%s*$","Você sente o toque do Adormecido. Suas pálpebras começam a se fechar. Se parar de se mover, este lugar amaldiçoado começará a drenar seu espírito."}
+    end
+end
+local A = AscensionPTBR
+if not A or not A.TipPairs then return end
+
+local T = A.TipPairs
+local n = #T
+local function Add(source, target)
+    n = n + 1
+    T[n] = {source, target}
+end
+
+Add("^(.-) p%. de daño de escarcha durante (.-)%.%s*$", "{{1}} de dano de Gelo durante {{2}}.")
+Add("^A mystical orb filled with the swirling tides of the elemental planes%. As you grasp it, you can feel it slowly slipping from your grasp%.%s*$", "Um orbe místico preenchido pelas marés revoltas dos planos elementais. Ao segurá-lo, você sente que ele escapa lentamente de suas mãos.")
+Add("^Acrid smoke clings to your throat%.%s*$", "Uma fumaça acre irrita sua garganta.")
+Add("^Affected by a Greater Healing Dart, which will heal you when the Tinker draws the dart back to them%.%s*$", "Afetado por um Dardo de Cura Maior, que curará você quando o Inventor puxar o dardo de volta.")
+Add("^At the end of the duration you will take damage%.%s*$", "Ao término do efeito, você receberá dano.")
+Add("^Aumenta la velocidad de movimiento un (.-)%%%.%s*$", "Aumenta a velocidade de movimento em {{1}}%.")
+Add("^Aumenta la velocidad de vuelo un (.-)%%%.%s*$", "Aumenta a velocidade de voo em {{1}}%.")
+Add("^Aumenta la velocidad por tierra un (.-)%%%.%s*$", "Aumenta a velocidade em solo em {{1}}%.")
+Add("^Aumenta la velocidad terrestre un (.-)%% y la velocidad de nado un (.-)%%%.%s*$", "Aumenta a velocidade em solo em {{1}}% e a velocidade de nado em {{2}}%.")
+Add("^Aumenta la velocidad un (.-)%%%. Aumenta la velocidad acuatica un (.-)%%%.%s*$", "Aumenta a velocidade em {{1}}%. Aumenta a velocidade na água em {{2}}%.")
+Add("^Aumenta la velocidad un (.-)%%%. ¡Te has fumado un estiércol!%s*$", "Aumenta a velocidade em {{1}}%. Você fumou esterco!")
+Add("^Aumenta la velocidad un (.-)%%%.%s*$", "Aumenta a velocidade em {{1}}%.")
+Add("^Being watched%.%s*$", "Você está sendo observado.")
+Add("^Blink and you'll miss it%.%s*$", "Piscar é perder.")
+Add("^Bonk other sword%-holders with your Foam Sword! Three Bonks defeats an opponent%. Unequipping your Foam Sword will destroy the sword%.%s*$", "Acerte outros portadores de espada com sua Espada de Espuma! Três golpes derrotam um oponente. Desequipar sua Espada de Espuma destruirá a espada.")
+Add("^Burns (.-) mana every (.-) seconds over (.-)%. If you fall bellow 50%% mana, the burn effect is heavily increased%.%s*$", "Queima {{1}} de mana a cada {{2}} s durante {{3}}. Se seu mana ficar abaixo de 50%, o efeito de queima aumentará consideravelmente.")
+Add("^Calls forth a guardian of time to assist you inside the Black Morass for up to (.-)%.%s*$", "Evoca um Guardião do Tempo para ajudar você dentro do Lamaçal Negro por até {{1}}.")
+Add("^Chance to hit with spells and abilities reduced by (.-)%%%.\nPeriodically drained for (.-) life%.%s*$", "Chance de acertar com feitiços e habilidades reduzida em {{1}}%.\nPeriodicamente perde {{2}} de vida.")
+Add("^Choose one of your stabled pets to replace your current pet%.%s*$", "Escolha uma das suas mascotes no estábulo para substituir sua mascote atual.")
+Add("^Consumed the Avatar of Hir'eek%.\n\nDamage dealt increased by (.-)%%%.\nDamage taken reduced by (.-)%%%.\n\nIf consumed by Hakkar also grants the Sonic Burst ability%.%s*$", "Consumiu o Avatar de Hir'eek.\n\nDano causado aumentado em {{1}}%.\nDano recebido reduzido em {{2}}%.\n\nSe consumido por Hakkar, também concede a habilidade Impacto Sônico.")
+Add("^Cool if yellow's your favorite color!%s*$", "Legal, se amarelo for sua cor favorita!")
+Add("^Cowering in fear%.%s*$", "Encolhido de medo.")
+Add("^Everything is strange%. You feel happy hungry and relaxed%. It's like you are discovering everything for the first time again%. You appreciate things you never noticed before, but can't tell genius from idiocy%. \n\nMoving will bring you back to reality%.%s*$", "Tudo parece estranho. Você se sente feliz, faminto e relaxado. É como descobrir tudo novamente pela primeira vez. Você aprecia coisas que nunca havia notado, mas não consegue distinguir genialidade de estupidez.\n\nMover-se trará você de volta à realidade.")
+Add("^Forbidden knowledge of the Twisting Nether is bestowed upon you, should your mind endure the burden%.%.%.%s*$", "O conhecimento proibido da Espiral Etérea é concedido a você, caso sua mente suporte o fardo...")
+Add("^Gives effective healing on you and any damage dealt by |cffffffffStarsunder|r a 15%% chance to enable you to use |cffffffffVengeance of Elune|r for a short time%.%s*$", "A cura efetiva recebida e qualquer dano causado por |cffffffffRuptura Estelar|r têm 15% de chance de permitir o uso de |cffffffffVingança de Eluna|r por um curto período.")
+Add("^Hunched over in pain%.%s*$", "Curvado de dor.")
+Add("^If you are Interrupted, gain (.-)%% increased Spell Haste and (.-)%% increased Spell Damage for (.-)%.%s*$", "Ao ser interrompido, recebe {{1}}% de celeridade de feitiço e {{2}}% de dano mágico aumentados durante {{3}}.")
+Add("^Increases the cast speed and critical chance of Align by (.-)%%%. Reduces your Energy generation by (.-)%%%. Increases the healing and duration of Eternity%.\n\nWhen your Energy runs out, the distortion will end%.%s*$", "Aumenta em {{1}}% a velocidade de lançamento e a chance de acerto crítico de Alinhar. Reduz em {{2}}% sua geração de Energia. Aumenta a cura e a duração de Eternidade.\n\nQuando sua Energia acabar, a distorção terminará.")
+Add("^Inflige de (.-) à (.-) points de dégâts de Givre modifiés par la puissance d'attaque et réduit de (.-)%% la vitesse d'attaque en mêlée et à distance et la vitesse d'incantation de la cible pendant (.-)%.%s*$", "Causa de {{1}} a {{2}} de dano de Gelo, modificado pelo poder de ataque, e reduz em {{3}}% as velocidades de ataque corpo a corpo, de ataque à distância e de lançamento do alvo durante {{4}}.")
+Add("^Let your food settle before sitting down to eat again%.%s*$", "Espere a comida assentar antes de sentar-se para comer novamente.")
+Add("^Move to the location of your corpse or speak with a spirit healer to be revived%.%s*$", "Vá até seu cadáver ou fale com um Anjo da Cura para ressuscitar.")
+Add("^Potion Toss and Splash Potion now apply Blood Frog%.%s*$", "Arremesso de Poção e Poção de Impacto agora aplicam Sangue de Rã.")
+Add("^Potion Toss applies Frog Bones%.%s*$", "Arremesso de Poção aplica Ossos de Rã.")
+Add("^Splash Potion and Potion Toss now apply Frog Shrooms%s*$", "Poção de Impacto e Arremesso de Poção agora aplicam Cogumelos de Rã.")
+Add("^The Plague inflicts increasing damage every (.-) sec%.\nIf you get too near a friendly target, you will transfer the Plague to them%.%s*$", "A Peste causa dano crescente a cada {{1}} s.\nSe você se aproximar demais de um alvo aliado, transmitirá a Peste a ele.")
+Add("^The blaster backfired%.%.%. you're shrunk!%s*$", "O disparador saiu pela culatra... você encolheu!")
+Add("^The next spell cast on the Witch Doctor will cause this Effigy to transform the caster into a frog!%s*$", "O próximo feitiço lançado contra o Feiticeiro fará esta Efígie transformar o lançador em uma rã!")
+Add("^Velocidad de movimiento ralentizada un (.-)%%%.%s*$", "Velocidade de movimento reduzida em {{1}}%.")
+Add("^Velocidad de movimiento reducida un (.-)%%%.%s*$", "Velocidade de movimento reduzida em {{1}}%.")
+Add("^Velocidad de nado aumentada un (.-)%%%.%s*$", "Velocidade de nado aumentada em {{1}}%.")
+Add("^Whenever you reach 100 Rage, you gain |cffffffffIgnite Blade|r for (.-) or until your Rage runs out%.%s*$", "Ao atingir 100 de Raiva, você recebe |cffffffffLâmina Incandescente|r durante {{1}} ou até sua Raiva acabar.")
+Add("^Where'd your head go%?%s*$", "Onde foi parar sua cabeça?")
+Add("^Wrangles a ram so it will follow you back to Ram Ranch%.%s*$", "Laça um carneiro para que ele siga você de volta ao Rancho dos Carneiros.")
+Add("^You are being given a second chance%.%s*$", "Você está recebendo uma segunda chance.")
+Add("^You are paralyzed%. Watch your step!  You hear the sharp clang of metal and cries of agony from the arena beyond, where your companions are fighting a pitched battle%. What do you suppose they would say if they could see you now%?%s*$", "Você está paralisado. Cuidado onde pisa! Você ouve o som estridente de metal e gritos de agonia vindos da arena adiante, onde seus companheiros travam uma batalha intensa. O que será que diriam se pudessem ver você agora?")
+Add("^You are temporarily banished to the Shadowlands%.%s*$", "Você foi banido temporariamente para as Terras Sombrias.")
+Add("^You generate 4 Rage every second if you are moving%. If you are not moving, you will instead generate 10 Energy%.%s*$", "Você gera 4 de Raiva por segundo enquanto se move. Se ficar parado, gerará 10 de Energia.")
+Add("^You got sand in your eyes%.\n\nChance to hit reduced by (.-)%%%.\nChance to dodge reduced by (.-)%%%.\nChance to parry reduced by (.-)%%%.%s*$", "Entrou areia nos seus olhos.\n\nChance de acerto reduzida em {{1}}%.\nChance de esquiva reduzida em {{2}}%.\nChance de aparar reduzida em {{3}}%.")
+Add("^You lost your weapon!  Next time, distance yourself from Coren when he drinks%.%s*$", "Você perdeu sua arma! Da próxima vez, afaste-se de Coren quando ele beber.")
+Add("^You may now safely kiss Lake Frogs without fear of getting warts%.%s*$", "Agora você pode beijar Rãs do Lago sem medo de criar verrugas.")
+Add("^Your body is becoming numb%.%s*$", "Seu corpo está ficando dormente.")
+Add("^¡Nadie se escapa de las Fauces%.%.%. pero aparentemente éstas alas si!%s*$", "Ninguém escapa da Gorja... mas aparentemente estas asas escapam!")
+
+end

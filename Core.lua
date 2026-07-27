@@ -1648,7 +1648,6 @@ local OPTIONS_LIST = {
     { key = "ui", text = "Interface e menus (algumas alterações exigem /reload)" },
     { key = "erros", text = "Mensagens de erro na tela", setter = "SetErrorsEnabled" },
     { key = "chat", text = "Mensagens do chat (saque, experiência, sistema...)", setter = "SetChatEnabled" },
-    { key = "voice", text = "Vozes de erro em português brasileiro", setter = "SetVoiceEnabled" },
 }
 
 local function BuildOptionsPanel()
@@ -2980,142 +2979,268 @@ castWatcher:SetScript("OnEvent", function(self, event, unit)
     end
 end)
 
-local UPDATE_PREFIX = "APTBRver"
-local myVersionStr = (GetAddOnMetadata and GetAddOnMetadata("AscensionPTBR", "Version")) or "0.0.0"
+;(function()
+    local UPDATE_PREFIX = "APTBRver"
+    local myVersionStr = (GetAddOnMetadata and GetAddOnMetadata("AscensionPTBR", "Version")) or "0.0.0"
 
-local function VersionScore(s)
-    local a, b, c, suf = s:match("^(%d+)%.(%d+)%.(%d+)(%a?)$")
-    if not a then return nil end
-    return tonumber(a) * 1000000 + tonumber(b) * 10000 + tonumber(c) * 100
-        + (suf ~= "" and (suf:lower():byte() - 96) or 0)
-end
+    local function VersionScore(s)
+        if type(s) ~= "string" then return nil end
+        s = s:gsub("^v", "")
+        local a, b, c, suf = s:match("^(%d+)%.(%d+)%.(%d+)(%a?)$")
+        if not a then return nil end
+        return tonumber(a) * 1000000 + tonumber(b) * 10000 + tonumber(c) * 100
+            + (suf ~= "" and (suf:lower():byte() - 96) or 0)
+    end
 
-local myScore = VersionScore(myVersionStr) or 0
-local notifiedScore = 0
-local lastSent = {}
-local REBROADCAST_CHANNELS = { PARTY = true, RAID = true, GUILD = true, BATTLEGROUND = true }
+    local myScore = VersionScore(myVersionStr) or 0
+    local notifiedScore = 0
+    local lastSent = {}
+    local lastWhisper = {}
+    local pendingVersion
+    local REBROADCAST_CHANNELS = { PARTY = true, RAID = true, GUILD = true, BATTLEGROUND = true }
 
-local UPDATE_URL = "https://github.com/GabrielBosco/AscensionPTBR/releases"
-local updPopup
+    local GITHUB_REPO = (GetAddOnMetadata and GetAddOnMetadata("AscensionPTBR", "X-GitHub-Repo"))
+        or "GabrielBosco/AscensionPTBR"
+    local UPDATE_URL = (GetAddOnMetadata and GetAddOnMetadata("AscensionPTBR", "X-GitHub-Releases"))
+        or ("https://github.com/" .. GITHUB_REPO .. "/releases/latest")
+    local updPopup
 
-local function TryOpenURL(url)
-    for _, name in ipairs({ "OpenURL", "LaunchURL", "OpenExternalURL" }) do
-        local fn = _G[name]
-        if type(fn) == "function" and pcall(fn, url) then
-            return true
+    local function UpdateDB()
+        AscensionPTBRDB = AscensionPTBRDB or {}
+        return AscensionPTBRDB
+    end
+
+    local function TryOpenURL(url)
+        for _, name in ipairs({ "OpenURL", "LaunchURL", "OpenExternalURL" }) do
+            local fn = _G[name]
+            if type(fn) == "function" and pcall(fn, url) then
+                return true
+            end
+        end
+        return false
+    end
+
+    local function ShowUpdatePopupNow(v)
+        if not updPopup then
+            local f = CreateFrame("Frame", "AscensionPTBRUpdate", UIParent)
+            f:SetFrameStrata("DIALOG")
+            f:SetWidth(470)
+            f:SetHeight(180)
+            f:ClearAllPoints()
+            f:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+            f:SetBackdrop({
+                bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+                tile = true, tileSize = 32, edgeSize = 32,
+                insets = { left = 11, right = 12, top = 12, bottom = 11 },
+            })
+            f:EnableMouse(true)
+            f:SetMovable(true)
+            f:RegisterForDrag("LeftButton")
+            f:SetScript("OnDragStart", function(self) self:StartMoving() end)
+            f:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
+            f:Hide()
+
+            local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+            close:SetPoint("TOPRIGHT", -5, -5)
+
+            local title = f:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+            title:SetPoint("TOP", 0, -20)
+            title:SetText("|cff33ff99AscensionPTBR|r desatualizado")
+
+            local msg = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+            msg:SetPoint("TOP", title, "BOTTOM", 0, -12)
+            msg:SetWidth(425)
+            msg:SetJustifyH("CENTER")
+            f.msg = msg
+
+            local eb = CreateFrame("EditBox", "AscensionPTBRUpdateEB", f, "InputBoxTemplate")
+            eb:SetWidth(365)
+            eb:SetHeight(20)
+            eb:SetPoint("TOP", msg, "BOTTOM", 0, -12)
+            eb:SetAutoFocus(false)
+            eb:SetText(UPDATE_URL)
+            eb:SetScript("OnTextChanged", function(self)
+                if self:GetText() ~= UPDATE_URL then
+                    self:SetText(UPDATE_URL)
+                    self:HighlightText()
+                end
+            end)
+            eb:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
+            f.eb = eb
+
+            local b1 = CreateFrame("Button", "AscensionPTBRUpdateB1", f, "UIPanelButtonTemplate")
+            b1:SetWidth(175)
+            b1:SetHeight(24)
+            b1:SetPoint("BOTTOMRIGHT", f, "BOTTOM", -8, 20)
+            b1:SetText("Abrir GitHub")
+            b1:SetScript("OnClick", function()
+                if TryOpenURL(UPDATE_URL) then
+                    f:Hide()
+                    return
+                end
+                f.msg:SetText("Copie o endereço abaixo com |cffffffffCtrl+C|r e abra no navegador.")
+                f.eb:SetFocus()
+                f.eb:HighlightText()
+            end)
+
+            local b2 = CreateFrame("Button", "AscensionPTBRUpdateB2", f, "UIPanelButtonTemplate")
+            b2:SetWidth(175)
+            b2:SetHeight(24)
+            b2:SetPoint("BOTTOMLEFT", f, "BOTTOM", 8, 20)
+            b2:SetText("Agora não")
+            b2:SetScript("OnClick", function() f:Hide() end)
+
+            updPopup = f
+            if type(UISpecialFrames) == "table" then
+                table.insert(UISpecialFrames, "AscensionPTBRUpdate")
+            end
+        end
+
+        updPopup.msg:SetText("Versão instalada: |cffffffff" .. myVersionStr
+            .. "|r\nNova versão detectada: |cff33ff99" .. v .. "|r")
+        updPopup.eb:SetText(UPDATE_URL)
+        updPopup:ClearAllPoints()
+        updPopup:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+        updPopup:Show()
+        updPopup:Raise()
+    end
+
+    local function ShowUpdatePopup(v)
+        if InCombatLockdown and InCombatLockdown() then
+            pendingVersion = v
+            return
+        end
+        ShowUpdatePopupNow(v)
+    end
+
+    local function RememberVersion(v)
+        local score = VersionScore(v)
+        if not score then return end
+        local d = UpdateDB()
+        local old = d.latestSeenVersion
+        if not old or score > (VersionScore(old) or 0) then
+            d.latestSeenVersion = v
         end
     end
-    return false
-end
 
-local function ShowUpdatePopup(v)
-    if not updPopup then
-        local f = CreateFrame("Frame", "AscensionPTBRUpdate", UIParent)
-        f:SetFrameStrata("DIALOG")
-        f:SetWidth(440)
-        f:SetHeight(150)
-        f:SetPoint("TOP", UIParent, "TOP", 0, -140)
-        f:SetBackdrop({
-            bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-            edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-            tile = true, tileSize = 32, edgeSize = 32,
-            insets = { left = 11, right = 12, top = 12, bottom = 11 },
-        })
-        f:EnableMouse(true)
-        local msg = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-        msg:SetPoint("TOP", 0, -22)
-        msg:SetWidth(400)
-        f.msg = msg
-        local eb = CreateFrame("EditBox", "AscensionPTBRUpdateEB", f, "InputBoxTemplate")
-        eb:SetWidth(330)
-        eb:SetHeight(20)
-        eb:SetPoint("TOP", msg, "BOTTOM", 0, -10)
-        eb:SetAutoFocus(false)
-        eb:SetText(UPDATE_URL)
-        eb:SetScript("OnTextChanged", function(self)
-
-            if self:GetText() ~= UPDATE_URL then
-                self:SetText(UPDATE_URL)
-                self:HighlightText()
-            end
-        end)
-        eb:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
-        f.eb = eb
-        local b1 = CreateFrame("Button", "AscensionPTBRUpdateB1", f, "UIPanelButtonTemplate")
-        b1:SetWidth(160)
-        b1:SetHeight(24)
-        b1:SetPoint("BOTTOMRIGHT", f, "BOTTOM", -8, 18)
-        b1:SetText("Atualizar")
-        b1:SetScript("OnClick", function()
-            if TryOpenURL(UPDATE_URL) then
-                f:Hide()
-                return
-            end
-            f.msg:SetText("Copie o link com |cffffffffCtrl+C|r e cole no navegador:")
-            f.eb:SetFocus()
-            f.eb:HighlightText()
-        end)
-        local b2 = CreateFrame("Button", "AscensionPTBRUpdateB2", f, "UIPanelButtonTemplate")
-        b2:SetWidth(160)
-        b2:SetHeight(24)
-        b2:SetPoint("BOTTOMLEFT", f, "BOTTOM", 8, 18)
-        b2:SetText("Cancelar")
-        b2:SetScript("OnClick", function() f:Hide() end)
-        updPopup = f
-    end
-    updPopup.msg:SetText("|cff33ff99AscensionPTBR|r: há uma nova versão |cffffffff" .. v
-        .. "|r disponível (você possui " .. myVersionStr .. ").")
-    updPopup.eb:SetText(UPDATE_URL)
-    updPopup:Show()
-end
-
-local function BroadcastVersion(chan)
-    if not SendAddonMessage then return end
-
-    if myVersionStr:match("%a$") then return end
-    local now = GetTime()
-    if lastSent[chan] and now - lastSent[chan] < 30 then return end
-    lastSent[chan] = now
-    SendAddonMessage(UPDATE_PREFIX, "V:" .. myVersionStr, chan)
-end
-
-local function BroadcastAll()
-    if GetNumRaidMembers and GetNumRaidMembers() > 0 then
-        BroadcastVersion("RAID")
-    elseif GetNumPartyMembers and GetNumPartyMembers() > 0 then
-        BroadcastVersion("PARTY")
-    end
-    if IsInGuild and IsInGuild() then
-        BroadcastVersion("GUILD")
-    end
-end
-
-local updFrame = CreateFrame("Frame")
-updFrame:RegisterEvent("CHAT_MSG_ADDON")
-updFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-updFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
-updFrame:RegisterEvent("RAID_ROSTER_UPDATE")
-updFrame:SetScript("OnEvent", function(self, event, prefix, msg, channel)
-    if event ~= "CHAT_MSG_ADDON" then
-        BroadcastAll()
-        return
-    end
-    if prefix ~= UPDATE_PREFIX or type(msg) ~= "string" then return end
-    local v = msg:match("^V:(%d+%.%d+%.%d+%a?)$")
-    local score = v and VersionScore(v)
-    if not score then return end
-    if score > myScore and score > notifiedScore then
+    local function NotifyNewVersion(v)
+        local score = VersionScore(v)
+        if not score or score <= myScore or score <= notifiedScore then return end
         notifiedScore = score
+        RememberVersion(v)
         DEFAULT_CHAT_FRAME:AddMessage(
-            "|cff33ff99AscensionPTBR|r: há uma nova versão |cffffffff" .. v
-            .. "|r disponível (você possui " .. myVersionStr
-            .. "). Baixe em |cff99ccffgithub.com/GabrielBosco/AscensionPTBR|r (seção Releases).")
+            "|cff33ff99AscensionPTBR|r: nova versão |cffffffff" .. v
+            .. "|r detectada automaticamente (instalada: " .. myVersionStr .. ").")
         pcall(ShowUpdatePopup, v)
-    elseif score < myScore and channel and REBROADCAST_CHANNELS[channel] then
-        BroadcastVersion(channel)
     end
-end)
 
+    local function SendVersion(chan, target, force)
+        if not SendAddonMessage then return end
+        local key = chan .. ":" .. tostring(target or "")
+        local now = GetTime and GetTime() or 0
+        if not force and lastSent[key] and now - lastSent[key] < 20 then return end
+        lastSent[key] = now
+        if chan == "WHISPER" then
+            if target and target ~= "" then
+                SendAddonMessage(UPDATE_PREFIX, "V:" .. myVersionStr, chan, target)
+            end
+        else
+            SendAddonMessage(UPDATE_PREFIX, "V:" .. myVersionStr, chan)
+        end
+    end
+
+    local function BroadcastAll(force)
+        if GetNumRaidMembers and GetNumRaidMembers() > 0 then
+            SendVersion("RAID", nil, force)
+        elseif GetNumPartyMembers and GetNumPartyMembers() > 0 then
+            SendVersion("PARTY", nil, force)
+        end
+        if IsInGuild and IsInGuild() then
+            SendVersion("GUILD", nil, force)
+        end
+    end
+
+    local function DelayedAutomaticCheck()
+        local driver = CreateFrame("Frame")
+        local elapsed, sent = 0, false
+        driver:SetScript("OnUpdate", function(self, dt)
+            elapsed = elapsed + (dt or 0.02)
+            if not sent and elapsed >= 4 then
+                sent = true
+                BroadcastAll(true)
+            end
+            if elapsed >= 12 then
+                BroadcastAll(false)
+                self:SetScript("OnUpdate", nil)
+            end
+        end)
+    end
+
+    if RegisterAddonMessagePrefix then
+        pcall(RegisterAddonMessagePrefix, UPDATE_PREFIX)
+    end
+
+    local updFrame = CreateFrame("Frame")
+    updFrame:RegisterEvent("CHAT_MSG_ADDON")
+    updFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+    updFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
+    updFrame:RegisterEvent("RAID_ROSTER_UPDATE")
+    updFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+    updFrame:SetScript("OnEvent", function(self, event, prefix, msg, channel, sender)
+        if event == "PLAYER_REGEN_ENABLED" then
+            if pendingVersion then
+                local v = pendingVersion
+                pendingVersion = nil
+                ShowUpdatePopupNow(v)
+            end
+            return
+        end
+
+        if event == "PLAYER_ENTERING_WORLD" then
+            local cached = UpdateDB().latestSeenVersion
+            if cached and (VersionScore(cached) or 0) > myScore then
+                NotifyNewVersion(cached)
+            end
+            DelayedAutomaticCheck()
+            return
+        end
+
+        if event ~= "CHAT_MSG_ADDON" then
+            BroadcastAll(false)
+            return
+        end
+
+        if prefix ~= UPDATE_PREFIX or type(msg) ~= "string" then return end
+        local v = msg:match("^V:(%d+%.%d+%.%d+%a?)$")
+        local score = v and VersionScore(v)
+        if not score then return end
+
+        if score > myScore then
+            NotifyNewVersion(v)
+        elseif score < myScore then
+            local now = GetTime and GetTime() or 0
+            if sender and sender ~= "" and (not lastWhisper[sender] or now - lastWhisper[sender] >= 30) then
+                lastWhisper[sender] = now
+                SendVersion("WHISPER", sender, true)
+            elseif channel and REBROADCAST_CHANNELS[channel] then
+                SendVersion(channel, nil, false)
+            end
+        end
+    end)
+
+    AES.ShowUpdatePopup = ShowUpdatePopup
+    AES.CheckForUpdates = function()
+        BroadcastAll(true)
+        local cached = UpdateDB().latestSeenVersion
+        if cached and (VersionScore(cached) or 0) > myScore then
+            NotifyNewVersion(cached)
+        else
+            DEFAULT_CHAT_FRAME:AddMessage(
+                "|cff33ff99AscensionPTBR|r: verificação automática enviada aos jogadores conectados.")
+        end
+    end
+end)()
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -3305,7 +3430,6 @@ end)
 
 SLASH_ASCENSIONPTBR1 = "/aptbr"
 SLASH_ASCENSIONPTBR2 = "/ascensionptbr"
-SLASH_ASCENSIONPTBR3 = "/ases"
 SlashCmdList["ASCENSIONPTBR"] = function(msg)
     msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
     local function status(v) return v and "|cff33ff99SIM|r" or "|cffff3333NÃO|r" end
@@ -3340,17 +3464,12 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         if AES.SetErrorsEnabled then AES.SetErrorsEnabled(enabled) else db.erros = enabled end
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r tradução de erros: " .. status(db.erros))
         return
-    elseif msg == "voz" or msg == "voice" then
-        local enabled = not (db.voice ~= false)
-        if AES.SetVoiceEnabled then AES.SetVoiceEnabled(enabled) else db.voice = enabled end
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r vozes: " .. status(db.voice))
-        return
     elseif msg == "atualizar" or msg == "refresh" then
         RetranslateStaticUI()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r interface retraduzida.")
         return
     elseif msg ~= "" then
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz e atualizar.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros e atualizar.")
         return
     end
 
@@ -3360,4 +3479,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.4.0/2026-07-24"
+AscensionPTBR.__firma = "AscensionPTBR/1.4.0/2026-07-27"

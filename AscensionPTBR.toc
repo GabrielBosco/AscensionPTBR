@@ -1,8 +1,8 @@
 ## Interface: 30300
 ## Title: AscensionPTBR |cff33ff99Português (Brasil)|r
-## Notes: Tradução em Português do Brasil para o Project Ascension, com suporte opcional às vozes ptBR.
+## Notes: Tradução em Português do Brasil para o Project Ascension.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
-## Version: 1.2.2
+## Version: 1.3.0
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## SavedVariables: AscensionPTBRDB
@@ -32,6 +32,4 @@ data\Chat.lua
 Core.lua
 data\TalentRuntime.lua
 Errors.lua
-data\Voices.lua
-Voice.lua
 Chat.lua
