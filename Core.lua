@@ -1648,6 +1648,7 @@ local OPTIONS_LIST = {
     { key = "ui", text = "Interface e menus (algumas alterações exigem /reload)" },
     { key = "erros", text = "Mensagens de erro na tela", setter = "SetErrorsEnabled" },
     { key = "chat", text = "Mensagens do chat (saque, experiência, sistema...)", setter = "SetChatEnabled" },
+    { key = "voice", text = "Vozes de erro em português brasileiro", setter = "SetVoiceEnabled" },
 }
 
 local function BuildOptionsPanel()
@@ -3464,12 +3465,17 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         if AES.SetErrorsEnabled then AES.SetErrorsEnabled(enabled) else db.erros = enabled end
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r tradução de erros: " .. status(db.erros))
         return
+    elseif msg == "voz" or msg == "voice" then
+        local enabled = not (db.voice ~= false)
+        if AES.SetVoiceEnabled then AES.SetVoiceEnabled(enabled) else db.voice = enabled end
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r vozes: " .. status(db.voice))
+        return
     elseif msg == "atualizar" or msg == "refresh" then
         RetranslateStaticUI()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r interface retraduzida.")
         return
     elseif msg ~= "" then
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros e atualizar.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz e atualizar.")
         return
     end
 

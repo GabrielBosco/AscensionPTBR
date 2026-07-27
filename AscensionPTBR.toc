@@ -32,4 +32,6 @@ data\Chat.lua
 Core.lua
 data\TalentRuntime.lua
 Errors.lua
+data\Voices.lua
+Voice.lua
 Chat.lua
