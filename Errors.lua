@@ -40,7 +40,8 @@ f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("UI_ERROR_MESSAGE")
 f:RegisterEvent("UI_INFO_MESSAGE")
-f:SetScript("OnEvent", function(self, event, arg1)
+f:SetScript("OnEvent", function(self, event, ...)
+    local arg1 = ...
     if event == "ADDON_LOADED" and arg1 == "AscensionPTBR" then
         AscensionPTBRDB = AscensionPTBRDB or {}
         if AscensionPTBRDB.errores == nil then
@@ -51,13 +52,29 @@ f:SetScript("OnEvent", function(self, event, arg1)
         if AscensionPTBRDB and AscensionPTBRDB.errores then Enable() end
     elseif event == "UI_ERROR_MESSAGE" then
         if not active then return end
-        if arg1 and UIErrorsFrame then
-            UIErrorsFrame:AddMessage(Translate(arg1), 1.0, 0.1, 0.1, 1.0)
+        local message
+        for i = 1, select("#", ...) do
+            local value = select(i, ...)
+            if type(value) == "string" and value ~= "" then
+                message = value
+                break
+            end
+        end
+        if message and UIErrorsFrame then
+            UIErrorsFrame:AddMessage(Translate(message), 1.0, 0.1, 0.1, 1.0)
         end
     elseif event == "UI_INFO_MESSAGE" then
         if not active then return end
-        if arg1 and UIErrorsFrame then
-            UIErrorsFrame:AddMessage(Translate(arg1), 1.0, 1.0, 0.0, 1.0)
+        local message
+        for i = 1, select("#", ...) do
+            local value = select(i, ...)
+            if type(value) == "string" and value ~= "" then
+                message = value
+                break
+            end
+        end
+        if message and UIErrorsFrame then
+            UIErrorsFrame:AddMessage(Translate(message), 1.0, 1.0, 0.0, 1.0)
         end
     end
 end)

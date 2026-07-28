@@ -125,8 +125,11 @@ local function ApplyVoiceCVar(enabled, recapture)
             originalErrorSpeech = ReadErrorSpeechCVar()
         end
         SetCVar("Sound_EnableErrorSpeech", 0)
-    elseif originalErrorSpeech ~= nil then
-        SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
+    else
+        -- O modo inglês precisa ser determinístico. Restaurar apenas o valor
+        -- capturado podia manter as falas mudas quando outra versão do addon
+        -- havia deixado esta CVar em 0.
+        SetCVar("Sound_EnableErrorSpeech", 1)
         originalErrorSpeech = nil
     end
 end
@@ -148,8 +151,8 @@ local function PlayError(errType, force)
     if not force and now - lastPlay < 3 then return false end
     lastPlay = now
 
-    PlaySoundFile(ADDON_PATH .. files[math.random(#files)])
-    return true
+    local ok = pcall(PlaySoundFile, ADDON_PATH .. files[math.random(#files)])
+    return ok
 end
 
 local function ChatMessage(text)
@@ -158,26 +161,77 @@ local function ChatMessage(text)
     end
 end
 
-SLASH_ASCENSIONPTBRVOICE1 = "/vozptbr"
-SlashCmdList.ASCENSIONPTBRVOICE = function(command)
+local function VoiceFileCount()
+    local set = playerKey and AES.VoiceFiles[playerKey]
+    local total = 0
+    if set then
+        for _, files in pairs(set) do
+            if type(files) == "table" then total = total + #files end
+        end
+    end
+    return total
+end
+
+local function PlayAnyTestVoice()
+    local preferred = { "err_nomana", "err_outofrange" }
+    for _, errType in ipairs(preferred) do
+        if PlayError(errType, true) then return true, errType end
+    end
+
+    local set = playerKey and AES.VoiceFiles[playerKey]
+    if set then
+        for errType, files in pairs(set) do
+            if type(files) == "table" and #files > 0 and PlayError(errType, true) then
+                return true, errType
+            end
+        end
+    end
+    return false
+end
+
+function AES.VoiceCommand(command)
     command = string.lower((command or ""):match("^%s*(.-)%s*$") or "")
 
-    if command == "on" or command == "ligar" then
+    if command == "on" or command == "ligar" or command == "ptbr" or command == "portugues"
+        or command == "português" then
         AES.SetVoiceEnabled(true)
-        ChatMessage("ativadas.")
-    elseif command == "off" or command == "desligar" then
+        ChatMessage("dublagem pt-BR ativada; falas originais em inglês desativadas.")
+    elseif command == "off" or command == "desligar" or command == "ingles"
+        or command == "inglês" or command == "english" or command == "original" then
         AES.SetVoiceEnabled(false)
-        ChatMessage("desativadas.")
+        ChatMessage("dublagem pt-BR desativada; falas originais em inglês restauradas.")
     elseif command == "teste" or command == "test" then
+        if not VoiceEnabled() then
+            ChatMessage("o teste pt-BR não foi executado porque o modo inglês está ativo. Use /vozptbr ptbr.")
+            return
+        end
         BuildMaps()
-        if not PlayError("err_nomana", true) and not PlayError("err_outofrange", true) then
+        local played, errType = PlayAnyTestVoice()
+        if not played then
             ChatMessage("nenhum arquivo de teste foi encontrado para " .. tostring(playerKey) .. ".")
         else
-            ChatMessage("teste reproduzido para " .. tostring(playerKey) .. ".")
+            ChatMessage("teste reproduzido para " .. tostring(playerKey) .. " (" .. tostring(errType) .. ").")
         end
+    elseif command == "diagnostico" or command == "diagnóstico" or command == "diag" then
+        BuildMaps()
+        local sound = GetCVar and GetCVar("Sound_EnableAllSound") or "?"
+        local errors = GetCVar and GetCVar("Sound_EnableErrorSpeech") or "?"
+        ChatMessage(string.format(
+            "perfil=%s; arquivos=%d; modo=%s; som=%s; Sound_EnableErrorSpeech=%s.",
+            tostring(playerKey), VoiceFileCount(), VoiceEnabled() and "pt-BR" or "inglês original",
+            tostring(sound), tostring(errors)))
+    elseif command == "status" then
+        ChatMessage(VoiceEnabled()
+            and "modo atual: pt-BR. Use /vozptbr ingles para voltar às falas originais."
+            or "modo atual: inglês original. Use /vozptbr ptbr para ativar a dublagem.")
     else
-        ChatMessage(VoiceEnabled() and "ativadas. Use /vozptbr teste ou /vozptbr off." or "desativadas. Use /vozptbr on.")
+        ChatMessage("comandos: /vozptbr ptbr, /vozptbr ingles, /vozptbr status, /vozptbr teste e /vozptbr diagnostico.")
     end
+end
+
+SLASH_ASCENSIONPTBRVOICE1 = "/vozptbr"
+SlashCmdList.ASCENSIONPTBRVOICE = function(command)
+    AES.VoiceCommand(command)
 end
 
 local frame = CreateFrame("Frame")
@@ -195,10 +249,13 @@ frame:SetScript("OnEvent", function(self, event, arg1, arg2)
         BuildMaps()
         if VoiceEnabled() then
             ApplyVoiceCVar(true, false)
+        else
+            ApplyVoiceCVar(false, false)
         end
     elseif event == "PLAYER_LOGOUT" then
-        if originalErrorSpeech ~= nil and SetCVar then
-            SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
+        if SetCVar then
+            -- Nunca deixa o cliente preso sem as falas originais após sair.
+            SetCVar("Sound_EnableErrorSpeech", 1)
             originalErrorSpeech = nil
         end
     elseif event == "UI_ERROR_MESSAGE" then

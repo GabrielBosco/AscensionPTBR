@@ -3014,8 +3014,9 @@ end)
     local function TryOpenURL(url)
         for _, name in ipairs({ "OpenURL", "LaunchURL", "OpenExternalURL" }) do
             local fn = _G[name]
-            if type(fn) == "function" and pcall(fn, url) then
-                return true
+            if type(fn) == "function" then
+                local ok, opened = pcall(fn, url)
+                if ok and opened ~= false then return true end
             end
         end
         return false
@@ -3231,6 +3232,13 @@ end)
     end)
 
     AES.ShowUpdatePopup = ShowUpdatePopup
+    AES.TestUpdatePopup = function()
+        local a, b, c = myVersionStr:match("^v?(%d+)%.(%d+)%.(%d+)")
+        local testVersion = a and (a .. "." .. b .. "." .. (tonumber(c) + 1)) or "9.9.9"
+        ShowUpdatePopup(testVersion)
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "|cff33ff99AscensionPTBR|r: teste visual aberto. Esta janela de teste não altera a versão salva.")
+    end
     AES.CheckForUpdates = function()
         BroadcastAll(true)
         local cached = UpdateDB().latestSeenVersion
@@ -3238,7 +3246,9 @@ end)
             NotifyNewVersion(cached)
         else
             DEFAULT_CHAT_FRAME:AddMessage(
-                "|cff33ff99AscensionPTBR|r: verificação automática enviada aos jogadores conectados.")
+                "|cff33ff99AscensionPTBR|r: consulta enviada ao grupo e à guilda. "
+                .. "Nenhuma versão superior foi detectada até agora. "
+                .. "O cliente 3.3.5a não consulta o GitHub diretamente.")
         end
     end
 end)()
@@ -3465,17 +3475,34 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         if AES.SetErrorsEnabled then AES.SetErrorsEnabled(enabled) else db.erros = enabled end
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r tradução de erros: " .. status(db.erros))
         return
+    elseif msg:match("^voz%s+") or msg:match("^voice%s+") then
+        local command = msg:match("^%S+%s+(.+)$") or ""
+        if AES.VoiceCommand then
+            AES.VoiceCommand(command)
+        else
+            DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r: módulo de vozes indisponível.")
+        end
+        return
     elseif msg == "voz" or msg == "voice" then
         local enabled = not (db.voice ~= false)
         if AES.SetVoiceEnabled then AES.SetVoiceEnabled(enabled) else db.voice = enabled end
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r vozes: " .. status(db.voice))
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r vozes: "
+            .. (db.voice and "|cff33ff99pt-BR|r" or "|cffffffffinglês original|r"))
+        return
+    elseif msg == "verificar" or msg == "versao" or msg == "versão"
+        or msg == "atualizacao" or msg == "atualização" or msg == "update" then
+        if AES.CheckForUpdates then AES.CheckForUpdates() end
+        return
+    elseif msg == "atualizacao teste" or msg == "atualização teste"
+        or msg == "update teste" or msg == "update test" then
+        if AES.TestUpdatePopup then AES.TestUpdatePopup() end
         return
     elseif msg == "atualizar" or msg == "refresh" then
         RetranslateStaticUI()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r interface retraduzida.")
         return
     elseif msg ~= "" then
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz e atualizar.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz ptbr, voz ingles, verificar, atualização teste e atualizar.")
         return
     end
 
@@ -3485,4 +3512,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.4.0/2026-07-27"
+AscensionPTBR.__firma = "AscensionPTBR/1.4.7/2026-07-28"
