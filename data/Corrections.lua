@@ -1,6 +1,4 @@
--- Revisões humanas ptBR aplicadas sobre registros legados cuja tradução
--- espanhola automática ficou corrompida. IDs, chaves e textos-fonte EN são
--- mantidos nas tabelas originais.
+-- Ajustes de textos antigos que vieram quebrados da base espanhola.
 local A = AscensionPTBR
 if not A then return end
 
@@ -46,8 +44,7 @@ if Q then
     end
 end
 
--- Auditoria final 1.4.0: textos de missões que ainda estavam híbridos
--- espanhol/português na base herdada.
+-- Missões que ainda misturavam espanhol e português.
 do
     local Q = A.QuestData
     if Q then
@@ -94,9 +91,8 @@ do
     end
 end
 
--- Terceira parte da revisão 1.3.1: habilidades e arquétipos.
--- Sobrescreve somente traduções comprovadamente corrompidas, preservando
--- as chaves em inglês usadas pelo cliente do Project Ascension.
+-- Habilidades e arquétipos com tradução quebrada.
+-- As chaves em inglês continuam iguais porque o cliente usa essas chaves na busca.
 do
     local S = A.SpellNameEN2ES
     if S then
@@ -178,7 +174,7 @@ end
 
 
 
--- Otimizacao/revisao 1.3: correcoes pontuais e seguras sobre dados legados.
+-- Correções pontuais da base antiga.
 do
     local S = A.SpellNameEN2ES
     if S then
@@ -200,8 +196,7 @@ do
     end
 end
 
--- Revisão de prioridade alta 1.3.0c: correções humanas de resíduos
--- espanhóis e traduções híbridas encontradas na auditoria.
+-- Resíduos encontrados durante a revisão.
 do
     local S = A.SpellNameEN2ES
     if S then

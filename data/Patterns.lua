@@ -87,7 +87,7 @@ AscensionPTBR.LinePatterns = {
     { "^%+(%d+) Intellect$", "+%1 de Intelecto" },
     { "^%+(%d+) Spirit$", "+%1 de Espírito" },
 
-    -- Painel personalizado de atributos do Project Ascension.
+    -- Textos do painel de atributos do Ascension.
     { "^Strength:%s*(.+)$", "Força: %1" },
     { "^Agility:%s*(.+)$", "Agilidade: %1" },
     { "^Intellect:%s*(.+)$", "Intelecto: %1" },

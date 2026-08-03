@@ -383,8 +383,7 @@ local function TranslateQuestTooltipText(text)
         or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text])
     if direct and direct ~= false then return render(direct) end
 
-    -- O painel de objetivos do Ascension repete o objetivo com marcadores.
-    -- Conserva recuo, hífen e espaços, substituindo somente o texto.
+    -- Mantém os marcadores do rastreador ao trocar o texto.
     local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
     if body and body ~= "" then
         local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
@@ -668,6 +667,24 @@ local function ScheduleLatePass(tip)
     latePassDriver:SetScript("OnUpdate", RunLatePass)
 end
 
+local reshowGuard = false
+local reshowQueue = setmetatable({}, { __mode = "k" })
+local reshowDriver = CreateFrame("Frame")
+reshowDriver:SetScript("OnUpdate", function()
+    if not next(reshowQueue) then return end
+    reshowGuard = true
+    for tip in pairs(reshowQueue) do
+        reshowQueue[tip] = nil
+        local ok, vis = pcall(tip.IsVisible, tip)
+        if ok and vis then pcall(tip.Show, tip) end
+    end
+    reshowGuard = false
+end)
+
+local function ReshowSoon(tip)
+    if tip and tip.IsVisible then reshowQueue[tip] = true end
+end
+
 local function OnSpellTooltip(tip)
     if not db or not db.spells then return end
     local _, _, spellID = tip:GetSpell()
@@ -702,6 +719,7 @@ local function OnSpellTooltip(tip)
 
     ApplyLinePatterns(tip)
     ScheduleLatePass(tip)
+    ReshowSoon(tip)
 end
 
 local function OnAuraTooltip(tip, unit, index, filter)
@@ -726,6 +744,7 @@ local function OnAuraTooltip(tip, unit, index, filter)
     end
 
     ApplyLinePatterns(tip)
+    ReshowSoon(tip)
 end
 
 local function OnItemTooltip(tip)
@@ -805,6 +824,7 @@ local function OnItemTooltip(tip)
 
     ApplyLinePatterns(tip)
     ScheduleLatePass(tip)
+    ReshowSoon(tip)
 end
 
 local function OnUnitTooltip(tip)
@@ -832,6 +852,7 @@ local function OnUnitTooltip(tip)
     end
 
     ApplyLinePatterns(tip)
+    ReshowSoon(tip)
 end
 
 local function TranslateShortText(text)
@@ -995,35 +1016,66 @@ end
 
 local HookUIFS
 
+local EXCLUDED_ROOTS = { CallBoardUI = true }
+local EXCLUDED_PAT = { "AuctionFilterButton" }
+local excludeCache = setmetatable({}, { __mode = "k" })
+local function FrameExcluded(obj)
+    if obj == nil then return false end
+    local cached = excludeCache[obj]
+    if cached ~= nil then return cached end
+    local cur, hops = obj, 0
+    while cur and hops < 14 do
+        local okn, nm = pcall(function() return cur.GetName and cur:GetName() end)
+        if okn and nm and EXCLUDED_ROOTS[nm] then
+            excludeCache[obj] = true
+            return true
+        end
+        if okn and nm then
+            for _, pat in ipairs(EXCLUDED_PAT) do
+                if nm:find(pat, 1, true) then
+                    excludeCache[obj] = true
+                    return true
+                end
+            end
+        end
+        local okp, par = pcall(function() return cur.GetParent and cur:GetParent() end)
+        cur = okp and par or nil
+        hops = hops + 1
+    end
+    excludeCache[obj] = false
+    return false
+end
+AES.FrameExcluded = FrameExcluded
+
 local function RetranslateStaticUI()
     if not db or not db.ui then return end
     local frame = EnumerateFrames()
     while frame do
+        if FrameExcluded(frame) then
+            frame = EnumerateFrames(frame)
+        else
+            local protected = frame.IsProtected and select(1, frame:IsProtected())
+            local forbidden = frame.IsForbidden and frame:IsForbidden()
 
-        local protected = frame.IsProtected and select(1, frame:IsProtected())
-        local forbidden = frame.IsForbidden and frame:IsForbidden()
-
-        local esEntrada = frame.IsObjectType and frame:IsObjectType("EditBox")
-        if not protected and not forbidden and not esEntrada then
-            local okvis, vis = pcall(function() return frame:IsVisible() end)
-            local ok, regions = pcall(function() return { frame:GetRegions() } end)
-            if ok and regions then
-                for _, r in ipairs(regions) do
-                    if r and r.IsObjectType and r:IsObjectType("FontString") then
-                        local t = r:GetText()
-                        if t and t ~= "" then
-                            local es = TranslateStaticText(t)
-                            if es then
-                                pcall(r.SetText, r, es)
+            local esEntrada = frame.IsObjectType and frame:IsObjectType("EditBox")
+            if not protected and not forbidden and not esEntrada then
+                local okvis, vis = pcall(function() return frame:IsVisible() end)
+                local ok, regions = pcall(function() return { frame:GetRegions() } end)
+                if ok and regions then
+                    for _, r in ipairs(regions) do
+                        if r and r.IsObjectType and r:IsObjectType("FontString") then
+                            local t = r:GetText()
+                            if t and t ~= "" then
+                                local es = TranslateStaticText(t)
+                                if es then pcall(r.SetText, r, es) end
                             end
+                            if okvis and vis and HookUIFS then pcall(HookUIFS, r) end
                         end
-
-                        if okvis and vis and HookUIFS then pcall(HookUIFS, r) end
                     end
                 end
             end
+            frame = EnumerateFrames(frame)
         end
-        frame = EnumerateFrames(frame)
     end
 end
 
@@ -1041,8 +1093,7 @@ local function PrimeStaticSubtree(root, depth)
                     local es = TranslateStaticText(t)
                     if es and es ~= t then pcall(r.SetText, r, es) end
                 end
-                -- Attach before the panel is first painted. Any later SetText
-                -- performed by Ascension is translated in the same UI cycle.
+                -- Intercepta o texto antes do primeiro desenho do painel.
                 if HookUIFS then pcall(HookUIFS, r) end
             end
         end
@@ -1098,8 +1149,7 @@ local function HookStaticPanels()
                             "SkillCardsFrame", "VanityCollectionFrame" }) do
         local f = _G[name]
         if f then
-            -- Prime hidden panels now, not only after OnShow. This prevents
-            -- the original English label from appearing for a frame.
+            -- Prepara também os painéis que ainda estão ocultos.
             pcall(PrimeStaticSubtree, f, 0)
             if not staticHooked[name] and f.HookScript and f:HasScript("OnShow") then
                 staticHooked[name] = true
@@ -1176,6 +1226,7 @@ local function AchTooltipPass(tip, achID)
             fsr:SetText(AES.AchCritEN2ES[textr])
         end
     end
+    ReshowSoon(tip)
 end
 
 local function HookAchievementUI()
@@ -1253,6 +1304,7 @@ local function HookAchievementLinks()
                 break
             end
         end
+        ReshowSoon(tip)
     end)
 end
 
@@ -1340,6 +1392,19 @@ local function TradeSkillWord(t)
         or (AES.UIStringsByEN and AES.UIStringsByEN[t])
 end
 
+local function TradeSkillSplit(t)
+    local pre, core, post = t:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    if not core then pre, core, post = "", t, "" end
+    local base, count = core:match("^(.-)%s*(%[%d+%])$")
+    base = base or core
+    base = base:gsub("^%s+", ""):gsub("%s+$", "")
+    return pre, base, count, post
+end
+
+local function TradeSkillRewrap(pre, translated, count, post)
+    return pre .. translated .. (count and (" " .. count) or "") .. post
+end
+
 local function TranslateTradeSkillFrame()
 
     local title = _G["TradeSkillFrameTitleText"]
@@ -1354,10 +1419,12 @@ local function TranslateTradeSkillFrame()
         if b and b.GetText then
             local t = b:GetText()
             if t and t ~= "" then
-                local base, count = t:match("^(.-)%s*(%[%d+%])$")
-                base = base or t
+                local pre, base, count, post = TradeSkillSplit(t)
                 local es = TradeSkillWord(base)
-                if es then pcall(b.SetText, b, es .. (count and (" " .. count) or "")) end
+                if es then
+                    local nt = TradeSkillRewrap(pre, es, count, post)
+                    if nt ~= t then pcall(b.SetText, b, nt) end
+                end
             end
         end
     end
@@ -1407,32 +1474,79 @@ local function TranslateTradeSkillDetail()
     end
 end
 
+local tsBtnHooked = setmetatable({}, { __mode = "k" })
+local tsBtnInHook = false
+local function TradeSkillButtonRetrans(b)
+    if tsBtnInHook or not (db and db.spells) then return end
+    local t = b.GetText and b:GetText()
+    if not t or t == "" then return end
+
+    local pre, base, count, post = TradeSkillSplit(t)
+    local es = TradeSkillWord(base)
+    if es then
+        local nt = TradeSkillRewrap(pre, es, count, post)
+        if nt ~= t then
+            tsBtnInHook = true
+            pcall(b.SetText, b, nt)
+            tsBtnInHook = false
+        end
+    end
+end
+
+local function HookTradeSkillButtons()
+    for i = 1, 30 do
+        local b = _G["TradeSkillSkill" .. i]
+        if b and not tsBtnHooked[b] and b.SetText then
+            tsBtnHooked[b] = true
+            pcall(hooksecurefunc, b, "SetText", TradeSkillButtonRetrans)
+        end
+    end
+end
+AES.HookTradeSkillButtons = HookTradeSkillButtons
+
 local function HookTradeSkillUI()
     if type(TradeSkillFrame_Update) ~= "function" then return end
     hooksecurefunc("TradeSkillFrame_Update", function()
         if db and db.spells then
+            HookTradeSkillButtons()
             TranslateTradeSkillFrame()
             TranslateTradeSkillDetail()
         end
     end)
     if type(TradeSkillFrame_SetSelection) == "function" then
         hooksecurefunc("TradeSkillFrame_SetSelection", function()
-            if db and db.spells then TranslateTradeSkillDetail() end
+            if db and db.spells then
+                TranslateTradeSkillFrame()
+                TranslateTradeSkillDetail()
+            end
         end)
     end
     if TradeSkillFrame and TradeSkillFrame.HookScript and TradeSkillFrame:HasScript("OnShow") then
-        TradeSkillFrame:HookScript("OnShow", RetranslateStaticUI)
+        TradeSkillFrame:HookScript("OnShow", function()
+            RetranslateStaticUI()
+            if db and db.spells then HookTradeSkillButtons() end
+        end)
     end
 end
 
 AES.TranslateTradeSkillFrame = TranslateTradeSkillFrame
 AES.TranslateTradeSkillDetail = TranslateTradeSkillDetail
 
--- Os tooltips do painel de atributos do Ascension podem ser reconstruidos
--- continuamente enquanto o mouse permanece sobre uma estatistica. Traduzir
--- somente no OnShow deixava o addon do servidor escrever o ingles novamente,
--- gerando o efeito de alternancia EN -> PT -> EN. As linhas agora sao
--- interceptadas no SetText/SetFormattedText e permanecem em pt-BR.
+local tsTick, tsAcc = CreateFrame("Frame"), 0
+tsTick:SetScript("OnUpdate", function(_, dt)
+    if not (db and db.spells) then return end
+
+    local f = TradeSkillFrame or _G["TradeSkillSkill1"]
+    local ok, vis = pcall(function() return f and f.IsVisible and f:IsVisible() end)
+    if not (ok and vis) then return end
+    tsAcc = tsAcc + dt
+    if tsAcc < 0.12 then return end
+    tsAcc = 0
+    pcall(TranslateTradeSkillFrame)
+    pcall(TranslateTradeSkillDetail)
+end)
+
+-- O Ascension reescreve estes tooltips enquanto o mouse fica sobre o atributo.
 local function TranslateCharacterStatText(text)
     if type(text) ~= "string" or text == "" then return nil end
     local out, pos, changed = {}, 1, false
@@ -1514,8 +1628,7 @@ local function TranslateCharacterStatTooltip(tip)
 end
 AES.TranslateCharacterStatTooltip = TranslateCharacterStatTooltip
 
--- Passagem curta apenas para descobrir linhas que tenham sido criadas depois
--- do OnShow. Depois de interceptadas, cada escrita do Ascension ja sai em PT.
+-- Procura linhas criadas depois do OnShow.
 local charStatLateTip, charStatLateElapsed, charStatLateShots
 local charStatLateDriver = CreateFrame("Frame")
 
@@ -1567,10 +1680,7 @@ local function HookTooltip(tip)
         return false
     end
 
-    -- O painel de atributos atualiza o GameTooltip repetidas vezes enquanto o
-    -- cursor permanece sobre a estatistica. Executar a traducao logo depois
-    -- dos metodos que montam cada linha impede que um OnUpdate posterior deixe
-    -- o texto ingles como ultimo valor visivel no quadro.
+    -- Traduz de novo sempre que o tooltip for atualizado.
     for _, method in ipairs({ "SetText", "AddLine", "AddDoubleLine", "AppendText" }) do
         if tip[method] then
             pcall(hooksecurefunc, tip, method, function(t)
@@ -1583,7 +1693,7 @@ local function HookTooltip(tip)
     end
     if tip:HasScript("OnShow") then
         tip:HookScript("OnShow", function(t)
-            if not db then return end
+            if not db or reshowGuard then return end
             if IsCharPanelTooltip(t) then
                 TranslateCharacterStatTooltip(t)
                 ScheduleCharacterStatLatePass(t)
@@ -1606,7 +1716,7 @@ local function HookTooltip(tip)
             end
             TranslateTooltipLines(t)
             ScheduleLatePass(t)
-
+            ReshowSoon(t)
         end)
     end
     if tip:HasScript("OnTooltipSetSpell") then
@@ -1810,9 +1920,7 @@ local function QuestGuardSet(fs, es, en)
 end
 
 
--- Camada exclusiva da interface de missões. O Ascension recria diversos
--- textos depois do evento original; por isso traduzimos e também observamos
--- cada FontString das janelas de missão.
+-- O Ascension recria estes textos, então as janelas de missão ficam monitoradas.
 local questUIFSHooked = setmetatable({}, { __mode = "k" })
 local questUIRootHooked = setmetatable({}, { __mode = "k" })
 local inQuestUIFSHook = false
@@ -2494,15 +2602,10 @@ end
 WrapTitleGetter("GetAvailableTitle")
 WrapTitleGetter("GetActiveTitle")
 
--- O diário de missões clássico monta a coluna da esquerda diretamente com
--- GetQuestLogTitle(). Traduzir somente os FontStrings depois do Update fazia o
--- título aparecer em inglês por alguns quadros (e voltar ao inglês ao rolar).
--- Preservamos todos os retornos da API e substituímos apenas o primeiro.
+-- Traduz o título antes de o diário montar a lista.
 local origGetQuestLogTitle = type(GetQuestLogTitle) == "function" and GetQuestLogTitle or nil
 
--- O rastreador de objetivos usa as APIs do diário, não GetObjectiveText().
--- Ao traduzir os retornos antes de o painel montar os FontStrings, evitamos
--- o texto em inglês e também o efeito visível de inglês -> português.
+-- O rastreador lê os objetivos direto das APIs do diário.
 local function QuestDataFromLogIndex(index)
     index = tonumber(index)
     if not (index and index > 0 and origGetQuestLogTitle) then return nil end
@@ -2598,8 +2701,7 @@ if QuestLogFrame and QuestLogFrame.HookScript then
     end)
 end
 
--- Compatibilidade com o painel avançado de objetivos do Ascension e com
--- outros rastreadores que já tenham armazenado o texto antes dos wrappers.
+-- Cobre o painel avançado e rastreadores que já guardaram o texto.
 local questTrackerFSHooked = setmetatable({}, { __mode = "k" })
 local inQuestTrackerFSHook = false
 local questTrackerRoots = setmetatable({}, { __mode = "k" })
@@ -2718,10 +2820,16 @@ function HookUIFS(fs)
     end
 end
 
-local function WalkUIExact(root, depth, hookFS)
+local function WalkUIExact(root, depth, hookFS, skip)
     if not (root and root.GetRegions and root.GetChildren) then return end
     depth = depth or 0
     if depth > 7 then return end
+
+    if skip then
+        local okn, nm = pcall(function() return root.GetName and root:GetName() end)
+        if okn and nm and skip(nm) then return end
+    end
+
     for _, r in ipairs({ root:GetRegions() }) do
         if r.IsObjectType and r:IsObjectType("FontString") then
             local t = r.GetText and r:GetText()
@@ -2731,9 +2839,14 @@ local function WalkUIExact(root, depth, hookFS)
         end
     end
     for _, c in ipairs({ root:GetChildren() }) do
-        WalkUIExact(c, depth + 1, hookFS)
+        WalkUIExact(c, depth + 1, hookFS, skip)
     end
 end
+
+local function SkipAuctionFilters(nm)
+    return nm:find("AuctionFilterButton", 1, true) ~= nil
+end
+AES.SkipAuctionFilters = SkipAuctionFilters
 
 local charDelay
 local function TranslateCharacterFrame()
@@ -2803,7 +2916,8 @@ local function HookServerPanelsDeep()
 
                 or nm:find("CharacterAdvancement") or nm:find("Collections")
                 or nm:find("WildCard") or nm:find("SkillCard")
-                or nm:find("Vanity") or nm:find("Draft")) then
+                or nm:find("Vanity") or nm:find("Draft")
+                or nm:find("HelpMenu")) then
             serverDeep[nm] = true
             if f.HookScript and f.HasScript and f:HasScript("OnShow") then
                 pcall(f.HookScript, f, "OnShow", function(self) DeepPass(self) end)
@@ -2820,6 +2934,199 @@ local deepWatcher = CreateFrame("Frame")
 deepWatcher:RegisterEvent("ADDON_LOADED")
 deepWatcher:RegisterEvent("PLAYER_ENTERING_WORLD")
 deepWatcher:SetScript("OnEvent", function() pcall(HookServerPanelsDeep) end)
+
+do
+local function AuctionRowPT(index, t)
+    local pre, core, post = t:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    if not core then pre, core, post = "", t, "" end
+    local ptName
+    local offset = (FauxScrollFrame_GetOffset and BrowseScrollFrame
+        and FauxScrollFrame_GetOffset(BrowseScrollFrame)) or 0
+    local link = GetAuctionItemLink and GetAuctionItemLink("list", offset + index)
+    local id = link and tonumber(link:match("item:(%d+)"))
+    if id and AES.ItemName and AES.ItemName[id] then
+        local enGuard = AES.ItemNameEN and AES.ItemNameEN[id]
+        if not enGuard or enGuard == core then ptName = AES.ItemName[id] end
+    end
+    if not ptName then ptName = AES.ItemNameEN2ES and AES.ItemNameEN2ES[core] end
+    if ptName then return pre .. ptName .. post end
+    return nil
+end
+
+local function TranslateAuctionRows()
+    if not (db and db.items) then return end
+    for i = 1, 20 do
+        local fs = _G["BrowseButton" .. i .. "Name"]
+        if fs and fs.GetText then
+            local ok, t = pcall(fs.GetText, fs)
+            if ok and type(t) == "string" and t ~= "" then
+                local pt = AuctionRowPT(i, t)
+                if pt and pt ~= t then pcall(fs.SetText, fs, pt) end
+            end
+        end
+    end
+end
+
+local function CatFontString(b)
+    if not b then return nil end
+    local fs = b.GetFontString and b:GetFontString()
+    if fs then return fs end
+    local nm = b.GetName and b:GetName()
+    return nm and _G[nm .. "NormalText"] or nil
+end
+
+local AUC_CAT_FIX = {
+    ["Mail"] = "Malha",
+    ["Head"] = "Cabeça", ["Neck"] = "Pescoço", ["Shoulder"] = "Ombros",
+    ["Shirt"] = "Camisa", ["Chest"] = "Torso", ["Waist"] = "Cintura",
+    ["Legs"] = "Calças", ["Feet"] = "Pés", ["Wrist"] = "Pulsos",
+    ["Hands"] = "Mãos", ["Finger"] = "Dedo", ["Trinket"] = "Berloque",
+    ["Back"] = "Costas", ["Tabard"] = "Tabardo", ["Robe"] = "Veste",
+}
+local auOverlay = setmetatable({}, { __mode = "k" })
+local function CatOverlay(b)
+    local orig = CatFontString(b)
+    if not orig or not b.CreateFontString then return end
+    local ov = auOverlay[b]
+    if not ov then
+        ov = b:CreateFontString(nil, "OVERLAY")
+        local fo = orig.GetFontObject and orig:GetFontObject()
+        if fo then
+            pcall(ov.SetFontObject, ov, fo)
+        elseif orig.GetFont then
+            local f, s, fl = orig:GetFont()
+            if f then pcall(ov.SetFont, ov, f, s, fl) end
+        end
+        pcall(ov.SetAllPoints, ov, orig)
+        local okj, j = pcall(orig.GetJustifyH, orig)
+        if okj and j then pcall(ov.SetJustifyH, ov, j) end
+        auOverlay[b] = ov
+    end
+    local ok, t = pcall(orig.GetText, orig)
+    if not ok or type(t) ~= "string" or t == "" then
+        pcall(orig.SetAlpha, orig, 1)
+        ov:Hide()
+        return
+    end
+
+    local clean = t:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+        :gsub("^%s+", ""):gsub("%s+$", "")
+    local fromFix = AUC_CAT_FIX[t] or AUC_CAT_FIX[clean]
+    local pt = fromFix or TranslateStaticText(t)
+    if pt and pt ~= t then
+        pcall(ov.SetText, ov, pt)
+        if fromFix then
+            pcall(ov.SetTextColor, ov, 1, 1, 1)
+        else
+            local okc, cr, cg, cb = pcall(orig.GetTextColor, orig)
+            if okc and type(cr) == "number" then
+                pcall(ov.SetTextColor, ov, cr, cg, cb)
+            else
+                pcall(ov.SetTextColor, ov, 1, 1, 1)
+            end
+        end
+        pcall(orig.SetAlpha, orig, 0)
+        pcall(orig.Hide, orig)
+        ov:Show()
+    else
+        pcall(orig.Show, orig)
+        pcall(orig.SetAlpha, orig, 1)
+        ov:Hide()
+    end
+end
+
+local function TranslateAuctionCats()
+    if not (db and db.ui) then return end
+    for i = 1, 60 do
+        local b = _G["AuctionFilterButton" .. i]
+        if b then pcall(CatOverlay, b) end
+    end
+end
+
+local function TranslateAuction()
+    TranslateAuctionRows()
+    if AES.catTrans ~= false then TranslateAuctionCats() end
+end
+AES.catTrans = true
+AES.TranslateAuction = TranslateAuction
+AES.TranslateAuctionRows = TranslateAuctionRows
+AES.TranslateAuctionCats = TranslateAuctionCats
+
+local auHooked = setmetatable({}, { __mode = "k" })
+local auInHook = false
+local function HookAuctionRow(n)
+    local fs = _G["BrowseButton" .. n .. "Name"]
+    if not fs or auHooked[fs] or not fs.SetText then return end
+    auHooked[fs] = true
+    hooksecurefunc(fs, "SetText", function(self)
+        if auInHook or not (db and db.items) then return end
+        local ok, t = pcall(self.GetText, self)
+        if not ok or type(t) ~= "string" or t == "" then return end
+        local pt = AuctionRowPT(n, t)
+        if pt and pt ~= t then
+            auInHook = true
+            pcall(self.SetText, self, pt)
+            auInHook = false
+        end
+    end)
+end
+
+local function HookAuctionRows()
+    for i = 1, 20 do HookAuctionRow(i) end
+end
+
+local auFnHooked = false
+local function HookAuctionFuncs()
+    if auFnHooked then return end
+    auFnHooked = true
+    for _, fn in ipairs({ "AuctionFrameFilters_UpdateClasses", "AuctionFrameFilters_Update" }) do
+        if type(_G[fn]) == "function" then
+            hooksecurefunc(fn, function()
+                if AES.catTrans then pcall(TranslateAuctionCats) end
+            end)
+        end
+    end
+    if type(AuctionFrameBrowse_Update) == "function" then
+        hooksecurefunc("AuctionFrameBrowse_Update", function()
+            HookAuctionRows()
+            pcall(TranslateAuctionRows)
+        end)
+    end
+end
+AES.HookAuctionFuncs = HookAuctionFuncs
+
+local liveListWatcher = CreateFrame("Frame")
+liveListWatcher:RegisterEvent("TRADE_SKILL_SHOW")
+liveListWatcher:RegisterEvent("TRADE_SKILL_UPDATE")
+liveListWatcher:RegisterEvent("AUCTION_HOUSE_SHOW")
+liveListWatcher:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
+liveListWatcher:SetScript("OnEvent", function(_, event)
+    if not db then return end
+    if event == "TRADE_SKILL_SHOW" or event == "TRADE_SKILL_UPDATE" then
+        if db.ui and TradeSkillFrame then pcall(WalkUIExact, TradeSkillFrame, 0, true) end
+    else
+        HookAuctionFuncs()
+        if event == "AUCTION_HOUSE_SHOW" and db.ui and AuctionFrame then
+            pcall(WalkUIExact, AuctionFrame, 0, true, SkipAuctionFilters)
+        end
+        HookAuctionRows()
+        pcall(TranslateAuction)
+    end
+end)
+
+local auCatTick, auCatAcc = CreateFrame("Frame"), 0
+auCatTick:SetScript("OnUpdate", function(_, dt)
+    if AES.catTrans == false or not (db and db.ui) then return end
+    local af = _G["AuctionFrame"]
+    local ok, vis = pcall(function() return af and af.IsVisible and af:IsVisible() end)
+    if not (ok and vis) then return end
+    auCatAcc = auCatAcc + dt
+    if auCatAcc < 0.1 then return end
+    auCatAcc = 0
+    pcall(TranslateAuctionCats)
+end)
+
+end
 
 local plateElapsed = 0
 local plateRootsSeen = setmetatable({}, { __mode = "k" })
@@ -3232,13 +3539,6 @@ end)
     end)
 
     AES.ShowUpdatePopup = ShowUpdatePopup
-    AES.TestUpdatePopup = function()
-        local a, b, c = myVersionStr:match("^v?(%d+)%.(%d+)%.(%d+)")
-        local testVersion = a and (a .. "." .. b .. "." .. (tonumber(c) + 1)) or "9.9.9"
-        ShowUpdatePopup(testVersion)
-        DEFAULT_CHAT_FRAME:AddMessage(
-            "|cff33ff99AscensionPTBR|r: teste visual aberto. Esta janela de teste não altera a versão salva.")
-    end
     AES.CheckForUpdates = function()
         BroadcastAll(true)
         local cached = UpdateDB().latestSeenVersion
@@ -3298,8 +3598,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         if db[k] == nil then db[k] = v end
     end
 
-    -- Campos usados apenas pelas ferramentas internas de desenvolvimento não
-    -- fazem parte da versão pública. Limpa dados antigos dos SavedVariables.
+    -- Remove opções antigas que não são usadas na versão pública.
     for _, key in ipairs({ "capture", "captured", "uicaptured", "qcaptured",
                             "gcaptured", "scaptured", "globalscaptured",
                             "sonda", "marcos" }) do
@@ -3370,8 +3669,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             if prior == nil then
                 AES.QuestObjectiveEN2PT[en] = pt
             elseif prior ~= pt then
-                -- Objetivos ingleses idênticos com traduções distintas não
-                -- são seguros sem o ID; o tooltip permanece original.
+                -- Sem o ID, textos ambíguos ficam no original.
                 AES.QuestObjectiveEN2PT[en] = false
             end
         end
@@ -3493,16 +3791,12 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         or msg == "atualizacao" or msg == "atualização" or msg == "update" then
         if AES.CheckForUpdates then AES.CheckForUpdates() end
         return
-    elseif msg == "atualizacao teste" or msg == "atualização teste"
-        or msg == "update teste" or msg == "update test" then
-        if AES.TestUpdatePopup then AES.TestUpdatePopup() end
-        return
     elseif msg == "atualizar" or msg == "refresh" then
         RetranslateStaticUI()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r interface retraduzida.")
         return
     elseif msg ~= "" then
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz ptbr, voz ingles, verificar, atualização teste e atualizar.")
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz ptbr, voz ingles, verificar e atualizar.")
         return
     end
 
@@ -3512,4 +3806,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.4.7/2026-07-28"
+AscensionPTBR.__firma = "AscensionPTBR/1.3.2/AscensionES-1.5.9/2026-07-31"

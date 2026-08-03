@@ -1,5 +1,4 @@
--- Gerado a partir do patch-6.MPQ pt-BR fornecido pelo usuario.
--- Contem apenas o indice dos arquivos de voz extraidos para a pasta do addon.
+-- Índice dos arquivos de voz pt-BR presentes na pasta sounds.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.VoiceFiles = {
     ["BloodElfFemale"] = {

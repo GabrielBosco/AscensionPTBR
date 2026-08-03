@@ -1,6 +1,5 @@
--- AscensionPTBR - interface dedicada a talentos, classes e raciais
--- Carregado antes do Core.lua. As chaves inglesas permanecem intactas para
--- reconhecer textos criados dinamicamente pelo Project Ascension.
+-- Textos das árvores de talentos, classes e raciais.
+-- As chaves ficam em inglês porque são usadas na busca.
 AscensionPTBR = AscensionPTBR or {}
 
 AscensionPTBR.TalentUIExact = {
@@ -8,6 +7,42 @@ AscensionPTBR.TalentUIExact = {
     ["Character Advancement:"] = "Avanço do Personagem:",
     ["Class"] = "Classe",
     ["Classes"] = "Classes",
+    -- Nomes mostrados nas árvores de talentos do CoA.
+    ["Warrior"] = "Guerreiro",
+    ["Paladin"] = "Paladino",
+    ["Hunter"] = "Caçador",
+    ["Rogue"] = "Ladino",
+    ["Priest"] = "Sacerdote",
+    ["Death Knight"] = "Cavaleiro da Morte",
+    ["Shaman"] = "Xamã",
+    ["Mage"] = "Mago",
+    ["Warlock"] = "Bruxo",
+    ["Druid"] = "Druida",
+    ["Monk"] = "Monge",
+    ["Hero"] = "Herói",
+    ["Barbarian"] = "Bárbaro",
+    ["Witch Doctor"] = "Médico Bruxo",
+    ["Felsworn"] = "Felsworn",
+    ["Demon Hunter"] = "Caçador de Demônios",
+    ["Witch Hunter"] = "Caçador de Bruxas",
+    ["Stormbringer"] = "Arauto da Tempestade",
+    ["Knight of Xoroth"] = "Cavaleiro de Xoroth",
+    ["Guardian"] = "Guardião",
+    ["Templar"] = "Templário",
+    ["Bloodmage"] = "Mago Sangrento",
+    ["Son of Arugal"] = "Filho de Arugal",
+    ["Ranger"] = "Patrulheiro",
+    ["Chronomancer"] = "Cronomante",
+    ["Necromancer"] = "Necromante",
+    ["Pyromancer"] = "Piromante",
+    ["Cultist"] = "Cultista",
+    ["Starcaller"] = "Chamador de Estrelas",
+    ["Sun Cleric"] = "Clérigo Solar",
+    ["Tinker"] = "Inventor",
+    ["Venomancer"] = "Venenomante",
+    ["Reaper"] = "Ceifador",
+    ["Primalist"] = "Primalista",
+    ["Runemaster"] = "Mestre das Runas",
     ["Class Tree"] = "Árvore de Classe",
     ["Class Tree (Left Tree)"] = "Árvore de Classe (árvore esquerda)",
     ["Class Talents"] = "Talentos de Classe",

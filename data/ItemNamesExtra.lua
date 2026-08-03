@@ -1,5 +1,5 @@
--- Complemento de nomes pt-BR ausentes no ItemNames original.
--- Base por ID do WotLK; carregue este arquivo depois de ItemNames.lua.
+-- Nomes que não existem na tabela principal.
+-- Este arquivo precisa carregar depois de ItemNames.lua.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.ItemName = AscensionPTBR.ItemName or {}
 ;(function(T)

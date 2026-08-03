@@ -7268,7 +7268,7 @@ T["點擊圖像使用 [忘卻卷軸]"]="Clique na imagem para usar [Pergaminho d
 end)(AscensionPTBR.ServerUINoColor)
 
 
--- Conteúdo incorporado da base AscensionES 1.5.6 (pt-BR)
+-- Base do AscensionES revisada em pt-BR.
 local A = AscensionPTBR
 if A then
 do

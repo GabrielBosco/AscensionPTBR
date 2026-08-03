@@ -1,3 +1,5 @@
+OBJECTIVES = "Objetivos"
+SOUNDS = "Som"
 ABILITY_ESSENCE_TOTAL = "Essência de habilidade: %s"
 APPEARANCE_COLLECTED = "A aparência |cffff80ff[%s]|r foi adicionada à sua coleção."
 APPEARANCE_UNCOLLECTED = "A aparência |cffff80ff[%s]|r foi removida da sua coleção."

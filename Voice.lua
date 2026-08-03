@@ -2,7 +2,7 @@ local ADDON_NAME = ...
 local AES = AscensionPTBR
 AES.VoiceFiles = AES.VoiceFiles or {}
 
--- O caminho e montado automaticamente usando o nome real da pasta/addon.
+-- Usa o nome real da pasta do addon.
 local ADDON_PATH = "Interface\\AddOns\\" .. (type(ADDON_NAME) == "string" and ADDON_NAME or "AscensionPTBR") .. "\\"
 local playerKey
 local msgMap = {}
@@ -58,7 +58,7 @@ local function AddMessage(text, err)
     if type(text) ~= "string" or text == "" then return end
     msgMap[text] = err
 
-    -- Se Errors.lua ja estiver carregado, aceita tambem a mensagem traduzida.
+    -- Aceita a mensagem já traduzida quando Errors.lua está carregado.
     local translated = AES.ErrExact and AES.ErrExact[text]
     if type(translated) == "string" and translated ~= "" then
         msgMap[translated] = err
@@ -126,9 +126,7 @@ local function ApplyVoiceCVar(enabled, recapture)
         end
         SetCVar("Sound_EnableErrorSpeech", 0)
     else
-        -- O modo inglês precisa ser determinístico. Restaurar apenas o valor
-        -- capturado podia manter as falas mudas quando outra versão do addon
-        -- havia deixado esta CVar em 0.
+        -- Garante que o modo inglês restaure as vozes do cliente.
         SetCVar("Sound_EnableErrorSpeech", 1)
         originalErrorSpeech = nil
     end
@@ -242,7 +240,7 @@ frame:RegisterEvent("PLAYER_LOGOUT")
 frame:SetScript("OnEvent", function(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == ADDON_NAME then
         local db = EnsureDB()
-        db.voiceOriginalErrorSpeech = nil -- remove valor persistente de versões antigas
+        db.voiceOriginalErrorSpeech = nil -- Limpa a configuração de versões antigas.
         BuildMaps()
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
@@ -254,14 +252,14 @@ frame:SetScript("OnEvent", function(self, event, arg1, arg2)
         end
     elseif event == "PLAYER_LOGOUT" then
         if SetCVar then
-            -- Nunca deixa o cliente preso sem as falas originais após sair.
+            -- Restaura as vozes originais ao sair.
             SetCVar("Sound_EnableErrorSpeech", 1)
             originalErrorSpeech = nil
         end
     elseif event == "UI_ERROR_MESSAGE" then
         if not VoiceEnabled() then return end
 
-        -- 3.3.5 normalmente envia a mensagem em arg1; alguns clientes customizados usam arg2.
+        -- O 3.3.5 usa arg1; alguns clientes customizados usam arg2.
         local message = type(arg1) == "string" and arg1 or (type(arg2) == "string" and arg2 or nil)
         if not message then return end
 

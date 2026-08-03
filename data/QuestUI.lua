@@ -1,12 +1,12 @@
--- AscensionPTBR - textos fixos da interface de missões
--- Esta tabela é separada da tradução geral da interface porque o Project
--- Ascension recria vários FontStrings depois que a janela já foi exibida.
+-- Textos fixos das janelas de missão.
+-- O Ascension recria alguns rótulos, por isso eles ficam nesta tabela.
 AscensionPTBR = AscensionPTBR or {}
 
 AscensionPTBR.QuestUIExact = {
     ["Objective"] = "Objetivo",
     ["Objective:"] = "Objetivo:",
     ["Objectives"] = "Objetivos",
+    ["OBJECTIVES"] = "Objetivos",
     ["Objectives:"] = "Objetivos:",
     ["Quest Objectives"] = "Objetivos da missão",
     ["Quest Objectives:"] = "Objetivos da missão:",
@@ -97,10 +97,10 @@ AscensionPTBR.QuestUIExact = {
     ["Click to complete quest."] = "Clique para concluir a missão.",
 }
 
--- Globais usadas pelos XMLs clássicos. O Core só altera as que realmente
--- existem no cliente, evitando criar nomes modernos no WoW 3.3.5a.
+-- Globais usadas pelos XMLs do cliente 3.3.5a.
 AscensionPTBR.QuestUIGlobals = {
     OBJECTIVE = "Objetivo",
+    OBJECTIVES = "Objetivos",
     OBJECTIVES_LABEL = "Objetivos",
     QUESTS_LABEL = "Missões",
     QUEST_LOG = "Registro de Missões",

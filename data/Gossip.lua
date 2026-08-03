@@ -41699,7 +41699,7 @@ G["|cffffff00The Stadium has been taken by the Horde!|r"]="|cffffff00O Estádio 
 end)(AscensionPTBR.GossipEN2ES)
 
 
--- Conteúdo incorporado da base AscensionES 1.5.6 (pt-BR)
+-- Base do AscensionES revisada em pt-BR.
 local A = AscensionPTBR
 if A then
 do

@@ -1317,7 +1317,7 @@ AscensionPTBR.UIStrings = {
 ["CHAT_AUTO_JOIN"]="Entrar Automaticamente",
 ["CHAT_BAN"]="Banir",
 ["CHAT_BANNED_NOTICE"]="[%s] Você foi banido desse canal.",
-["CHAT_BATTLEGROUND_GET"]="|Hchannel:BATTLEGROUND|h[CampoDeBatalla]|h %s: ",
+["CHAT_BATTLEGROUND_GET"]="|Hchannel:BATTLEGROUND|h[Campo de Batalha]|h %s: ",
 ["CHAT_BATTLEGROUND_LEADER_GET"]="|Hchannel:BATTLEGROUND|h[Líder de batalha]|h %s: ",
 ["CHAT_BATTLEGROUND_SEND"]="/campodebatalha",
 ["CHAT_BN_CONVERSATION_GET_LINK"]="|Hchannel:BN_CONVERSATION:%d|h[%s. Conversa]|h",
@@ -1408,7 +1408,7 @@ AscensionPTBR.UIStrings = {
 ["CHAT_MSG_BG_SYSTEM_HORDE"]="Mensagem de zona da Horda",
 ["CHAT_MSG_BG_SYSTEM_NEUTRAL"]="Mensagem de zona neutra",
 ["CHAT_MSG_BN_CONVERSATION"]="Conversa com Real ID",
-["CHAT_MSG_BN_WHISPER"]="Sussuro com Real ID",
+["CHAT_MSG_BN_WHISPER"]="Sussurro com Real ID",
 ["CHAT_MSG_CHANNEL_LIST"]="Lista de canais",
 ["CHAT_MSG_COMBAT_HONOR_GAIN"]="Ganho de Honra",
 ["CHAT_MSG_EMOTE"]="Expressão",
@@ -2305,9 +2305,9 @@ AscensionPTBR.UIStrings = {
 ["EMOTE375_CMD2"]="/encourage",
 ["EMOTE376_CMD1"]="/inimigo",
 ["EMOTE376_CMD2"]="/enemy",
-["EMOTE377_CMD1"]="/sobrancelha",
+["EMOTE377_CMD1"]="/sobrancelhacelha",
 ["EMOTE377_CMD2"]="/eyebrow",
-["EMOTE377_CMD3"]="/sobran",
+["EMOTE377_CMD3"]="/sobrancelha",
 ["EMOTE377_CMD4"]="/brow",
 ["EMOTE37_CMD1"]="/babar",
 ["EMOTE37_CMD2"]="/drool",
@@ -2969,7 +2969,7 @@ AscensionPTBR.UIStrings = {
 ["ERR_FOOD_COOLDOWN"]="Você já comeu o suficiente.",
 ["ERR_FRIEND_ADDED_S"]="Personagem %s adicionado à lista de amigos.",
 ["ERR_FRIEND_ALREADY_S"]="%s já está na lista de amigos.",
-["ERR_FRIEND_DB_ERROR"]="Erro no banco dacertei de busca de amigos.",
+["ERR_FRIEND_DB_ERROR"]="Erro no banco de dados da busca de amigos.",
 ["ERR_FRIEND_DELETED"]="Amigo removido porque o personagem não existe mais.",
 ["ERR_FRIEND_ERROR"]="Resposta de amigo desconhecido proveniente do servidor.",
 ["ERR_FRIEND_LIST_FULL"]="Não há lugar para mais nenhum amigo.",
@@ -3151,7 +3151,7 @@ AscensionPTBR.UIStrings = {
 ["ERR_MAIL_BAG"]="Não é possível postar bolsas com itens em seu interior.",
 ["ERR_MAIL_BOUND_ITEM"]="Não é possível postar itens vinculados.",
 ["ERR_MAIL_CONJURED_ITEM"]="Não é possível enviar itens conjurados por carta",
-["ERR_MAIL_DATABASE_ERROR"]="Erro interno do banco dacertei de correio",
+["ERR_MAIL_DATABASE_ERROR"]="Erro interno no banco de dados do correio",
 ["ERR_MAIL_INVALID_ATTACHMENT"]="Um anexo da mensagem é inválido.",
 ["ERR_MAIL_INVALID_ATTACHMENT_SLOT"]="Não é possível anexar mais de 12 itens à carta.",
 ["ERR_MAIL_LIMITED_DURATION_ITEM"]="Não é possível enviar itens com duração limitada",
@@ -3962,12 +3962,12 @@ AscensionPTBR.UIStrings = {
 ["HELPFRAME_GENERAL_BUTTON_DESCRIPTION"]="Perguntas/Informações básicas sobre o jogo",
 ["HELPFRAME_GENERAL_BUTTON_TEXT"]="Pergunta geral de jogabilidade:",
 ["HELPFRAME_GMTALK_ISSUE1"]="Isso inclui informações sobre missões, personagens não jogáveis (PNJs), itens, locais ou qualquer outra coisa que o jogador possa descobrir explorando e/ou interagindo com o mundo ou com outros jogadores.",
-["HELPFRAME_GMTALK_ISSUE1_HEADER"]="Consejos de jogo",
+["HELPFRAME_GMTALK_ISSUE1_HEADER"]="Dicas de jogo",
 ["HELPFRAME_GMTALK_ISSUE2"]="Isso inclui informações sobre uma atualização futura (o quê, quando e como), futuras adições de conteúdo, mudanças na jogabilidade e futuras alterações nas regras.",
-["HELPFRAME_GMTALK_ISSUE2_HEADER"]="Consejos de meta-jogo",
+["HELPFRAME_GMTALK_ISSUE2_HEADER"]="Dicas de metajogo",
 ["HELPFRAME_GMTALK_ISSUE3"]="A maioria dos problemas de JxJ pode ser resolvida pela própria mecânica de JxJ do jogo. Os MJ não poderão ajudar em muitas situações. Há exceções, como comportamentos previstos nas políticas de abuso de World of Warcraft. Para consultar as regras especiais de atividade JxJ, visite:",
 ["HELPFRAME_GMTALK_ISSUE3_HEADER"]="JxJ",
-["HELPFRAME_GMTALK_TEXT1"]="Normalmente, os mestres de jogo estão disponíveis para ajudar você 24 horas ao dia. O mestre de jogo que ativar disponível te ajudará sem importar o personagem com o que ativar jogando. Tenha em conta que os tempos de espera podem variar e que existem alguns temas com os que os mestres de jogo |cffffd200NO|r poderão ajudar você, incluyendo mas |cffffd200NO|r limitándose a:",
+["HELPFRAME_GMTALK_TEXT1"]="Normalmente, os mestres de jogo estão disponíveis para ajudar você 24 horas por dia. O mestre de jogo disponível poderá ajudar independentemente do personagem com o qual você esteja jogando. Os tempos de espera podem variar, e há alguns assuntos com os quais os mestres de jogo |cffffd200NÃO|r podem ajudar, incluindo, entre outros:",
 ["HELPFRAME_GMTALK_TEXT2"]="Além disso, recomendamos que todos os jogadores consultem primeiro os fóruns e o site para buscar informações sobre seus problemas em |cffffd200www.worldofwarcraft.com|r e deem atenção especial às políticas do jogo em |cffffd200www.worldofwarcraft.com/policy/|r.",
 ["HELPFRAME_GMTALK_TITLE"]="Falar com um mestre de jogo",
 ["HELPFRAME_GM_BUTTON_DESCRIPTION"]="Entre em contato com um MJ para obter ajuda",
@@ -4023,11 +4023,11 @@ AscensionPTBR.UIStrings = {
 ["HELPFRAME_QUEST_BUTTON_TEXT"]="Comunicar problema com missão/PNJ",
 ["HELPFRAME_QUEST_TEXT"]="Um problema que resulta na incapacidade de iniciar ou concluir uma missão",
 ["HELPFRAME_QUEST_TITLE"]="Missão/PNJ de Missão",
-["HELPFRAME_REPORTISSUE_BULLET1"]="Acoso por parte de outros jogadores",
+["HELPFRAME_REPORTISSUE_BULLET1"]="Assédio por parte de outros jogadores",
 ["HELPFRAME_REPORTISSUE_BULLET2"]="Erros menores como problemas gráficos",
 ["HELPFRAME_REPORTISSUE_BULLET_TITLE1"]="Alguns exemplos:",
 ["HELPFRAME_REPORTISSUE_TEXT1"]="Usa esta página para nos informar de qualquer problema que encontre no jogo que não exija uma resposta imediata de um Mestre de Jogo.",
-["HELPFRAME_REPORTISSUE_TEXT2"]="Somente nos pondremos em contato contigo se precisamos mais informações, mas de todas formas nos esforzaremos ao máximo para resolver o problema.",
+["HELPFRAME_REPORTISSUE_TEXT2"]="Só entraremos em contato se precisarmos de mais informações. De qualquer forma, faremos o possível para resolver o problema.",
 ["HELPFRAME_REPORTISSUE_TITLE"]="Informar de um problema",
 ["HELPFRAME_REPORTLAG_TEXT1"]="Sua reclamação sobre atraso foi enviada com sucesso.",
 ["HELPFRAME_STUCK_BUTTON_DESCRIPTION"]="Fisicamente travado em uma área do mapa",
@@ -4466,7 +4466,7 @@ AscensionPTBR.UIStrings = {
 ["KBASE_ARTICLE_ID"]="Id do arquivo: %d",
 ["KBASE_CHARSTUCK"]="Personagem travado",
 ["KBASE_DEFAULT_SEARCH_TEXT"]="Digite as palavras-chave aqui.",
-["KBASE_ERROR_LOAD_FAILURE"]="A Base dacertei de Conhecimento está indisponível no momento. Consulte http://us.blizzard.com/support/index.xml?gameId=11 para obter ajuda com problemas de suporte ou envie uma solicitação usando o botão abaixo.",
+["KBASE_ERROR_LOAD_FAILURE"]="A Base de Conhecimento está indisponível no momento. Consulte http://us.blizzard.com/support/index.xml?gameId=11 para obter ajuda com problemas de suporte ou envie uma solicitação usando o botão abaixo.",
 ["KBASE_ERROR_NO_RESULTS"]="Nenhum artigo corresponde aos critérios de busca.",
 ["KBASE_GMTALK"]="Falar com um MJ",
 ["KBASE_HOT_ISSUE"]="Assunto importante",
@@ -4575,7 +4575,7 @@ AscensionPTBR.UIStrings = {
 ["KILLS_COMBATLOG_TOOLTIP"]="Exibir mensagens quando um integrante do grupo matar algo.",
 ["KILLS_PVP"]="Abates",
 ["KNOWLEDGEBASE_FRAME_TITLE"]="Base de conhecimento",
-["KNOWLEDGE_BASE"]="Base dacertei de conhecimento",
+["KNOWLEDGE_BASE"]="Base de Conhecimento",
 ["KNOWN_TALENTS_HEADER"]="Meus Talentos",
 ["KOKR"]="Coreano",
 ["LABEL_NOTE"]="Nota",
@@ -4915,8 +4915,8 @@ AscensionPTBR.UIStrings = {
 ["MOVIE_RECORDING_COMPRESSION"]="Compactação",
 ["MOVIE_RECORDING_COMPRESSION_STARTED"]="Compactação de vídeo de \"%s\" iniciada.",
 ["MOVIE_RECORDING_COMPRESS_TOOLTIP"]="Marcar esta opção fará uma busca por vídeos não compactados e perguntará se deseja compactá-los, exclui-los ou ignorá-los.",
-["MOVIE_RECORDING_DATA_RATE"]="Taxa de gravação dacertei:",
-["MOVIE_RECORDING_DATA_RATE_TOOLTIP"]="Este é o volume dacertei que precisa ser gravado no disco rígido por segundo. Se o jogo estiver emperrando muito durante a gravação, talvez a taxa dacertei seja alta demais para o disco rígido. O jogo interrompe a gravação quando não consegue gravar os dados na velocidade necessária.",
+["MOVIE_RECORDING_DATA_RATE"]="Taxa de gravação de dados:",
+["MOVIE_RECORDING_DATA_RATE_TOOLTIP"]="Este é o volume de dados que precisa ser gravado no disco rígido por segundo. Se o jogo estiver travando muito durante a gravação, talvez a taxa de dados seja alta demais para o disco rígido. O jogo interrompe a gravação quando não consegue gravar os dados na velocidade necessária.",
 ["MOVIE_RECORDING_DV"]="DV",
 ["MOVIE_RECORDING_DV_TOOLTIP"]="DV é o codec mais usado em câmeras de vídeo e no iMovie.",
 ["MOVIE_RECORDING_ENABLE_COMPRESSION"]="Compactar após gravação",
@@ -5020,7 +5020,7 @@ AscensionPTBR.UIStrings = {
 ["NEWBIE_TOOLTIP_GUILD_INFORMATION"]="Clique para visualizar informações adicionais sobre a guilda. Se for um oficial ou o líder da guilda, é possível inserir informações neste campo para os integrantes da guilda.",
 ["NEWBIE_TOOLTIP_GUILD_MEMBER_OPTIONS"]="Clique com o botão direito do mouse em um integrante da guilda para ver mais opções.",
 ["NEWBIE_TOOLTIP_HEALTHBAR"]="O total de pontos de vida que você tem no momento. Se os pontos de vida chegarem a zero, você morrerá. Os pontos de vida se regeneram automaticamente quando você não está em combate.",
-["NEWBIE_TOOLTIP_HELP"]="Acesse a Base dacertei de Conhecimento On-line ou fale com o Mestre do Jogo (MJ) sobre o problema.",
+["NEWBIE_TOOLTIP_HELP"]="Acesse a Base de Conhecimento on-line ou fale com um Mestre de Jogo (MJ) sobre o problema.",
 ["NEWBIE_TOOLTIP_HONORABLE_KILLS"]="Cada vez que você ou seu grupo causar dano a um jogador adversário em JxJ e este for morto em seguida, você obterá um abate honroso.   Só é possível obter abates honrosos se a dificuldade do alvo for verde ou acima (o alvo daria experiência se fosse um monstro).    Somente jogadores adversários podem proporcionar mortes honrosas.",
 ["NEWBIE_TOOLTIP_HONOR_CONTRIBUTION_POINTS"]="Você ganha honra por realizar abates honrosos em combates JxJ.   A quantidade de honra obtida por abate é determinada pelo dano que você (ou seu grupo) causou ao jogador que foi abatido. Um dano maior concede mais honra.   A honra obtida é dividida entre os integrantes do grupo ou grupo do raide.   A honra obtida será menor se abater o mesmo jogador várias vezes em um curto período de tempo. Após abater o mesmo jogador algumas vezes, você receberá pouca ou nenhuma honra do abate.",
 ["NEWBIE_TOOLTIP_HONOR_STANDING"]="Posição é como você está em comparação com todos os outros jogadores da sua facção (Horda ou Aliança).   Se a sua posição for 150, então 149 outros jogadores ganharam mais honra que você no mesmo período. É necessário obter ao menos 25 Abates Honoráveis em uma semana para ter Posição e Posto.",
@@ -5241,7 +5241,7 @@ AscensionPTBR.UIStrings = {
 ["OPTION_TOOLTIP_CONSOLIDATE_BUFFS"]="Filtra alguns bônus em uma caixa de consolidação de bônus. Os bônus de curta duração são mostrados na caixa. Os bônus de duração muito longa são mostrados na caixa até o efeito chegar perto do fim.",
 ["OPTION_TOOLTIP_DEATH_EFFECT"]="Desmarque essa opção para desativar o efeito de brilho enquanto estiver na forma de fantasma. Isso poderá melhorar o desempenho.",
 ["OPTION_TOOLTIP_DESKTOP_GAMMA"]="Usar as mesmas configurações de gama da área de trabalho.",
-["OPTION_TOOLTIP_DISABLE_SPAM_FILTER"]="Desativao filtro de spam no texto de chat.",
+["OPTION_TOOLTIP_DISABLE_SPAM_FILTER"]="Desativa o filtro de spam no texto do chat.",
 ["OPTION_TOOLTIP_DISPLAY_FREE_BAG_SLOTS"]="Exibe o número de compartimentos vazios do inventário no ícone da mochila.",
 ["OPTION_TOOLTIP_ENABLE_ALL_SHADERS"]="Ativa o sombreado de todos os pixels.",
 ["OPTION_TOOLTIP_ENABLE_AMBIENCE"]="Ativar som ambiente.",
@@ -6926,7 +6926,7 @@ AscensionPTBR.UIStrings = {
 ["SPELL_FAILED_CUSTOM_ERROR_78"]="Sua alma pertence ao Lich Rei",
 ["SPELL_FAILED_CUSTOM_ERROR_79"]="O seu criado já possui um Pônei Argênteo",
 ["SPELL_FAILED_CUSTOM_ERROR_8"]="A Mortalha do Flagelo Imbuída funcionará apenas quando equipada na Cidade-templo de En'kilah.",
-["SPELL_FAILED_CUSTOM_ERROR_83"]="Você precisar ter um Totem de Magma, de Labaredas ou de Elemental do Fogo ativo.",
+["SPELL_FAILED_CUSTOM_ERROR_83"]="Você precisa ter um Totem de Magma, de Labaredas ou de Elemental do Fogo ativo.",
 ["SPELL_FAILED_CUSTOM_ERROR_84"]="Você não pode morder outros vampiros.",
 ["SPELL_FAILED_CUSTOM_ERROR_85"]="O seu ajudante já está no seu nível.",
 ["SPELL_FAILED_CUSTOM_ERROR_86"]="Você não possui os requisitos de nível para este item.",
@@ -7578,7 +7578,7 @@ AscensionPTBR.UIStrings = {
 ["TURN_IN_ITEMS"]="Itens necessários:",
 ["TURN_IN_QUEST"]="Entregar",
 ["TUTORIAL1"]="Os recrutadores de missões têm pontos de exclamação (|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0|t) acima da cabeça. |cffffd200Clique com o Botão direito do mouse|r neles para receber uma missão.",
-["TUTORIAL10"]="Tem recebido uma bolsa. Agora poderá levar mais itens.|n|nColoca bolsa em um espaço de bolsa vazio junto a seu mochila. Faça clique acima para abrirla.",
+["TUTORIAL10"]="Você recebeu uma bolsa. Agora poderá carregar mais itens.|n|nColoque-a em um espaço de bolsa vazio ao lado da mochila. Clique nela para abri-la.",
 ["TUTORIAL11"]="Para regenerar sua vida mais rápido pode comer. Faça |cffffd200clique com o botão direito|r sobre um alimento para comê-lo.",
 ["TUTORIAL12"]="Você pode beber para recuperar o mana mais rapidamente. |cffffd200Clique com o Botão Direito|r em uma bebida para bebê-la.|n|nVocê não precisa beber se sua classe não usar mana.",
 ["TUTORIAL13"]="Você pode aprender um novo talento na interface de talentos.|n|nAbra a página de talentos clicando no |cffffd200Botão Talentos|r na barra de ações.",
@@ -7634,7 +7634,7 @@ AscensionPTBR.UIStrings = {
 ["TUTORIAL59"]="Venda alguns dos itens coletados para liberar espaço na bolsa ou ganhar dinheiro.|n|nEncontre um vendedor e |cffffd200Clique com o Botão direito do mouse|r nele. A seguir, abra as suas bolsas e |cffffd200Clique com o Botão direito do mouse|r nos itens que deseja vender.",
 ["TUTORIAL6"]="Muitas das suas habilidades são ataques com armas ou feitiços de combate.|n|nDependendo da sua classe, você pode ter habilidades defensivas ou mesmo feitiços de cura na barra de ações.",
 ["TUTORIAL60"]="O seu personagem tem habilidades especiais na barra de ações, na parte inferior da tela.|n|nEssas habilidades são úteis para matar os inimigos muito mais rápido do que simplesmente atacando com a arma.",
-["TUTORIAL61"]="Esta é uma versão de prova de World of Warcraft. Algumas opções não estão disponíveis. Para disfrutar do jogo entero, visite www.wow-europe.com.",
+["TUTORIAL61"]="Esta é uma versão de teste de World of Warcraft. Algumas opções não estão disponíveis. Para aproveitar o jogo completo, visite www.wow-europe.com.",
 ["TUTORIAL7"]="Se um inimigo derrotado exibir fagulhas no cadáver, isso indica que ele possui itens que podem ser saqueados.|n|n|cffffd200Clique com o Botão Direito do mouse|r no cadáver de uma criatura para saqueá-lo. Uma janela de saque aparecerá. A seguir, |cffffd200clique com o Botão Direito do mouse|r nos itens da janela para movê-los para a mochila.",
 ["TUTORIAL8"]="Você guardou um item na mochila.|n|nClique no |cffffd200Botão da Mochila|r no canto inferior direito da tela se desejar abrir a mochila.  Passe o mouse sobre o item para ver o que é.",
 ["TUTORIAL9"]="Alguns itens podem ser usados. |cffffd200Clique com o Botão direito do mouse|r em um item para usá-lo.|n|nÉ possível arrastar um item para a barra de ações e usá-lo sem abrir a mochila.",
@@ -8434,7 +8434,7 @@ AscensionPTBR.UIStrings = {
 ["VOICEMACRO_20_Ni_7"]="Eu não ligo para os gnomos, mas sempre tenho medo de tropeçar em um.",
 ["VOICEMACRO_20_Or_0"]="Eu vou esmagar e destruir e... uia, brilha...",
 ["VOICEMACRO_20_Or_0_FEMALE"]="Se você ficar entre mim e minha comida, vai virar a sobremesa.",
-["VOICEMACRO_20_Or_1"]="O próximo que me chamar de \"minino do dedo verde\" vai levar um dedo no olho.",
+["VOICEMACRO_20_Or_1"]="O próximo que me chamar de \"menino do dedo verde\" vai levar um dedo no olho.",
 ["VOICEMACRO_20_Or_1_FEMALE"]="Não tenho respeito algum por pessoas com piercings pequenos.  Eu digo:  Chuta logo o pau da barraca.  Enfia uma lança na sua cabeça.",
 ["VOICEMACRO_20_Or_2"]="Cara, mano, tá ligado, tipo, parece que tô te sacando, mas não tô te sacando, saca?",
 ["VOICEMACRO_20_Or_2_FEMALE"]="Me sinto bem feminina e vou arrebentar a cara de quem disser o contrário.",
@@ -8885,8 +8885,7 @@ AscensionPTBR.UIStrings = {
 ["_RECORDING_WARNING_CORRUPTED"]="Este arquivo de vídeo não é válido.",
 }
 
--- Índice reverso compatível com o cliente atual. Entradas de versões modernas
--- do WoW são descartadas quando a global correspondente não existe no 3.3.5a.
+-- Monta o índice só com globais que existem no cliente 3.3.5a.
 do
     local source = AscensionPTBR.UIStrings or {}
     local active, byEnglish = {}, {}
@@ -8910,7 +8909,7 @@ do
 end
 
 
--- Conteúdo incorporado da base AscensionES 1.5.6 (pt-BR)
+-- Base do AscensionES revisada em pt-BR.
 local A = AscensionPTBR
 if A then
 do
@@ -9583,14 +9582,14 @@ do
         T["/blush"] = "/ruborizar"
         T["/boggle"] = "/boggle"
         T["/bonk"] = "/cabeça"
-        T["/bored"] = "/tedio"
+T["/bored"]="/tédio"
         T["/bounce"] = "/saltitar"
         T["/bow"] = "/curvar"
         T["/brandish"] = "/brandir"
         T["/bravo"] = "/bravo"
         T["/brb"] = "/brb"
         T["/breath"] = "/respirar"
-        T["/brow"] = "/sobran"
+        T["/brow"] = "/sobrancelha"
         T["/burp"] = "/burp"
         T["/busy"] = "/dnd"
         T["/bye"] = "/tchau"
@@ -9689,7 +9688,7 @@ do
         T["/excited"] = "/empolgado"
         T["/exit"] = "/sair"
         T["/eye"] = "/secar"
-        T["/eyebrow"] = "/sobrancelha"
+        T["/eyebrow"] = "/sobrancelhacelha"
         T["/eyeroll"] = "/dardeombros"
         T["/facepalm"] = "/cobrerosto"
         T["/faint"] = "/desmaiar"
@@ -9823,7 +9822,7 @@ do
         T["/massage"] = "/massagem"
         T["/master"] = "/mestre"
         T["/me"] = "/eu"
-        T["/mercy"] = "/misericordia"
+T["/mercy"]="/misericórdia"
         T["/moan"] = "/gemido"
         T["/mock"] = "/provocar"
         T["/mod, /moderator, /unmod, /unmoderator <channel> <player> - change a player's moderator status"] = "/mod, /modera, /desmod, /desmodera <canal> <jogador> - alteram o status de moderador de um jogador"
@@ -9898,7 +9897,7 @@ do
         T["/raidbrowser"] = "/localizaraide"
         T["/raidinfo"] = "/raideinfo"
         T["/raise"] = "/mao"
-        T["/random"] = "/aleatorio"
+T["/random"]="/aleatório"
         T["/rasp"] = "/rasp"
         T["/rawr"] = "/urro"
         T["/rb"] = "/lr"
@@ -9914,7 +9913,7 @@ do
         T["/resetchat"] = "/resetchat"
         T["/retreat"] = "/retirada"
         T["/revenge"] = "/vingança"
-        T["/rnd"] = "/alea"
+T["/rnd"]="/aléa"
         T["/roar"] = "/rugir"
         T["/rofl"] = "/rofl"
         T["/roll"] = "/roll"
@@ -9926,7 +9925,7 @@ do
         T["/run"] = "/executar"
         T["/rw"] = "/rc"
         T["/sad"] = "/triste"
-        T["/salute"] = "/continencia"
+T["/salute"]="/continência"
         T["/saveguildroster"] = "/saveguildroster"
         T["/say"] = "/say"
         T["/scared"] = "/assustado"
@@ -10040,7 +10039,7 @@ do
         T["/trade"] = "/negociar"
         T["/train"] = "/trem"
         T["/tremove"] = "/eqremover"
-        T["/truce"] = "/tregua"
+T["/truce"]="/trégua"
         T["/twiddle"] = "/girardedo"
         T["/ty"] = "/vlw"
         T["/unban"] = "/unban"
@@ -10168,7 +10167,7 @@ do
         T["Accepted"] = "Aceito"
         T["Accepting this item will cost:"] = "Aceitar este item custará:"
         T["Accepting this quest will flag you for PvP as long as the quest is in your log.  Do you wish to accept?"] = "Enquanto estiver em andamento, esta missão o deixará marcado para JxJ.  Deseja aceitá-la?"
-        T["Access the Online Knowledge Base or speak to a Game Master (GM) about a problem you are having. "] = "Acesse a Base dacertei de Conhecimento On-line ou fale com o Mestre do Jogo (MJ) sobre o problema."
+        T["Access the Online Knowledge Base or speak to a Game Master (GM) about a problem you are having. "] = "Acesse a Base de Conhecimento on-line ou fale com um Mestre de Jogo (MJ) sobre o problema."
         T["Account Bound"] = "Conta vinculada"
         T["Accusative Case"] = "Caso acusativo"
         T["Achievement Announce"] = "Anúncio de conquista"
@@ -11305,7 +11304,7 @@ do
         T["English (US)"] = "Inglês (EUA)"
         T["Enhanced Tooltips"] = "Dicas de interface aprimoradas"
         T["Enough of this chit chat.  Let's get to it, then."] = "Chega de conversa mole.  Vamos ao que interessa."
-        T["Enough with your flirting.  I know you think all Dwarven women look the same."] = "Chega de bla bla blá, eu sei que tu acha todas as anãs iguais."
+T["Enough with your flirting.  I know you think all Dwarven women look the same."]="Chega de blá blá blá, eu sei que tu acha todas as anãs iguais."
         T["Ensure that you do not instigate further harassment."] = "Não dê motivo para mais assédio."
         T["Enter Battle"] = "Entrar"
         T["Enter Dungeon"] = "Entrar"
@@ -11468,7 +11467,7 @@ do
         T["Freeing Up Bag Space"] = "Liberar espaço na bolsa"
         T["French"] = "Francês"
         T["Friday"] = "Sexta-feira"
-        T["Friend lookup database error."] = "Erro no banco dacertei de busca de amigos."
+        T["Friend lookup database error."] = "Erro no banco de dados da busca de amigos."
         T["Friend removed because the character no longer exists."] = "Amigo removido porque o personagem não existe mais."
         T["Friend"] = "Amigo"
         T["Friendly Healer Names"] = "Nomes dos curadores aliados"
@@ -11497,11 +11496,11 @@ do
         T["GM Chat Request"] = "Solicitação de Bate-papo com MJ"
         T["GM Help Tickets are currently unavailable."] = "Consultas de Ajuda do MJ indisponíveis no momento."
         T["Game Audio Fade"] = "Fade de Áudio do Jogo"
-        T["Game Hints"] = "Consejos de jogo"
+        T["Game Hints"] = "Dicas de jogo"
         T["Game Master (GM) Customer Service Survey"] = "Pesquisa do Atendimento ao Cliente dos Mestres do Jogo (MJ)"
         T["Game Master (GM) Response:"] = "Resposta do Mestre de Jogo (MJ):"
         T["Game Master Response:"] = "Resposta do Mestre de Jogo:"
-        T["Game Masters are normally available to assist 24 hours a day. The next available Game Master will be able to assist you no matter which character you are currently playing on.  Please keep in mind wait times may vary, and there are some issues that Game Masters will |cffffd200NOT|r be able to assist you with.  Those issues include, but are |cffffd200NOT|r limited to the following:"] = "Normalmente, os mestres de jogo estão disponíveis para ajudar você 24 horas ao dia. O mestre de jogo que ativar disponível te ajudará sem importar o personagem com o que ativar jogando. Tenha em conta que os tempos de espera podem variar e que existem alguns temas com os que os mestres de jogo |cffffd200NO|r poderão ajudar você, incluyendo mas |cffffd200NO|r limitándose a:"
+        T["Game Masters are normally available to assist 24 hours a day. The next available Game Master will be able to assist you no matter which character you are currently playing on.  Please keep in mind wait times may vary, and there are some issues that Game Masters will |cffffd200NOT|r be able to assist you with.  Those issues include, but are |cffffd200NOT|r limited to the following:"] = "Normalmente, os mestres de jogo estão disponíveis para ajudar você 24 horas por dia. O mestre de jogo disponível poderá ajudar independentemente do personagem com o qual você esteja jogando. Os tempos de espera podem variar, e há alguns assuntos com os quais os mestres de jogo |cffffd200NÃO|r podem ajudar, incluindo, entre outros:"
         T["Game Menu"] = "Menu do Jogo"
         T["Game Play"] = "Jogabilidade"
         T["Game Sound Output"] = "Saída de som do jogo"
@@ -11598,7 +11597,7 @@ do
         T["Happiness"] = "Felicidade"
         T["Happy Taurens come from Mulgore."] = "Os elekks são fãs de Taurenlate, o kodo, a dragoleta e o murloc também são..."
         T["Happy"] = "Feliz"
-        T["Harassment by other players"] = "Acoso por parte de outros jogadores"
+        T["Harassment by other players"] = "Assédio por parte de outros jogadores"
         T["Harassment"] = "Assédio"
         T["Harassment:"] = "Assédio:"
         T["Hardware Cursor"] = "Cursor de hardware"
@@ -12004,7 +12003,7 @@ do
         T["Internal auction error."] = "Erro interno de leilão."
         T["Internal error"] = "Erro interno"
         T["Internal guild error."] = "Erro interno de guilda."
-        T["Internal mail database error."] = "Erro interno do banco dacertei de correio"
+        T["Internal mail database error."] = "Erro interno no banco de dados do correio"
         T["Internal pet error"] = "Erro interno de ajudante"
         T["Interrupt"] = "Interromper"
         T["Interrupted"] = "Interrompido"
@@ -12058,7 +12057,7 @@ do
         T["It's been quite an experience."] = "Foi uma experiência e tanto."
         T["It's been real."] = "O prazer é todo meu."
         T["It's like my father always used to say, \"Shut up, and get out.\""] = "É como meu pai sempre dizia, \"Cala a boca e cai fora.\""
-        T["It's not easy being green."] = "O próximo que me chamar de \"minino do dedo verde\" vai levar um dedo no olho."
+        T["It's not easy being green."] = "O próximo que me chamar de \"menino do dedo verde\" vai levar um dedo no olho."
         T["Item Level %d"] = "Nível do Item: %d"
         T["Item Names"] = "Nomes de itens"
         T["Item Purchased:"] = "Item comprado:"
@@ -12118,7 +12117,7 @@ do
         T["Knight-Captain"] = "Capitão-cavaleiro"
         T["Knight-Champion"] = "Campeão-cavaleiro"
         T["Knight-Lieutenant"] = "Tenente-cavaleiro"
-        T["Knowledge Base"] = "Base dacertei de conhecimento"
+        T["Knowledge Base"] = "Base de Conhecimento"
         T["Korean"] = "Coreano"
         T["Lady, from the moment I see you I... I did not expect to get this far."] = "Garota, assim que eu te vi eu... não consegui pensar em mais nada."
         T["Lag is often caused by having a large number of players in one location, such as a city or Battleground. It can also be caused by high latency between your computer and the WoW servers. Submitting this report will help us detect and hopefully address lag problems you might be experiencing. \n\nWhat type of lag are you experiencing? Click on a button below to submit a report."] = "Os atrasos geralmente são causados por uma grande quantidade de jogadores em um local, como uma cidade ou Campo de Batalha. Também podem ser causados por alta latência entre o computador e os servidores do WoW. Enviar o relatório nos ajudará a detectar e, possivelmente, resolver os problemas de atrasos que estiver enfrentando.\n\nQue tipo de atraso está enfrentando? Clique em um botão abaixo para enviar uma reclamação."
@@ -12343,7 +12342,7 @@ do
         T["Meta Socket"] = "Engaste meta"
         T["Meta gems can only be placed in meta gem slots"] = "As metagemas só podem ser colocadas em engastes de metagema"
         T["Meta"] = "Meta"
-        T["Meta-Game Hints"] = "Consejos de meta-jogo"
+        T["Meta-Game Hints"] = "Dicas de metajogo"
         T["Microphone Test"] = "Teste de microfone"
         T["Microphone Volume"] = "Volume do microfone"
         T["Microphone has been disabled by Parental Controls."] = "O microfone foi desativado pelo Controle de Conteúdo."
@@ -12920,7 +12919,7 @@ do
         T["Record a sample."] = "Gravar uma amostra."
         T["Record the Cursor"] = "Gravar a posição do cursor"
         T["Record the User Interface"] = "Gravar a interface do usuário"
-        T["Recording Data Rate:"] = "Taxa de gravação dacertei:"
+        T["Recording Data Rate:"] = "Taxa de gravação de dados:"
         T["Recording Time: "] = "Tempo de gravação:"
         T["Recording of the user interface is off."] = "A gravação da interface de usuário está desativada."
         T["Recording of the user interface is on."] = "A gravação da interface de usuário está ativada."
@@ -13732,7 +13731,7 @@ do
         T["The Icy Depths"] = "Profundezas Geladas"
         T["The Imbued Scourge Shroud will only work when equipped in the Temple City of En'kilah."] = "A Mortalha do Flagelo Imbuída funcionará apenas quando equipada na Cidade-templo de En'kilah."
         T["The Inner Sanctum of Ulduar"] = "Sanctum Santorum de Ulduar"
-        T["The Knowledge Base is currently unavailable.  Please refer to http://us.blizzard.com/support/index.xml?gameId=11 for help with support issues, or submit a petition using the button below."] = "A Base dacertei de Conhecimento está indisponível no momento. Consulte http://us.blizzard.com/support/index.xml?gameId=11 para obter ajuda com problemas de suporte ou envie uma solicitação usando o botão abaixo."
+        T["The Knowledge Base is currently unavailable.  Please refer to http://us.blizzard.com/support/index.xml?gameId=11 for help with support issues, or submit a petition using the button below."] = "A Base de Conhecimento está indisponível no momento. Consulte http://us.blizzard.com/support/index.xml?gameId=11 para obter ajuda com problemas de suporte ou envie uma solicitação usando o botão abaixo."
         T["The Lower Citadel"] = "Cidadela Inferior"
         T["The Lower Necropolis"] = "Necrópole Inferior"
         T["The Military Quarter"] = "O Distrito Militar"
@@ -13879,9 +13878,9 @@ do
         T["This is a character you have enjoyed playing with on your realm, You can party and chat with this character."] = "Você gostou de jogar com este personagem no seu reino. Você pode fazer um grupo e conversar com este personagem."
         T["This is a flight master who trains flying beasts to carry passengers from one location to another. For a minimal fee, you can swiftly travel to other flight masters that you have spoken to in the past.|n|nWhen you discover a new city, finding the flight master will allow you to return easily in the future."] = "Este é um mestre de voo que treina feras voadoras para carregarem passageiros de um lugar para outro. Por um preço módico, é possível viajar até outros mestres de voo com os quais você já tenha falado.|n|nQuando descobrir uma nova cidade, procure o mestre de voo para poder voltar facilmente depois."
         T["This is a person you know and trust in real life. You will be able to chat with them no matter which Blizzard game you are playing. They must accept your friend invite, at which point your real name will be displayed to all of their friends."] = "Esta é uma pessoa da vida real que você conhece e confia. Você poderá conversar com ela em qualquer jogo da Blizzard que estiver jogando. A outra pessoa precisa aceitar a sua confirmação de amizade. O seu nome verdadeiro será mostrado para todos os amigos dela."
-        T["This is a trial version of World of Warcraft. Some features are not available. To experience all of the game go to www.worldofwarcraft.com."] = "Esta é uma versão de prova de World of Warcraft. Algumas opções não estão disponíveis. Para disfrutar do jogo entero, visite www.wow-europe.com."
+        T["This is a trial version of World of Warcraft. Some features are not available. To experience all of the game go to www.worldofwarcraft.com."] = "Esta é uma versão de teste de World of Warcraft. Algumas opções não estão disponíveis. Para aproveitar o jogo completo, visite www.wow-europe.com."
         T["This is how long you can record a movie before you run out of disk space. The game will stop recording after that time."] = "Tempo de gravação de vídeo antes que acabe o espaço em disco. A gravação será interrompida depois desse tempo."
-        T["This is how much data needs to be written to your hard drive every second. If the game becomes very choppy while recording then it might be that the data rate is too high for your hard drive. The game will stop recording if it cannot write the data fast enough."] = "Este é o volume dacertei que precisa ser gravado no disco rígido por segundo. Se o jogo estiver emperrando muito durante a gravação, talvez a taxa dacertei seja alta demais para o disco rígido. O jogo interrompe a gravação quando não consegue gravar os dados na velocidade necessária."
+        T["This is how much data needs to be written to your hard drive every second. If the game becomes very choppy while recording then it might be that the data rate is too high for your hard drive. The game will stop recording if it cannot write the data fast enough."] = "Este é o volume de dados que precisa ser gravado no disco rígido por segundo. Se o jogo estiver travando muito durante a gravação, talvez a taxa de dados seja alta demais para o disco rígido. O jogo interrompe a gravação quando não consegue gravar os dados na velocidade necessária."
         T["This is true love.  Do you think this happens every day?"] = "É o amor!  Isso não acontece todo dia?"
         T["This is your announcement"] = "Este é o seu anúncio"
         T["This is your event"] = "Este é o seu evento"
@@ -14200,7 +14199,7 @@ do
         T["We Trolls mate for life.  'Course, we believe in frequent reincarnation."] = "Nós Trolls acasalamos pela vida toda.  Só que a gente acredita em reencarnação."
         T["We are currently experiencing a high volume of petitions."] = "Estamos processando um volume alto de consultas no momento."
         T["We bring the pain to them!"] = "Vamo arrebentá com eles!"
-        T["We will only contact you if we require more information. However, we will still work hard to solve the problem."] = "Somente nos pondremos em contato contigo se precisamos mais informações, mas de todas formas nos esforzaremos ao máximo para resolver o problema."
+        T["We will only contact you if we require more information. However, we will still work hard to solve the problem."] = "Só entraremos em contato se precisarmos de mais informações. De qualquer forma, faremos o possível para resolver o problema."
         T["Weapon Damage"] = "Dano da arma"
         T["Weapon Skill Rating %d"] = "Perícia com a arma %d"
         T["Weapon Skill"] = "Perícia com armas"
@@ -14849,7 +14848,7 @@ do
         T["You must first select a Proto-Drake Egg."] = "Você precisa selecionar primeiro um Ovo de Protodraco."
         T["You must have The Burning Crusade expansion installed to access this area."] = "Você precisa instalar a expansão The Burning Crusade para acessar esta área."
         T["You must have The Wrath of the Lich King expansion installed to access this area."] = "Você precisa instalar a expansão The Wrath of Lich King para acessar esta área."
-        T["You must have a Fire Totem active."] = "Você precisar ter um Totem de Magma, de Labaredas ou de Elemental do Fogo ativo."
+        T["You must have a Fire Totem active."] = "Você precisa ter um Totem de Magma, de Labaredas ou de Elemental do Fogo ativo."
         T["You must have a demonic circle active."] = "Você precisa escolher um círculo demoníaco ativo."
         T["You must have a lance equipped."] = "É necessário estar equipado com uma lança."
         T["You must meet the min bid."] = "Você precisa cobrir o lance mínimo."
@@ -14888,7 +14887,7 @@ do
         T["You receive item: %sx%d."] = "Você recebe o item: %sx%d."
         T["You receive loot: %s."] = "Você recebe o saque: %s."
         T["You receive loot: %sx%d."] = "Você recebe o saque: %sx%d."
-        T["You received a bag. Now you will be able to carry more items.|n|nMove the bag to an empty bag space next to your backpack. Click on a bag to open it."] = "Tem recebido uma bolsa. Agora poderá levar mais itens.|n|nColoca bolsa em um espaço de bolsa vazio junto a seu mochila. Faça clique acima para abrirla."
+        T["You received a bag. Now you will be able to carry more items.|n|nMove the bag to an empty bag space next to your backpack. Click on a bag to open it."] = "Você recebeu uma bolsa. Agora poderá carregar mais itens.|n|nColoque-a em um espaço de bolsa vazio ao lado da mochila. Clique nela para abri-la."
         T["You recently deserted a Dungeon Finder group and may not queue again for:"] = "Você abandonou há pouco tempo um grupo e não poderá entrar na fila novamente por:"
         T["You recently queued for a Random Dungeon.\nYou may queue for another in:"] = "Você entrou na fila recentemente para uma Masmorra Aleatória.\nVocê poderá entrar novamente na fila para outra em:"
         T["You scratch my back, I scratch yours."] = "Uma mão lava a outra."
@@ -15265,7 +15264,7 @@ do
         T["|Hchannel:%d|h[%s]|h You do not have permission to speak."] = "|Hchannel:%d|h[%s]|h Você não tem permissão para falar."
         T["|Hchannel:%d|h[%s]|h You invited %s to join the channel"] = "|Hchannel:%d|h[%s]|h Você convidou %s para entrar no canal."
         T["|Hchannel:BATTLEGROUND|h[Battleground Leader]|h %s: "] = "|Hchannel:BATTLEGROUND|h[Líder de batalha]|h %s: "
-        T["|Hchannel:BATTLEGROUND|h[Battleground]|h %s: "] = "|Hchannel:BATTLEGROUND|h[CampoDeBatalla]|h %s: "
+        T["|Hchannel:BATTLEGROUND|h[Battleground]|h %s: "] = "|Hchannel:BATTLEGROUND|h[Campo de Batalha]|h %s: "
         T["|Hchannel:BN_CONVERSATION:%d|h[%s. Conversation]|h"] = "|Hchannel:BN_CONVERSATION:%d|h[%s. Conversa]|h"
         T["|Hchannel:CHANNEL:%d|h[%s]|h %s has been banned."] = "|Hchannel:CHANNEL:%d|h[%s]|h %s foi banido."
         T["|Hchannel:CHANNEL:%d|h[%s]|h %s lost chat permission."] = "|Hchannel:CHANNEL:%d|h[%s]|h %s perdeu a permissão de bate-papo."

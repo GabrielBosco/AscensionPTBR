@@ -6,9 +6,8 @@ local function TalentEnabled()
     return not d or d.spells ~= false
 end
 
--- Camada dedicada às árvores de classe, especialização e raça do CoA.
--- O painel do Ascension redesenha nomes e descrições depois de aberto; por
--- isso cada FontString relevante é traduzido no SetText e SetFormattedText.
+-- Tradução em tempo real das árvores do CoA.
+-- O painel redesenha os textos, então os FontStrings são interceptados.
 local talentUIFSHooked = setmetatable({}, { __mode = "k" })
 local talentUIRootHooked = setmetatable({}, { __mode = "k" })
 local inTalentUIHook = false
@@ -148,9 +147,8 @@ talentEventFrame:SetScript("OnEvent", function()
     DelayedTalentPass()
 end)
 
--- APIs usadas por diferentes versões do painel customizado do Ascension.
--- Somente valores de texto retornados são alterados; IDs, números e tabelas
--- permanecem exatamente como o servidor os forneceu.
+-- Wrappers das APIs usadas pelas diferentes versões do painel.
+-- Só muda texto; IDs e valores continuam iguais.
 local talentAPIWrapped = setmetatable({}, { __mode = "k" })
 local function PackTalentResults(...)
     return { n = select("#", ...), ... }

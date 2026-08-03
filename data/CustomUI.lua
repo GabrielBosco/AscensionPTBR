@@ -2,6 +2,11 @@ AscensionPTBR = AscensionPTBR or {}
 
 AscensionPTBR.CustomUI = {
 
+    ["One-Handed Axes"] = "Machados de uma mão",
+    ["One-Handed Maces"] = "Maças de uma mão",
+    ["One-Handed Swords"] = "Espadas de uma mão",
+    ["Fishing Poles"] = "Varas de pescar",
+
     ["Hold Shift to Compare"] = "Mantenha Shift pressionado para comparar",
 
     ["Character Info"] = "Informações do personagem",
@@ -68,6 +73,7 @@ AscensionPTBR.CustomUI = {
     ["Food & Drink"] = "Comida e bebida",
     ["Materials"] = "Materiais",
     ["Leather"] = "Couro",
+    ["Mail"] = "Malha", -- Aqui Mail é tipo de armadura, não correio.
     ["Cloth"] = "Tecido",
     ["Armor"] = "Armadura",
     ["Weapon"] = "Arma",
@@ -99,6 +105,9 @@ AscensionPTBR.CustomUI = {
     ["Close"] = "Fechar",
     ["Options"] = "Opções",
     ["Sound"] = "Som",
+    ["Sounds"] = "Som",
+    ["SOUND"] = "Som",
+    ["SOUNDS"] = "Som",
 
     ["Display"] = "Exibição",
     ["Graphics"] = "Gráficos",
@@ -119,6 +128,7 @@ AscensionPTBR.CustomUI = {
     ["Controls"] = "Controles",
     ["Combat"] = "Combate",
     ["Objectives"] = "Objetivos",
+    ["OBJECTIVES"] = "Objetivos",
     ["ActionBars"] = "Barras de ação|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t",
     ["Names"] = "Nomes|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t",
     ["NamePlates"] = "Placas de identificação",
