@@ -371,6 +371,68 @@ local QUEST_TOOLTIP_STATIC = {
     ["Requirements:"] = "Requisitos:",
 }
 
+-- Todos os pontos da interface passam pelo mesmo resolvedor de títulos.
+-- O diário normalmente fornece o ID, mas NPCs e rastreadores podem fornecer
+-- apenas texto formatado, como "[80] Título" ou "Título (Complete)".
+local function TranslateQuestTitleText(text, depth)
+    if type(text) ~= "string" or text == "" then return nil end
+    depth = depth or 0
+    if depth > 5 then return nil end
+
+    local translated = AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text]
+    if translated and translated ~= false then
+        return AES.QuestRenderPT and AES.QuestRenderPT(translated) or translated
+    end
+
+    local function rebuild(prefix, body, suffix)
+        if not body or body == "" then return nil end
+        local pt = TranslateQuestTitleText(body, depth + 1)
+        if pt then return (prefix or "") .. pt .. (suffix or "") end
+    end
+
+    local prefix, body, suffix = text:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    local pt = rebuild(prefix, body, suffix)
+    if pt then return pt end
+
+    prefix, body = text:match("^(|T.-|t%s*)(.+)$")
+    pt = rebuild(prefix, body, "")
+    if pt then return pt end
+
+    prefix, body, suffix = text:match("^(%s*%[%d+%+%]%s*)(.-)(%s*)$")
+    pt = rebuild(prefix, body, suffix)
+    if pt then return pt end
+
+    prefix, body, suffix = text:match("^(%s*%[%d+%]%s*)(.-)(%s*)$")
+    pt = rebuild(prefix, body, suffix)
+    if pt then return pt end
+
+    prefix, body, suffix = text:match("^(%s*[-•]%s*)(.-)(%s*)$")
+    pt = rebuild(prefix, body, suffix)
+    if pt then return pt end
+
+    body = text:match("^(.-)%s*%([Cc]omplete%)%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " (Concluída)" end
+
+    body = text:match("^(.-)%s*%([Cc]ompleted%)%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " (Concluída)" end
+
+    body = text:match("^(.-)%s+%-%s+[Cc]omplete%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " - Concluída" end
+
+    body = text:match("^(.-)%s+%-%s+[Cc]ompleted%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " - Concluída" end
+
+    local first, rest = text:match("^([^\n]+)(\n.+)$")
+    pt = first and TranslateQuestTitleText(first, depth + 1)
+    if pt then return pt .. rest end
+    return nil
+end
+AES.TranslateQuestTitleText = TranslateQuestTitleText
+
 local function TranslateQuestTooltipText(text)
     if not (db and db.quests) or type(text) ~= "string" or text == "" then return nil end
     local function render(v)
@@ -379,18 +441,21 @@ local function TranslateQuestTooltipText(text)
 
     local direct = (AES.QuestUIExact and AES.QuestUIExact[text])
         or QUEST_TOOLTIP_STATIC[text]
-        or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text])
         or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text])
     if direct and direct ~= false then return render(direct) end
+
+    local title = TranslateQuestTitleText(text)
+    if title then return title end
 
     -- Mantém os marcadores do rastreador ao trocar o texto.
     local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
     if body and body ~= "" then
         local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
-            or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[body])
             or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
             or QUEST_TOOLTIP_STATIC[body]
         if translated and translated ~= false then return prefix .. render(translated) end
+        local title = TranslateQuestTitleText(body)
+        if title then return prefix .. title end
     end
     return nil
 end
@@ -1956,8 +2021,8 @@ local function TranslateQuestUIText(text)
         or QUEST_TOOLTIP_STATIC[text]
     if exact then return exact end
 
-    local title = AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text]
-    if title and title ~= false then return QuestRenderES(title) end
+    local title = TranslateQuestTitleText(text)
+    if title then return title end
     local objective = AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text]
     if objective and objective ~= false then return QuestRenderES(objective) end
 
@@ -1967,11 +2032,12 @@ local function TranslateQuestUIText(text)
     local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
     if body and body ~= "" then
         local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
-            or (AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[body])
             or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
         if translated and translated ~= false then
             return prefix .. QuestRenderES(translated)
         end
+        local title = TranslateQuestTitleText(body)
+        if title then return prefix .. title end
     end
     return nil
 end
@@ -2178,8 +2244,8 @@ local function TranslateQuestButtons(prefix, count)
         local b = _G[prefix .. i]
         if b and b.GetText then
             local t = b:GetText()
-            local es = t and AES.QuestTitleEN2ES[t]
-            if es then pcall(b.SetText, b, es) end
+            local pt = t and TranslateQuestTitleText(t)
+            if pt and pt ~= t then pcall(b.SetText, b, pt) end
         end
     end
 end
@@ -2191,8 +2257,8 @@ local function TranslateTitlesIn(root)
         for _, r in ipairs({ fr:GetRegions() }) do
             if r.IsObjectType and r:IsObjectType("FontString") then
                 local t = r.GetText and r:GetText()
-                local es = t and AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[t]
-                if es then pcall(r.SetText, r, es) end
+                local pt = t and TranslateQuestTitleText(t)
+                if pt and pt ~= t then pcall(r.SetText, r, pt) end
             end
         end
         for _, c in ipairs({ fr:GetChildren() }) do
@@ -2551,8 +2617,8 @@ if origGetTitleText then
             return en
         end
 
-        local es = AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[en]
-        if es then return es end
+        local pt = TranslateQuestTitleText(en)
+        if pt then return pt end
         return en
     end
 end
@@ -2576,8 +2642,8 @@ local function WrapTitleList(fname)
         if db and db.quests and AES.QuestTitleEN2ES then
             for i = 1, #r do
                 if type(r[i]) == "string" then
-                    local es = AES.QuestTitleEN2ES[r[i]]
-                    if es then r[i] = es end
+                    local pt = TranslateQuestTitleText(r[i])
+                    if pt then r[i] = pt end
                 end
             end
         end
@@ -2593,8 +2659,8 @@ local function WrapTitleGetter(fname)
     _G[fname] = function(...)
         local t = orig(...)
         if db and db.quests and type(t) == "string" and AES.QuestTitleEN2ES then
-            local es = AES.QuestTitleEN2ES[t]
-            if es then return es end
+            local pt = TranslateQuestTitleText(t)
+            if pt then return pt end
         end
         return t
     end
@@ -2663,9 +2729,7 @@ if origGetQuestLogTitle then
         if db and db.quests and type(r[1]) == "string" and r[1] ~= "" then
             local questID = tonumber(r[9])
             local pt = questID and AES.QuestTitle and AES.QuestTitle[questID]
-            if not pt and AES.QuestTitleEN2ES then
-                pt = AES.QuestTitleEN2ES[r[1]]
-            end
+            if not pt then pt = TranslateQuestTitleText(r[1]) end
             if pt then r[1] = pt end
         end
         return unpack(r)
@@ -2682,7 +2746,7 @@ local function TranslateQuestLogTitles()
         if button and button.GetText and button:IsShown() and origGetQuestLogTitle then
             local en, _, _, _, _, _, _, _, questID = origGetQuestLogTitle(index)
             local pt = questID and AES.QuestTitle and AES.QuestTitle[questID]
-            if not pt and en and AES.QuestTitleEN2ES then pt = AES.QuestTitleEN2ES[en] end
+            if not pt and en then pt = TranslateQuestTitleText(en) end
             if pt and button:GetText() ~= pt then pcall(button.SetText, button, pt) end
         end
     end
