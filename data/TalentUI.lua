@@ -190,6 +190,52 @@ AscensionPTBR.TalentUIExact = {
     ["You can also select groups of spells, such as |cff00d1ffSuggested Talents|r or |cff00d1ffSuggested Abilities|r to stop on any spell that may be good for your build!"] = "Você também pode selecionar grupos de feitiços, como |cff00d1ffTalentos Sugeridos|r ou |cff00d1ffHabilidades Sugeridas|r, para parar em qualquer feitiço que possa beneficiar sua composição!",
 }
 
+-- Componentes exibidos na segunda linha do tooltip de jogadores.
+-- O cliente do Ascension monta essa linha dinamicamente, por exemplo:
+-- "Level 20 Blood Elf Necromancer (Player)".
+AscensionPTBR.UnitDescriptorRaces = {
+    ["Human"] = "Humano", ["Dwarf"] = "Anão", ["Night Elf"] = "Elfo Noturno",
+    ["Gnome"] = "Gnomo", ["Draenei"] = "Draenei", ["Orc"] = "Orc",
+    ["Undead"] = "Morto-vivo", ["Tauren"] = "Tauren", ["Troll"] = "Troll",
+    ["Blood Elf"] = "Elfo Sangrento",
+    -- Alias interno usado por clientes 3.3.5a para a raça Morto-vivo.
+    ["Scourge"] = "Morto-vivo",
+}
+
+-- Mapa exclusivo do descritor de unidade. Não depende dos textos da janela de
+-- talentos e cobre as classes padrão, as 21 classes do CoA e nomes legados que
+-- ainda podem ser devolvidos pelo servidor.
+AscensionPTBR.UnitDescriptorClasses = {
+    ["Warrior"] = "Guerreiro", ["Paladin"] = "Paladino",
+    ["Hunter"] = "Caçador", ["Rogue"] = "Ladino",
+    ["Priest"] = "Sacerdote", ["Death Knight"] = "Cavaleiro da Morte",
+    ["Shaman"] = "Xamã", ["Mage"] = "Mago",
+    ["Warlock"] = "Bruxo", ["Druid"] = "Druida",
+
+    ["Necromancer"] = "Necromante", ["Pyromancer"] = "Piromante",
+    ["Cultist"] = "Cultista", ["Starcaller"] = "Chamador de Estrelas",
+    ["Sun Cleric"] = "Clérigo Solar", ["Tinker"] = "Inventor",
+    ["Runemaster"] = "Mestre das Runas", ["Primalist"] = "Primalista",
+    ["Reaper"] = "Ceifador", ["Venomancer"] = "Venenomante",
+    ["Chronomancer"] = "Cronomante", ["Son of Arugal"] = "Filho de Arugal",
+    ["Guardian"] = "Guardião", ["Stormbringer"] = "Arauto da Tempestade",
+    ["Felsworn"] = "Felsworn", ["Barbarian"] = "Bárbaro",
+    ["Witch Doctor"] = "Médico Bruxo", ["Witch Hunter"] = "Caçador de Bruxas",
+    ["Knight of Xoroth"] = "Cavaleiro de Xoroth", ["Templar"] = "Templário",
+    ["Ranger"] = "Patrulheiro",
+
+    -- Nomes ainda presentes em versões ou interfaces legadas do Ascension.
+    ["Bloodmage"] = "Mago Sangrento", ["Blood Mage"] = "Mago Sangrento",
+    ["Monk"] = "Monge", ["Demon Hunter"] = "Caçador de Demônios",
+    ["Hero"] = "Herói",
+}
+
+AscensionPTBR.UnitDescriptorKinds = {
+    ["Player"] = "Jogador",
+    ["Pet"] = "Mascote", ["Minion"] = "Lacaio",
+    ["Companion"] = "Companheiro", ["NPC"] = "NPC",
+}
+
 AscensionPTBR.TalentUIGlobals = {
     TALENTS = "Talentos",
     TALENT_POINTS = "Pontos de Talento",

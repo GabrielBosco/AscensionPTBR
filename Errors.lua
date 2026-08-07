@@ -31,7 +31,8 @@ local function Disable()
 end
 
 function AES.SetErrorsEnabled(on)
-    if AscensionPTBRDB then AscensionPTBRDB.errores = on end
+    AscensionPTBRDB = AscensionPTBRDB or {}
+    AscensionPTBRDB.errores = on and true or false
     if on then Enable() else Disable() end
 end
 
@@ -44,9 +45,7 @@ f:SetScript("OnEvent", function(self, event, ...)
     local arg1 = ...
     if event == "ADDON_LOADED" and arg1 == "AscensionPTBR" then
         AscensionPTBRDB = AscensionPTBRDB or {}
-        if AscensionPTBRDB.errores == nil then
-            AscensionPTBRDB.errores = true
-        end
+        if AscensionPTBRDB.errores == nil then AscensionPTBRDB.errores = true end
         self:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_LOGIN" then
         if AscensionPTBRDB and AscensionPTBRDB.errores then Enable() end
