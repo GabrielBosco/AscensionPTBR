@@ -11,6 +11,9 @@ end
 local talentUIFSHooked = setmetatable({}, { __mode = "k" })
 local talentUIRootHooked = setmetatable({}, { __mode = "k" })
 local inTalentUIHook = false
+local talentTextCache = {}
+local talentTextCacheCount = 0
+local TALENT_TEXT_CACHE_LIMIT = 2048
 
 local TALENT_UI_ROOT_NAMES = {
     "CharacterAdvancement", "CharacterAdvancementFrame",
@@ -29,13 +32,29 @@ end
 
 local function TranslateTalentUIText(text)
     if not TalentEnabled() or type(text) ~= "string" or text == "" then return nil end
-    local exact = AES.TalentUIExact and AES.TalentUIExact[text]
-    if exact and exact ~= text then return exact end
-    local spell = AES.SpellNameEN2ES and AES.SpellNameEN2ES[text]
-    if spell and spell ~= text then return spell end
-    local static = AES.TranslateStaticText and AES.TranslateStaticText(text)
-    if static and static ~= text then return static end
-    return TranslateTalentDescriptionText(text)
+
+    local cached = talentTextCache[text]
+    if cached ~= nil then return cached ~= false and cached or nil end
+
+    local translated = AES.TalentUIExact and AES.TalentUIExact[text]
+    if not translated or translated == text then
+        translated = AES.SpellNameEN2ES and AES.SpellNameEN2ES[text]
+    end
+    if not translated or translated == text then
+        translated = AES.TranslateStaticText and AES.TranslateStaticText(text)
+    end
+    if not translated or translated == text then
+        translated = TranslateTalentDescriptionText(text)
+    end
+    if translated == text then translated = nil end
+
+    if talentTextCacheCount >= TALENT_TEXT_CACHE_LIMIT then
+        talentTextCache = {}
+        talentTextCacheCount = 0
+    end
+    talentTextCache[text] = translated or false
+    talentTextCacheCount = talentTextCacheCount + 1
+    return translated
 end
 AES.TranslateTalentUIText = TranslateTalentUIText
 
@@ -107,6 +126,13 @@ local function HookTalentRoots()
 end
 
 local talentPassTimer
+local function RootIsVisible(root)
+    if not root then return false end
+    if not root.IsShown then return true end
+    local ok, shown = pcall(root.IsShown, root)
+    return not ok or shown
+end
+
 local function TranslateTalentChrome()
     if not TalentEnabled() then return end
     ApplyTalentGlobalStrings()
@@ -114,13 +140,19 @@ local function TranslateTalentChrome()
     local seen = {}
     for _, name in ipairs(TALENT_UI_ROOT_NAMES) do
         local root = _G[name]
-        if root then pcall(WalkTalentUI, root, 0, seen) end
+        if RootIsVisible(root) then pcall(WalkTalentUI, root, 0, seen) end
     end
 end
 AES.TranslateTalentChrome = TranslateTalentChrome
 
 local function DelayedTalentPass()
     TranslateTalentChrome()
+    if AES.Runtime and AES.Runtime.Repeat then
+        AES.Runtime.Repeat("talent-ui-refresh", 0.03, 0.12, 2, TranslateTalentChrome)
+        return
+    end
+
+    -- Compatibilidade para carregamentos incomuns em que Runtime.lua ainda não exista.
     if not talentPassTimer then talentPassTimer = CreateFrame("Frame") end
     local elapsed, shot = 0, 0
     talentPassTimer:SetScript("OnUpdate", function(self, dt)

@@ -1,5 +1,6 @@
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
+AES.Perf = AES.Perf or {}
 
 AES.SpellNameEN2ES = AES.SpellNameEN2ES or {}
 AES.NameToIDs      = AES.NameToIDs or {}
@@ -17,6 +18,31 @@ AES.QuestTitleEN   = AES.QuestTitleEN or {}
 AES.QuestData      = AES.QuestData or {}
 AES.QuestObjectiveEN2PT = AES.QuestObjectiveEN2PT or {}
 AES.QuestTextEN2PT = AES.QuestTextEN2PT or {}
+AES.QuestTrackerNameEN2PT = {
+    ["Broodwatcher Akhenat"] = "Vigia da Ninhada Akhenat",
+    ["Malgorm Hollowhoof"] = "Malgorm Casco Oco",
+    ["Presence of the Deceiver"] = "Presença do Enganador",
+    ["Chimeric Embryo"] = "Embrião Quimérico",
+    ["Bear Flank"] = "Flanco de Urso",
+    ["Bear Flanks"] = "Flancos de Urso",
+    ["Refreshing Spring Water"] = "Água Refrescante da Fonte",
+    ["Refreshing Springwater"] = "Água Refrescante da Fonte",
+    ["Goblin Spices"] = "Temperos Goblínicos",
+    ["Ghost Dust"] = "Pó Fantasmagórico",
+    ["Raw Spinefin Halibut"] = "Linguado Espinhacostas Cru",
+    ["Large Hydra Scale"] = "Escama Grande de Hidra",
+    ["Sandworm Meat"] = "Carne de Verme da Areia",
+    ["Silithid Innards"] = "Vísceras de Silitídeo",
+    ["Shard of Nevermelting Ice"] = "Estilhaço de Gelo que Nunca Derrete",
+    ["Ice Cold Milk"] = "Leite Gelado",
+    ["Sugar"] = "Açúcar",
+    ["Thunderbrew Hops"] = "Lúpulos Cervaforte",
+    ["Prophet's Oracular Orb"] = "Orbe Oracular do Profeta",
+    ["Prophet’s Oracular Orb"] = "Orbe Oracular do Profeta",
+    ["Cut of Good Meat"] = "Corte de Carne Boa",
+    ["Necrotic Spore"] = "Esporo Necrótico",
+    ["Necrotic Spores"] = "Esporos Necróticos",
+}
 AES.UnitName       = AES.UnitName or {}
 AES.UnitNameEN     = AES.UnitNameEN or {}
 AES.UnitSub        = AES.UnitSub or {}
@@ -214,15 +240,26 @@ end
 
 local TranslateStaticText
 
+-- Cache e indexação de padrões ficam em Runtime.lua.
+
 local function MatchLinePatterns(text)
     local function apply(s)
-
         local exact = TranslateStaticText and TranslateStaticText(s)
         if exact then return exact end
-        for _, p in ipairs(AES.LinePatterns) do
-            if p[2] then
-                local rep, n = s:gsub(p[1], p[2])
-                if n > 0 and rep ~= s then return rep end
+
+        -- Runtime.lua fornece o caminho otimizado. Se ele nao tiver sido
+        -- carregado (TOC antigo, arquivo ausente ou falha de load), usamos
+        -- o caminho compatibilidade em vez de quebrar o tooltip.
+        if AES.Perf and type(AES.Perf.MatchDynamicLinePattern) == "function" then
+            return AES.Perf.MatchDynamicLinePattern(s)
+        end
+
+        local patterns = AES.LinePatterns or {}
+        for i = 1, #patterns do
+            local pair = patterns[i]
+            if pair and pair[1] and pair[2] then
+                local rep, changed = s:gsub(pair[1], pair[2])
+                if changed > 0 and rep ~= s then return rep end
             end
         end
         return nil
@@ -501,29 +538,68 @@ local function TranslateQuestTooltipText(text)
         end
     end
 
-    -- Objetivos de coleta/abate costumam chegar como "0/1 Nome do item".
-    -- Traduz o conteúdo sem alterar o contador controlado pelo servidor.
-    local progress, progressBody = text:match("^(%d+/%d+)%s+(.+)$")
-    if progressBody and progressBody ~= "" then
-        local progressPT = (AES.QuestUIExact and AES.QuestUIExact[progressBody])
-            or (AES.ItemNameEN2ES and AES.ItemNameEN2ES[progressBody])
-            or (AES.UnitNameEN2ES and AES.UnitNameEN2ES[progressBody])
-        if progressPT and progressPT ~= false then
-            return progress .. " " .. render(progressPT)
+    -- Normaliza o lado textual dos contadores do Diário/rastreador. O servidor
+    -- pode enviar o mesmo objetivo em ordens diferentes, por exemplo:
+    -- "0/8 Mottled Boar slain", "Mottled Boar slain: 0/8" ou
+    -- "Mottled Boar slain 0/8". O contador continua vindo do servidor.
+    local function trackedBodyPT(body)
+        if type(body) ~= "string" or body == "" then return nil end
+        local directPT = (AES.QuestUIExact and AES.QuestUIExact[body])
+            or (AES.UnitNameEN2ES and AES.UnitNameEN2ES[body])
+            or (AES.ItemNameEN2ES and AES.ItemNameEN2ES[body])
+            or (AES.QuestTrackerNameEN2PT and AES.QuestTrackerNameEN2PT[body])
+            or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
+        if directPT and directPT ~= false then return render(directPT) end
+
+        local unitBody = body:match("^(.-)%s+[Ss]lain$")
+        local actionPT = unitBody and "abatido" or nil
+        if not unitBody then unitBody = body:match("^(.-)%s+[Kk]illed$"); actionPT = unitBody and "eliminado" or nil end
+        if not unitBody then unitBody = body:match("^(.-)%s+[Dd]estroyed$"); actionPT = unitBody and "destruído" or nil end
+        if not unitBody then unitBody = body:match("^(.-)%s+[Rr]escued$"); actionPT = unitBody and "resgatado" or nil end
+        if not unitBody then unitBody = body:match("^(.-)%s+[Ff]reed$"); actionPT = unitBody and "libertado" or nil end
+        if unitBody then
+            local unitPT = (AES.UnitNameEN2ES and AES.UnitNameEN2ES[unitBody])
+                or (AES.QuestTrackerNameEN2PT and AES.QuestTrackerNameEN2PT[unitBody])
+            if unitPT and unitPT ~= false then
+                return render(unitPT) .. " " .. actionPT
+            end
         end
+
+        -- Objetivos de coleta também podem carregar um verbo após o nome do item.
+        -- O nome traduzido já é suficiente no contador e evita flexão de gênero
+        -- incorreta em itens como "Pearl collected" / "Supplies gathered".
+        local itemBody = body:match("^(.-)%s+[Cc]ollected$")
+        if not itemBody then itemBody = body:match("^(.-)%s+[Gg]athered$") end
+        if not itemBody then itemBody = body:match("^(.-)%s+[Ff]ound$") end
+        if not itemBody then itemBody = body:match("^(.-)%s+[Oo]btained$") end
+        if not itemBody then itemBody = body:match("^(.-)%s+[Uu]sed$") end
+        if itemBody then
+            local itemPT = (AES.ItemNameEN2ES and AES.ItemNameEN2ES[itemBody])
+                or (AES.QuestTrackerNameEN2PT and AES.QuestTrackerNameEN2PT[itemBody])
+            if itemPT and itemPT ~= false then return render(itemPT) end
+        end
+        return nil
     end
 
-    -- O Diário e o rastreador compacto usam "Nome: atual/total". O texto à
-    -- esquerda pode ser item, criatura ou um objetivo específico da missão.
+    -- Forma "0/8 Nome".
+    local progress, progressBody = text:match("^(%d+/%d+)%s+(.+)$")
+    if progressBody and progressBody ~= "" then
+        local progressPT = trackedBodyPT(progressBody)
+        if progressPT then return progressPT .. ": " .. progress end
+    end
+
+    -- Forma "Nome: 0/8".
     local counterBody, counter = text:match("^(.-):%s*(%d+/%d+)%s*$")
     if counterBody and counterBody ~= "" then
-        local counterPT = (AES.QuestUIExact and AES.QuestUIExact[counterBody])
-            or (AES.ItemNameEN2ES and AES.ItemNameEN2ES[counterBody])
-            or (AES.UnitNameEN2ES and AES.UnitNameEN2ES[counterBody])
-            or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[counterBody])
-        if counterPT and counterPT ~= false then
-            return render(counterPT) .. ": " .. counter
-        end
+        local counterPT = trackedBodyPT(counterBody)
+        if counterPT then return counterPT .. ": " .. counter end
+    end
+
+    -- Algumas builds omitem os dois-pontos: "Nome abatido 0/8".
+    local trailingBody, trailingCounter = text:match("^(.-)%s+(%d+/%d+)%s*$")
+    if trailingBody and trailingBody ~= "" then
+        local trailingPT = trackedBodyPT(trailingBody)
+        if trailingPT then return trailingPT .. ": " .. trailingCounter end
     end
 
     local title = TranslateQuestTitleText(text)
@@ -826,56 +902,31 @@ end
 local ApplyLinePatterns = TranslateTooltipLines
 AES.TranslateTooltipLines = TranslateTooltipLines
 
-local latePassTip, latePassElapsed, latePassShots
-local latePassDriver = CreateFrame("Frame")
-
-local function StopLatePass()
-    latePassTip = nil
-    latePassElapsed = 0
-    latePassShots = 0
-    latePassDriver:SetScript("OnUpdate", nil)
-end
-
-local function RunLatePass(self, dt)
-    if not latePassTip or not latePassTip.IsVisible or not latePassTip:IsVisible() then
-        StopLatePass()
-        return
-    end
-
-    latePassElapsed = latePassElapsed + (dt or 0.02)
-    local wait = latePassShots == 0 and 0.01 or 0.08
-    if latePassElapsed < wait then return end
-
-    latePassElapsed = 0
-    latePassShots = latePassShots + 1
-    pcall(TranslateTooltipLines, latePassTip)
-    if latePassShots >= 2 then StopLatePass() end
-end
-
 local function ScheduleLatePass(tip)
-    if not (tip and tip.IsVisible) then return end
-    latePassTip = tip
-    latePassElapsed = 0
-    latePassShots = 0
-    latePassDriver:SetScript("OnUpdate", RunLatePass)
+    if not (tip and tip.IsVisible and AES.Runtime) then return end
+    AES.Runtime.After("tooltip-late-1", 0.01, function()
+        if not tip:IsVisible() then return false end
+        pcall(TranslateTooltipLines, tip)
+    end)
+    AES.Runtime.After("tooltip-late-2", 0.09, function()
+        if not tip:IsVisible() then return false end
+        pcall(TranslateTooltipLines, tip)
+    end)
 end
 
-local reshowGuard = false
 local reshowQueue = setmetatable({}, { __mode = "k" })
-local reshowDriver = CreateFrame("Frame")
-reshowDriver:SetScript("OnUpdate", function()
-    if not next(reshowQueue) then return end
-    reshowGuard = true
-    for tip in pairs(reshowQueue) do
-        reshowQueue[tip] = nil
-        local ok, vis = pcall(tip.IsVisible, tip)
-        if ok and vis then pcall(tip.Show, tip) end
-    end
-    reshowGuard = false
-end)
-
 local function ReshowSoon(tip)
-    if tip and tip.IsVisible then reshowQueue[tip] = true end
+    if not (tip and tip.IsVisible and AES.Runtime) then return end
+    reshowQueue[tip] = true
+    AES.Runtime.After("tooltip-reshow", 0, function()
+        AES.Perf.reshowGuard = true
+        for queuedTip in pairs(reshowQueue) do
+            reshowQueue[queuedTip] = nil
+            local ok, vis = pcall(queuedTip.IsVisible, queuedTip)
+            if ok and vis then pcall(queuedTip.Show, queuedTip) end
+        end
+        AES.Perf.reshowGuard = false
+    end)
 end
 
 local function OnSpellTooltip(tip)
@@ -1060,25 +1111,61 @@ local function OnUnitTooltip(tip)
     ReshowSoon(tip)
 end
 
+local function EscapeLuaPattern(text)
+    return (text:gsub("([^%w])", "%%%1"))
+end
+
 function AES.TranslateUnitDescriptorText(text)
     if type(text) ~= "string" or text == "" then return nil end
-    local level, descriptor, kind = text:match("^Level%s+(%d+)%s+(.+)%s+%(([^()]+)%)$")
+
+    -- O cabeçalho do personagem e os tooltips de unidades podem usar o mesmo
+    -- descritor com ou sem cores e com ou sem o sufixo "(Player)".
+    local plain = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+    local level, descriptor, kind = plain:match("^Level%s+(%d+)%s+(.+)%s+%(([^()]+)%)$")
+    if not level then
+        level, descriptor = plain:match("^Level%s+(%d+)%s+(.+)$")
+    end
     if not level then return nil end
 
-    local translatedKind = (AES.UnitDescriptorKinds and AES.UnitDescriptorKinds[kind]) or kind
-    local translatedDescriptor = descriptor
-    for raceEN, racePT in pairs(AES.UnitDescriptorRaces or {}) do
-        local prefix = raceEN .. " "
+    local raceEN, racePT, classEN, classPT
+    for rEN, rPT in pairs(AES.UnitDescriptorRaces or {}) do
+        local prefix = rEN .. " "
         if descriptor:sub(1, #prefix) == prefix then
-            local classEN = descriptor:sub(#prefix + 1)
-            local classPT = (AES.UnitDescriptorClasses and AES.UnitDescriptorClasses[classEN])
+            raceEN, racePT = rEN, rPT
+            classEN = descriptor:sub(#prefix + 1)
+            classPT = (AES.UnitDescriptorClasses and AES.UnitDescriptorClasses[classEN])
                 or (AES.TalentUIExact and AES.TalentUIExact[classEN]) or classEN
-            translatedDescriptor = racePT .. " " .. classPT
             break
         end
     end
 
-    return "Nível " .. level .. " " .. translatedDescriptor .. " (" .. translatedKind .. ")"
+    -- Algumas interfaces retornam apenas a classe ou apenas a raça.
+    if not classEN then
+        local c = (AES.UnitDescriptorClasses and AES.UnitDescriptorClasses[descriptor])
+            or (AES.TalentUIExact and AES.TalentUIExact[descriptor])
+        if c then classEN, classPT = descriptor, c end
+    end
+    if not raceEN and not classEN then
+        local r = AES.UnitDescriptorRaces and AES.UnitDescriptorRaces[descriptor]
+        if r then raceEN, racePT = descriptor, r end
+    end
+
+    local out = text
+    -- Sem âncora para também funcionar quando "Level 20" estiver envolto por
+    -- códigos de cor no mesmo FontString.
+    out = out:gsub("Level%s+" .. level, "Nível " .. level, 1)
+    if raceEN and racePT then
+        out = out:gsub(EscapeLuaPattern(raceEN), racePT, 1)
+    end
+    if classEN and classPT then
+        out = out:gsub(EscapeLuaPattern(classEN), classPT, 1)
+    end
+    if kind then
+        local kindPT = (AES.UnitDescriptorKinds and AES.UnitDescriptorKinds[kind]) or kind
+        out = out:gsub(EscapeLuaPattern(kind), kindPT, 1)
+    end
+
+    return out ~= text and out or nil
 end
 
 local function TranslateShortText(text)
@@ -1144,6 +1231,7 @@ end
 
 function TranslateStaticText(t)
     local es = (AES.TalentUIExact and AES.TalentUIExact[t])
+        or (AES.CharacterStatExact and AES.CharacterStatExact[t])
         or (AES.CustomUI and AES.CustomUI[t])
         or (AES.ServerUI and AES.ServerUI[t])
         or (AES.UIStringsByEN and AES.UIStringsByEN[t])
@@ -1153,6 +1241,7 @@ function TranslateStaticText(t)
     local base, tail = t:match("^(.-)%s*(:?)%s*$")
     if base and base ~= t and base ~= "" then
         es = (AES.TalentUIExact and AES.TalentUIExact[base])
+            or (AES.CharacterStatExact and AES.CharacterStatExact[base])
             or (AES.CustomUI and AES.CustomUI[base])
             or (AES.ServerUI and AES.ServerUI[base])
             or (AES.UIStringsByEN and AES.UIStringsByEN[base])
@@ -1163,6 +1252,7 @@ function TranslateStaticText(t)
     local c0, inner, r0 = t:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)%s*$")
     if inner and inner ~= "" and not inner:find("|c") then
         local es2 = (AES.TalentUIExact and AES.TalentUIExact[inner])
+            or (AES.CharacterStatExact and AES.CharacterStatExact[inner])
             or (AES.CustomUI and AES.CustomUI[inner])
             or (AES.ServerUI and AES.ServerUI[inner])
             or (AES.UIStringsByEN and AES.UIStringsByEN[inner])
@@ -1308,20 +1398,15 @@ local function HookAreaRoots()
     end
 end
 
-local areaDelay
 local function TranslateAreaUI()
     if not (db and db.ui) then return end
     HookAreaRoots()
-    if not areaDelay then areaDelay = CreateFrame("Frame") end
-    local elapsed, shots = 0, 0
-    areaDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + (dt or 0)
-        if elapsed < 0.12 then return end
-        elapsed = 0
-        shots = shots + 1
-        HookAreaRoots()
-        if shots >= 3 then self:SetScript("OnUpdate", nil) end
-    end)
+    if AES.Runtime then
+        AES.Runtime.Repeat("area-ui", 0.12, 0.12, 3, function()
+            if not (db and db.ui) then return false end
+            HookAreaRoots()
+        end)
+    end
 end
 AES.TranslateAreaUI = TranslateAreaUI
 
@@ -1489,28 +1574,25 @@ local function PrimeStaticSubtree(root, depth)
     end
 end
 
-local staticPassTimer
-local staticPassPanel
 local function StaticPassSoon(panel)
-    staticPassPanel = panel or staticPassPanel
-    if staticPassPanel then pcall(PrimeStaticSubtree, staticPassPanel, 0) end
-    RetranslateStaticUI()
+    if not panel then return end
+    pcall(PrimeStaticSubtree, panel, 0)
 
-    if not staticPassTimer then staticPassTimer = CreateFrame("Frame") end
-    local elapsed, shots = 0, 0
-    staticPassTimer:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + (dt or 0)
-        local wait = shots == 0 and 0.03 or 0.15
-        if elapsed < wait then return end
-        elapsed = 0
-        shots = shots + 1
-        if staticPassPanel then pcall(PrimeStaticSubtree, staticPassPanel, 0) end
-        if shots == 1 then RetranslateStaticUI() end
-        if shots >= 2 then
-            staticPassPanel = nil
-            self:SetScript("OnUpdate", nil)
-        end
-    end)
+    -- O painel já é percorrido e tem SetText hookado. Fazemos apenas dois
+    -- repasses curtos pelo scheduler compartilhado; scan global fica reservado
+    -- para login e /aptbr atualizar.
+    if AES.Runtime then
+        AES.Runtime.After("static-panel-1", 0.03, function()
+            if panel and panel.IsVisible and panel:IsVisible() then
+                pcall(PrimeStaticSubtree, panel, 0)
+            end
+        end)
+        AES.Runtime.After("static-panel-2", 0.18, function()
+            if panel and panel.IsVisible and panel:IsVisible() then
+                pcall(PrimeStaticSubtree, panel, 0)
+            end
+        end)
+    end
 end
 
 local staticHooked = {}
@@ -1544,10 +1626,25 @@ local function HookStaticPanels()
     end
 end
 
+AES.Perf.IsRelevantUILoad = function(name)
+    if type(name) ~= "string" then return false end
+    if name == "AscensionPTBR" then return true end
+    if name:find("Ascension", 1, true) then return true end
+    return name == "Blizzard_AchievementUI"
+        or name == "Blizzard_TrainerUI"
+        or name == "Blizzard_TradeSkillUI"
+        or name == "Blizzard_AuctionUI"
+        or name == "Blizzard_TalentUI"
+end
+
 local staticWatcher = CreateFrame("Frame")
 staticWatcher:RegisterEvent("ADDON_LOADED")
 staticWatcher:RegisterEvent("PLAYER_ENTERING_WORLD")
-staticWatcher:SetScript("OnEvent", function() pcall(HookStaticPanels) end)
+staticWatcher:SetScript("OnEvent", function(_, event, name)
+    if event == "PLAYER_ENTERING_WORLD" or AES.Perf.IsRelevantUILoad(name) then
+        pcall(HookStaticPanels)
+    end
+end)
 
 if type(C_Tutorial) == "table" then
     local function TutMapStr(v)
@@ -1908,8 +2005,11 @@ local function HookTradeSkillUI()
     end
     if TradeSkillFrame and TradeSkillFrame.HookScript and TradeSkillFrame:HasScript("OnShow") then
         TradeSkillFrame:HookScript("OnShow", function()
-            RetranslateStaticUI()
-            if db and db.spells then HookTradeSkillButtons() end
+            if db and db.spells then
+                HookTradeSkillButtons()
+                pcall(TranslateTradeSkillFrame)
+                pcall(TranslateTradeSkillDetail)
+            end
         end)
     end
 end
@@ -1918,22 +2018,49 @@ AES.TranslateTradeSkillFrame = TranslateTradeSkillFrame
 AES.TranslateTradeSkillDetail = TranslateTradeSkillDetail
 
 local tsTick, tsAcc = CreateFrame("Frame"), 0
-tsTick:SetScript("OnUpdate", function(_, dt)
-    if not (db and db.spells) then return end
-
+AES.Perf.RunTradeSkillTick = function(self, dt)
+    if not (db and db.spells) then
+        self:SetScript("OnUpdate", nil)
+        return
+    end
     local f = TradeSkillFrame or _G["TradeSkillSkill1"]
     local ok, vis = pcall(function() return f and f.IsVisible and f:IsVisible() end)
-    if not (ok and vis) then return end
-    tsAcc = tsAcc + dt
-    if tsAcc < 0.12 then return end
+    if not (ok and vis) then
+        self:SetScript("OnUpdate", nil)
+        return
+    end
+    tsAcc = tsAcc + (dt or 0)
+    if tsAcc < 0.18 then return end
     tsAcc = 0
     pcall(TranslateTradeSkillFrame)
     pcall(TranslateTradeSkillDetail)
+end
+
+AES.Perf.tsTickEvents = AES.Perf.tsTickEvents or CreateFrame("Frame")
+AES.Perf.tsTickEvents:RegisterEvent("TRADE_SKILL_SHOW")
+AES.Perf.tsTickEvents:RegisterEvent("TRADE_SKILL_CLOSE")
+AES.Perf.tsTickEvents:SetScript("OnEvent", function(_, event)
+    if event == "TRADE_SKILL_SHOW" then
+        tsAcc = 0
+        tsTick:SetScript("OnUpdate", AES.Perf.RunTradeSkillTick)
+    else
+        tsTick:SetScript("OnUpdate", nil)
+    end
 end)
 
 -- O Ascension reescreve estes tooltips enquanto o mouse fica sobre o atributo.
 local function TranslateCharacterStatText(text)
     if type(text) ~= "string" or text == "" then return nil end
+
+    local statLine = AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(text)
+    if statLine and statLine ~= text then return statLine end
+
+    -- Primeiro tenta o bloco inteiro. Isso é importante para descrições de
+    -- atributos como Força/Agilidade/Intelecto/Espírito que contêm quebras de
+    -- linha e já possuem tradução oficial na tabela de UI.
+    local whole = TranslateStaticText(text)
+    if whole and whole ~= text then return whole end
+
     local out, pos, changed = {}, 1, false
     while pos <= #text do
         local nlStart, nlEnd = text:find("\n", pos, true)
@@ -1952,7 +2079,8 @@ local function TranslateCharacterStatText(text)
             line = text:sub(pos)
         end
 
-        local translated = MatchLinePatterns(line) or TranslateStaticText(line)
+        local translated = (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(line))
+            or MatchLinePatterns(line) or TranslateStaticText(line)
         if translated and translated ~= line then
             line = translated
             changed = true
@@ -2013,37 +2141,13 @@ local function TranslateCharacterStatTooltip(tip)
 end
 AES.TranslateCharacterStatTooltip = TranslateCharacterStatTooltip
 
--- Procura linhas criadas depois do OnShow.
-local charStatLateTip, charStatLateElapsed, charStatLateShots
-local charStatLateDriver = CreateFrame("Frame")
-
-local function StopCharacterStatLatePass()
-    charStatLateTip = nil
-    charStatLateElapsed = 0
-    charStatLateShots = 0
-    charStatLateDriver:SetScript("OnUpdate", nil)
-end
-
-local function RunCharacterStatLatePass(_, dt)
-    if not charStatLateTip or not charStatLateTip.IsVisible
-        or not charStatLateTip:IsVisible() then
-        StopCharacterStatLatePass()
-        return
-    end
-    charStatLateElapsed = charStatLateElapsed + (dt or 0.02)
-    if charStatLateElapsed < 0.05 then return end
-    charStatLateElapsed = 0
-    charStatLateShots = charStatLateShots + 1
-    pcall(TranslateCharacterStatTooltip, charStatLateTip)
-    if charStatLateShots >= 12 then StopCharacterStatLatePass() end
-end
-
+-- Procura linhas criadas depois do OnShow usando o scheduler compartilhado.
 local function ScheduleCharacterStatLatePass(tip)
-    if not tip then return end
-    charStatLateTip = tip
-    charStatLateElapsed = 0
-    charStatLateShots = 0
-    charStatLateDriver:SetScript("OnUpdate", RunCharacterStatLatePass)
+    if not (tip and AES.Runtime) then return end
+    AES.Runtime.Repeat("character-stat-tooltip", 0.05, 0.05, 12, function()
+        if not (tip.IsVisible and tip:IsVisible()) then return false end
+        pcall(TranslateCharacterStatTooltip, tip)
+    end)
 end
 
 local function HookTooltip(tip)
@@ -2078,7 +2182,7 @@ local function HookTooltip(tip)
     end
     if tip:HasScript("OnShow") then
         tip:HookScript("OnShow", function(t)
-            if not db or reshowGuard then return end
+            if not db or AES.Perf.reshowGuard then return end
             if IsCharPanelTooltip(t) then
                 TranslateCharacterStatTooltip(t)
                 ScheduleCharacterStatLatePass(t)
@@ -2189,8 +2293,18 @@ end
 AES.QuestRenderPT = QuestRenderES
 
 local function GuardEq(shown, guardEN)
-    return guardEN ~= nil
-        and QuestNormalizeShown(shown) == CollapseWS(guardEN:gsub("\r", ""))
+    if guardEN == nil or type(shown) ~= "string" then return false end
+    local left = QuestNormalizeShown(shown)
+    local right = guardEN:gsub("\\n", "\n"):gsub("|n", "\n"):gsub("\r", "")
+    right = right:gsub("%$[Nn]", "<name>"):gsub("%$[Cc]", "<class>"):gsub("%$[Rr]", "<race>")
+    right = CollapseWS(right)
+    if left == right then return true end
+
+    -- Classes customizadas do Ascension nem sempre coincidem com UnitClass().
+    -- O fallback flexibiliza apenas os placeholders; o restante precisa bater.
+    local pattern = right:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+    pattern = pattern:gsub("<name>", ".-"):gsub("<class>", ".-"):gsub("<race>", ".-")
+    return left:match("^" .. pattern .. "$") ~= nil
 end
 
 local function ResolveQuestIDByShown(title, shown, fields)
@@ -2555,7 +2669,6 @@ local function TranslateTitlesIn(root)
     pcall(visit, root, 0)
 end
 
-local greetDelay
 local function TranslateGreetings()
     TranslateQuestChrome()
     TranslateQuestButtons("QuestTitleButton", 32)
@@ -2563,19 +2676,14 @@ local function TranslateGreetings()
     TranslateTitlesIn(GossipFrame)
     TranslateTitlesIn(QuestFrameGreetingPanel)
 
-    if not greetDelay then
-        greetDelay = CreateFrame("Frame")
+    if AES.Runtime then
+        AES.Runtime.After("quest-greeting", 0.05, function()
+            TranslateQuestButtons("QuestTitleButton", 32)
+            TranslateQuestButtons("GossipTitleButton", 32)
+            TranslateTitlesIn(GossipFrame)
+            TranslateTitlesIn(QuestFrameGreetingPanel)
+        end)
     end
-    local elapsed = 0
-    greetDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.05 then return end
-        self:SetScript("OnUpdate", nil)
-        TranslateQuestButtons("QuestTitleButton", 32)
-        TranslateQuestButtons("GossipTitleButton", 32)
-        TranslateTitlesIn(GossipFrame)
-        TranslateTitlesIn(QuestFrameGreetingPanel)
-    end)
 end
 
 local function ReflowQuestPanels()
@@ -2606,27 +2714,18 @@ local function ReflowQuestPanels()
 end
 AES.ReflowQuestPanels = ReflowQuestPanels
 
-local questDelay
+local function RunQuestLatePass()
+    TranslateQuestInfo()
+    TranslateQuestProgress()
+    TranslateQuestChrome()
+    pcall(ReflowQuestPanels)
+    pcall(TranslateQuestItemButtons)
+end
+
 local function DelayedQuestPass()
-    if not questDelay then
-        questDelay = CreateFrame("Frame")
-    end
-    local elapsed, shots = 0, 0
-    questDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if (shots == 0 and elapsed < 0.03) or (shots == 1 and elapsed < 0.12) then
-            return
-        end
-        shots = shots + 1
-        TranslateQuestInfo()
-        TranslateQuestProgress()
-        TranslateQuestChrome()
-        pcall(ReflowQuestPanels)
-        pcall(TranslateQuestItemButtons)
-        if shots >= 2 then
-            self:SetScript("OnUpdate", nil)
-        end
-    end)
+    if not AES.Runtime then return end
+    AES.Runtime.After("quest-pass-1", 0.03, RunQuestLatePass)
+    AES.Runtime.After("quest-pass-2", 0.12, RunQuestLatePass)
 end
 
 local function CaptureGiverSex()
@@ -2767,22 +2866,15 @@ local function TranslateGossipGreeting()
 end
 AES.TranslateGossipGreeting = TranslateGossipGreeting
 
-local gossipDelay
 local gossipFrame = CreateFrame("Frame")
 gossipFrame:RegisterEvent("GOSSIP_SHOW")
 gossipFrame:RegisterEvent("QUEST_GREETING")
 gossipFrame:SetScript("OnEvent", function()
     if not (db and db.gossip) then return end
     TranslateGossipGreeting()
-
-    if not gossipDelay then gossipDelay = CreateFrame("Frame") end
-    local elapsed = 0
-    gossipDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.3 then return end
-        self:SetScript("OnUpdate", nil)
-        TranslateGossipGreeting()
-    end)
+    if AES.Runtime then
+        AES.Runtime.After("gossip-pass", 0.3, TranslateGossipGreeting)
+    end
 end)
 
 local bubblePending, bubbleScanner = {}, nil
@@ -3223,6 +3315,7 @@ function HookUIFS(fs)
                 local txt = self.GetText and self:GetText()
                 if type(txt) ~= "string" or txt == "" then return end
                 local es = TranslateStaticText(txt)
+                    or (AES.TranslateUnitDescriptorText and AES.TranslateUnitDescriptorText(txt))
                 if es and es ~= txt then
                     inUIFSHook = true
                     pcall(self.SetText, self, es)
@@ -3246,7 +3339,8 @@ local function WalkUIExact(root, depth, hookFS, skip)
     for _, r in ipairs({ root:GetRegions() }) do
         if r.IsObjectType and r:IsObjectType("FontString") then
             local t = r.GetText and r:GetText()
-            local es = t and TranslateStaticText(t)
+            local es = t and (TranslateStaticText(t)
+                or (AES.TranslateUnitDescriptorText and AES.TranslateUnitDescriptorText(t)))
             if es then pcall(r.SetText, r, es) end
             if hookFS then pcall(HookUIFS, r) end
         end
@@ -3261,32 +3355,48 @@ local function SkipAuctionFilters(nm)
 end
 AES.SkipAuctionFilters = SkipAuctionFilters
 
-local charDelay
+local function WalkCharacterStatUI(root, depth)
+    if not (root and root.GetRegions and root.GetChildren) then return end
+    depth = depth or 0
+    if depth > 9 then return end
+
+    local okRegions, regions = pcall(function() return { root:GetRegions() } end)
+    if okRegions then
+        for _, region in ipairs(regions) do
+            if region and region.IsObjectType and region:IsObjectType("FontString") then
+                HookCharacterStatFS(region)
+                local text = region.GetText and region:GetText()
+                local translated = text and TranslateCharacterStatText(text)
+                if translated and translated ~= text then
+                    inCharStatFSHook = true
+                    pcall(region.SetText, region, translated)
+                    inCharStatFSHook = false
+                end
+            end
+        end
+    end
+
+    local okChildren, children = pcall(function() return { root:GetChildren() } end)
+    if okChildren then
+        for _, child in ipairs(children) do
+            WalkCharacterStatUI(child, depth + 1)
+        end
+    end
+end
+
 local function TranslateCharacterFrame()
     if not (db and db.ui) then return end
-    pcall(WalkUIExact, CharacterFrame)
-    pcall(WalkUIExact, PaperDollFrame)
-    pcall(WalkUIExact, _G["AscensionCharacterFrame"], 0, true)
-    if not charDelay then
-        charDelay = CreateFrame("Frame")
-    end
-    local elapsed, shots = 0, 0
-    charDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.3 then return end
-        elapsed = 0
-        shots = shots + 1
+
+    local function pass()
+        if not (db and db.ui) then return false end
         pcall(WalkUIExact, CharacterFrame)
         pcall(WalkUIExact, PaperDollFrame)
         pcall(WalkUIExact, _G["AscensionCharacterFrame"], 0, true)
-        if shots == 1 then
+        pcall(WalkCharacterStatUI, _G["AscensionCharacterStatsPanel"], 0)
+    end
 
-            RetranslateStaticUI()
-        end
-        if shots >= 3 then
-            self:SetScript("OnUpdate", nil)
-        end
-    end)
+    pass()
+    if AES.Runtime then AES.Runtime.Repeat("character-frame", 0.3, 0.3, 3, pass) end
 end
 
 if CharacterFrame and CharacterFrame.HookScript then
@@ -3294,24 +3404,16 @@ if CharacterFrame and CharacterFrame.HookScript then
 end
 AES.TranslateCharacterFrame = TranslateCharacterFrame
 
-local deepTimers = setmetatable({}, { __mode = "k" })
 local function DeepPass(panel)
     if not (db and db.ui and panel) then return end
     pcall(WalkUIExact, panel, 0, true)
-    local t = deepTimers[panel]
-    if not t then
-        t = CreateFrame("Frame")
-        deepTimers[panel] = t
-    end
-    local elapsed, shots = 0, 0
-    t:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.4 then return end
-        elapsed = 0
-        shots = shots + 1
-        local ok, vis = pcall(function() return panel:IsVisible() end)
-        if ok and vis then pcall(WalkUIExact, panel, 0, true) end
-        if shots >= 3 then self:SetScript("OnUpdate", nil) end
+    if not AES.Runtime then return end
+
+    AES.Runtime.Repeat("deep-panel:" .. tostring(panel), 0.4, 0.4, 3, function()
+        if not (db and db.ui) then return false end
+        local ok, vis = pcall(panel.IsVisible, panel)
+        if not (ok and vis) then return false end
+        pcall(WalkUIExact, panel, 0, true)
     end)
 end
 
@@ -3346,7 +3448,13 @@ AES.HookServerPanelsDeep = HookServerPanelsDeep
 local deepWatcher = CreateFrame("Frame")
 deepWatcher:RegisterEvent("ADDON_LOADED")
 deepWatcher:RegisterEvent("PLAYER_ENTERING_WORLD")
-deepWatcher:SetScript("OnEvent", function() pcall(HookServerPanelsDeep) end)
+deepWatcher:SetScript("OnEvent", function(_, event, name)
+    -- EnumerateFrames pode visitar dezenas de milhares de frames. Não há motivo
+    -- para repetir isso a cada addon aleatório carregado.
+    if event == "PLAYER_ENTERING_WORLD" or AES.Perf.IsRelevantUILoad(name) then
+        pcall(HookServerPanelsDeep)
+    end
+end)
 
 do
 local function AuctionRowPT(index, t)
@@ -3528,28 +3636,67 @@ liveListWatcher:SetScript("OnEvent", function(_, event)
 end)
 
 local auCatTick, auCatAcc = CreateFrame("Frame"), 0
-auCatTick:SetScript("OnUpdate", function(_, dt)
-    if AES.catTrans == false or not (db and db.ui) then return end
+AES.Perf.RunAuctionCatTick = function(self, dt)
+    if AES.catTrans == false or not (db and db.ui) then
+        self:SetScript("OnUpdate", nil)
+        return
+    end
     local af = _G["AuctionFrame"]
     local ok, vis = pcall(function() return af and af.IsVisible and af:IsVisible() end)
-    if not (ok and vis) then return end
-    auCatAcc = auCatAcc + dt
-    if auCatAcc < 0.1 then return end
+    if not (ok and vis) then
+        self:SetScript("OnUpdate", nil)
+        return
+    end
+    auCatAcc = auCatAcc + (dt or 0)
+    if auCatAcc < 0.15 then return end
     auCatAcc = 0
     pcall(TranslateAuctionCats)
+end
+
+AES.Perf.auCatEvents = AES.Perf.auCatEvents or CreateFrame("Frame")
+AES.Perf.auCatEvents:RegisterEvent("AUCTION_HOUSE_SHOW")
+AES.Perf.auCatEvents:RegisterEvent("AUCTION_HOUSE_CLOSED")
+AES.Perf.auCatEvents:SetScript("OnEvent", function(_, event)
+    if event == "AUCTION_HOUSE_SHOW" then
+        auCatAcc = 0
+        auCatTick:SetScript("OnUpdate", AES.Perf.RunAuctionCatTick)
+    else
+        auCatTick:SetScript("OnUpdate", nil)
+    end
 end)
 
 end
 
+do
 local plateElapsed = 0
-local plateRootsSeen = setmetatable({}, { __mode = "k" })
+local plateRootState = setmetatable({}, { __mode = "k" })
 local plateFSHooked = setmetatable({}, { __mode = "k" })
 local inPlateFSHook = false
+
+local function TranslatePlateText(text)
+    if type(text) ~= "string" or text == "" or not AES.UnitNameEN2ES then return nil end
+
+    local translated = AES.UnitNameEN2ES[text]
+    if translated then return translated end
+
+    local prefix, body, suffix = text:match("^(%s*)(.-)(%s*)$")
+    if body and body ~= text then
+        translated = AES.UnitNameEN2ES[body]
+        if translated then return prefix .. translated .. suffix end
+    end
+
+    local color, inner, reset = text:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    if inner then
+        translated = AES.UnitNameEN2ES[inner]
+        if translated then return color .. translated .. reset end
+    end
+    return nil
+end
 
 local function TranslatePlateFS(fs)
     if inPlateFSHook or not (db and db.units and AES.UnitNameEN2ES) then return end
     local text = fs and fs.GetText and fs:GetText()
-    local translated = text and AES.UnitNameEN2ES[text]
+    local translated = text and TranslatePlateText(text)
     if translated and translated ~= text then
         inPlateFSHook = true
         pcall(fs.SetText, fs, translated)
@@ -3561,35 +3708,67 @@ local function HookPlateFS(fs)
     if not (fs and fs.SetText) or plateFSHooked[fs] then return end
     plateFSHooked[fs] = true
     pcall(hooksecurefunc, fs, "SetText", TranslatePlateFS)
+    if fs.SetFormattedText then
+        pcall(hooksecurefunc, fs, "SetFormattedText", TranslatePlateFS)
+    end
     TranslatePlateFS(fs)
 end
 
 local function ScanPlateRoot(fr, depth)
-    if not (fr and fr.GetRegions and fr.GetChildren) or depth > 2 then return end
-    for _, region in ipairs({ fr:GetRegions() }) do
-        if region and region.IsObjectType and region:IsObjectType("FontString") then
-            HookPlateFS(region)
+    if not (fr and fr.GetRegions and fr.GetChildren) or depth > 4 then return end
+
+    local okRegions, regions = pcall(function() return { fr:GetRegions() } end)
+    if okRegions then
+        for _, region in ipairs(regions) do
+            if region and region.IsObjectType and region:IsObjectType("FontString") then
+                HookPlateFS(region)
+            end
         end
     end
-    for _, child in ipairs({ fr:GetChildren() }) do
-        ScanPlateRoot(child, depth + 1)
+
+    local okChildren, children = pcall(function() return { fr:GetChildren() } end)
+    if okChildren then
+        for _, child in ipairs(children) do
+            ScanPlateRoot(child, depth + 1)
+        end
     end
 end
 
+local function FrameCount(frame, method)
+    local fn = frame and frame[method]
+    if type(fn) ~= "function" then return -1 end
+    local ok, count = pcall(fn, frame)
+    return ok and tonumber(count) or -1
+end
+
+local function ScanPlateRootIfChanged(root)
+    if not root then return end
+    local children = FrameCount(root, "GetNumChildren")
+    local regions = FrameCount(root, "GetNumRegions")
+    local state = plateRootState[root]
+
+    if state and state.children == children and state.regions == regions then return end
+    plateRootState[root] = { children = children, regions = regions }
+    pcall(ScanPlateRoot, root, 0)
+end
+
+-- No 3.3.5a as placas são filhos do WorldFrame e podem ser recicladas. O
+-- passe abaixo só aprofunda em raízes novas ou cuja estrutura mudou; FontStrings
+-- já encontrados ficam hookados e não precisam ser varridos de novo.
 local plateScanner = CreateFrame("Frame")
 plateScanner:SetScript("OnUpdate", function(_, dt)
     plateElapsed = plateElapsed + (dt or 0)
-    if plateElapsed < 0.75 then return end
+    if plateElapsed < 1.0 then return end
     plateElapsed = 0
     if not (db and db.units and AES.UnitNameEN2ES and WorldFrame) then return end
 
-    for _, child in ipairs({ WorldFrame:GetChildren() }) do
-        if not plateRootsSeen[child] then
-            plateRootsSeen[child] = true
-            pcall(ScanPlateRoot, child, 0)
-        end
+    local ok, children = pcall(function() return { WorldFrame:GetChildren() } end)
+    if not ok then return end
+    for _, child in ipairs(children) do
+        ScanPlateRootIfChanged(child)
     end
 end)
+end
 
 local UNITFRAME_ROOTS = {
     "XPerl_Target", "XPerl_TargetTarget", "XPerl_Focus", "XPerl_Player",
@@ -3628,18 +3807,12 @@ local function TranslateUnitFrames(unit)
     end
 end
 
-local unitDelay
 local function DelayedUnitPass(unit)
-    if not unitDelay then
-        unitDelay = CreateFrame("Frame")
+    if AES.Runtime then
+        AES.Runtime.After("unit-frame:" .. tostring(unit), 0.2, function()
+            TranslateUnitFrames(unit)
+        end)
     end
-    local elapsed = 0
-    unitDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.2 then return end
-        self:SetScript("OnUpdate", nil)
-        TranslateUnitFrames(unit)
-    end)
 end
 
 local unitFrameWatcher = CreateFrame("Frame")
@@ -3663,7 +3836,6 @@ local CASTBAR_ROOTS = {
     "Quartz3CastBarPet", "QuartzCastBar",
 }
 
-local castDelay
 local function TranslateCastbars(unit)
     if not (db and db.spells) then return end
     local name = UnitCastingInfo and UnitCastingInfo(unit)
@@ -3678,16 +3850,11 @@ local function TranslateCastbars(unit)
 end
 
 local function DelayedCastPass(unit)
-    if not castDelay then
-        castDelay = CreateFrame("Frame")
+    if AES.Runtime then
+        AES.Runtime.After("castbar:" .. tostring(unit), 0.1, function()
+            TranslateCastbars(unit)
+        end)
     end
-    local elapsed = 0
-    castDelay:SetScript("OnUpdate", function(self, dt)
-        elapsed = elapsed + dt
-        if elapsed < 0.1 then return end
-        self:SetScript("OnUpdate", nil)
-        TranslateCastbars(unit)
-    end)
 end
 
 local castWatcher = CreateFrame("Frame")
@@ -3884,19 +4051,9 @@ end)
     end
 
     local function DelayedAutomaticCheck()
-        local driver = CreateFrame("Frame")
-        local elapsed, sent = 0, false
-        driver:SetScript("OnUpdate", function(self, dt)
-            elapsed = elapsed + (dt or 0.02)
-            if not sent and elapsed >= 4 then
-                sent = true
-                BroadcastAll(true)
-            end
-            if elapsed >= 12 then
-                BroadcastAll(false)
-                self:SetScript("OnUpdate", nil)
-            end
-        end)
+        if not AES.Runtime then return end
+        AES.Runtime.After("version-check-first", 4, function() BroadcastAll(true) end)
+        AES.Runtime.After("version-check-second", 12, function() BroadcastAll(false) end)
     end
 
     if RegisterAddonMessagePrefix then
@@ -3979,17 +4136,16 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             acf:HookScript("OnShow", TranslateCharacterFrame)
 
             local statsScroll = _G["AscensionCharacterStatsPanelScrollFrame"]
-            local statsPass = CreateFrame("Frame")
             local function OnStatsScroll()
                 if not (db and db.ui) then return end
                 pcall(WalkUIExact, _G["AscensionCharacterStatsPanel"], 0, true)
-                local elapsed = 0
-                statsPass:SetScript("OnUpdate", function(self, dt)
-                    elapsed = elapsed + dt
-                    if elapsed < 0.1 then return end
-                    self:SetScript("OnUpdate", nil)
-                    pcall(WalkUIExact, _G["AscensionCharacterStatsPanel"], 0, true)
-                end)
+                pcall(WalkCharacterStatUI, _G["AscensionCharacterStatsPanel"], 0)
+                if AES.Runtime then
+                    AES.Runtime.After("character-stats-scroll", 0.1, function()
+                        pcall(WalkUIExact, _G["AscensionCharacterStatsPanel"], 0, true)
+                        pcall(WalkCharacterStatUI, _G["AscensionCharacterStatsPanel"], 0)
+                    end)
+                end
             end
             if statsScroll and statsScroll.HookScript then
                 if statsScroll:HasScript("OnVerticalScroll") then
@@ -4028,7 +4184,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         end
     end
 
-    AES.UnitNameEN2ES = AES.UnitNameEN2ES or {}
+    AES.UnitNameEN2ES = {}
     for id, en in pairs(AES.UnitNameEN or {}) do
         local es = AES.UnitName[id]
         if es and es ~= en then
@@ -4041,6 +4197,14 @@ frame:SetScript("OnEvent", function(self, event, arg1)
     end
     for en, es in pairs(AES.UnitNameEN2ES) do
         if es == false then AES.UnitNameEN2ES[en] = nil end
+    end
+    -- Alguns IDs compartilham o mesmo nome inglês, mas têm flexões, grafias ou
+    -- dados PT divergentes. O mapa antigo descartava o nome inteiro nesses casos,
+    -- deixando o rastreador em inglês. Preferências curadas mantêm o runtime estável.
+    for en, pt in pairs(AES.UnitNamePreferredEN2PT or {}) do
+        if type(en) == "string" and type(pt) == "string" and pt ~= "" then
+            AES.UnitNameEN2ES[en] = pt
+        end
     end
 
     if type(AES.BuildQuestRuntimeIndex) == "function" then
@@ -4232,4 +4396,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.3.3/AscensionES-1.5.9/2026-08-06"
+AscensionPTBR.__firma = "AscensionPTBR/1.4.0/AscensionES-1.5.9/2026-08-10"

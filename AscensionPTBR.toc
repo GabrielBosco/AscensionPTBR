@@ -3,7 +3,7 @@
 ## Notes: Tradução em Português do Brasil para o Project Ascension.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
 ## GitHun-Repo Author: https://github.com/HideXs/AscensionES
-## Version: 1.4.0
+## Version: 1.4.1
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## SavedVariables: AscensionPTBRDB
@@ -14,6 +14,7 @@ data\Patterns.lua
 data\CustomUI.lua
 data\ServerUI.lua
 data\UIStrings.lua
+data\CharacterStats.lua
 data\TalentUI.lua
 data\QuestUI.lua
 data\Achievements.lua
@@ -31,6 +32,7 @@ data\Corrections.lua
 data\Gossip.lua
 data\Errors.lua
 data\Chat.lua
+Runtime.lua
 Core.lua
 data\TalentRuntime.lua
 Errors.lua
