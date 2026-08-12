@@ -6771,7 +6771,7 @@ AscensionPTBR.UIStrings = {
 ["SOLD_BY_COLON"]="Vendido por:",
 ["SOLO"]="Individual",
 ["SORT_QUEST"]="Classificar missões",
-["SOUNDOPTIONS_MENU"]="Som e voz",
+["SOUNDOPTIONS_MENU"]="Som",
 ["SOUND_CHANNELS"]="Canais de som",
 ["SOUND_DISABLED"]="Todos os sons estão desativados",
 ["SOUND_EFFECTS_DISABLED"]="Efeitos sonoros desativados",
@@ -8885,7 +8885,7 @@ AscensionPTBR.UIStrings = {
 ["_RECORDING_WARNING_CORRUPTED"]="Este arquivo de vídeo não é válido.",
 }
 
--- Monta o índice só com globais que existem no cliente 3.3.5a.
+-- Só espelha global que existe nesse cliente. Não cria coisa nova à toa.
 do
     local source = AscensionPTBR.UIStrings or {}
     local active, byEnglish = {}, {}
@@ -8909,7 +8909,6 @@ do
 end
 
 
--- Base do AscensionES revisada em pt-BR.
 local A = AscensionPTBR
 if A then
 do

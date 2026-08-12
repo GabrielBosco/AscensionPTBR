@@ -1,7 +1,4 @@
--- AscensionPTBR Runtime
--- Infraestrutura leve compartilhada para timers curtos e padrões de tooltip.
--- Mantida fora do Core.lua para reduzir complexidade e o número de locais
--- ativos no chunk principal do Lua 5.1.
+-- Coisas compartilhadas que não precisam ficar entupindo o Core.lua.
 
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
@@ -12,14 +9,8 @@ AES.Perf = AES.Perf or {}
 local Runtime = AES.Runtime
 local Perf = AES.Perf
 
--- ---------------------------------------------------------------------------
--- Scheduler compartilhado
--- ---------------------------------------------------------------------------
--- O cliente 3.3.5a não possui C_Timer.After. Antes, várias partes do addon
--- criavam seu próprio Frame + OnUpdate apenas para esperar alguns milissegundos.
--- Este scheduler concentra esses atrasos em um único OnUpdate e só fica ativo
--- enquanto existem tarefas pendentes.
 
+-- Um scheduler só. Nada de criar OnUpdate novo pra cada coisinha.
 Runtime.tasks = Runtime.tasks or {}
 Runtime.clock = Runtime.clock or 0
 Runtime.frame = Runtime.frame or CreateFrame("Frame")
@@ -87,8 +78,7 @@ function Runtime.OnUpdate(self, dt)
                 keep = false
             end
 
-            -- O callback pode cancelar ou substituir a própria chave. Nesse
-            -- caso, não sobrescrevemos a nova tarefa com o estado antigo.
+            -- Se o callback mexeu na própria task, não pisa por cima dela.
             if Runtime.tasks[key] == task then
                 task.remaining = (task.remaining or 1) - 1
                 if keep and task.remaining > 0 and task.interval then
@@ -103,13 +93,8 @@ function Runtime.OnUpdate(self, dt)
     if not HasTasks() then self:SetScript("OnUpdate", nil) end
 end
 
--- ---------------------------------------------------------------------------
--- Cache/indexação dos padrões de tooltip
--- ---------------------------------------------------------------------------
--- LinePatterns possui centenas de expressões. Em cache miss, o Core antigo
--- percorria todas elas. Aqui os padrões são separados pelo primeiro caractere
--- esperado, reduzindo bastante o conjunto testado na maioria dos tooltips.
 
+-- Agrupa padrão pelo começo do texto. Menos regex por tooltip.
 Perf.linePatternCache = Perf.linePatternCache or {}
 Perf.linePatternCacheCount = Perf.linePatternCacheCount or 0
 Perf.LINE_PATTERN_CACHE_LIMIT = Perf.LINE_PATTERN_CACHE_LIMIT or 4096
@@ -126,8 +111,7 @@ local function PatternBucket(pattern)
     if s:sub(1, 2) == "%-" then return "-" end
     if s:sub(1, 2) == "%(" then return "(" end
 
-    -- Capturas numéricas são muito comuns nos tooltips: mana, dano, alcance,
-    -- atributos, recargas etc.
+    -- Número aparece muito em mana, dano, alcance, recarga etc.
     if s:sub(1, 1) == "(" and s:sub(1, 18):find("%%d") then return "#" end
 
     local first = s:match("^([%a])")

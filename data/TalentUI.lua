@@ -1,5 +1,4 @@
--- Textos das árvores de talentos, classes e raciais.
--- As chaves ficam em inglês porque são usadas na busca.
+-- Chave em inglês de propósito: é assim que o cliente procura.
 AscensionPTBR = AscensionPTBR or {}
 
 AscensionPTBR.TalentUIExact = {
@@ -12,7 +11,7 @@ AscensionPTBR.TalentUIExact = {
     ["Command: Grave Mage"] = "Ordem: Mago Sepulcral",
     ["Command: Decaying Colossus"] = "Ordem: Colosso em Decomposição",
     ["Return: Necropolis"] = "Retorno: Necrópole",
-    -- Nomes mostrados nas árvores de talentos do CoA.
+    -- Classes padrão + classes do CoA.
     ["Warrior"] = "Guerreiro",
     ["Paladin"] = "Paladino",
     ["Hunter"] = "Caçador",
@@ -46,9 +45,15 @@ AscensionPTBR.TalentUIExact = {
     ["Tinker"] = "Inventor",
     ["Venomancer"] = "Venenomante",
     ["Reaper"] = "Ceifador",
+    ["Deathbringer"] = "Arauto da Morte",
+    ["The Grim Reaper"] = "O Ceifador",
+    ["Sanguine Harvester"] = "Ceifador Sanguíneo",
+    ["Death Herald"] = "Arauto da Morte",
+    ["Harbinger of Death"] = "Arauto da Morte",
+    ["Doubles the duration of Blood Frenzy, Harvest Time, and Harvesting Grounds."] = "Duplica a duração de Frenesi Sanguíneo, Tempo de Colheita e Terras de Colheita.",
+    ["Doubles the duration of Blood Frenzy, Harvest Time and Harvesting Grounds."] = "Duplica a duração de Frenesi Sanguíneo, Tempo de Colheita e Terras de Colheita.",
     ["Primalist"] = "Primalista",
     ["Runemaster"] = "Mestre das Runas",
-    -- Especializações exibidas como cabeçalhos das árvores.
     ["Arms"] = "Armas",
     ["Fury"] = "Fúria",
     ["Protection"] = "Proteção",
@@ -290,7 +295,6 @@ AscensionPTBR.TalentUIExact = {
     ["Open the [KEYWORD:Character Advancement] window by pressing [ACTION:N] and select a primary stat on the right side of the window."] = "Abra a janela [KEYWORD:Avanço do Personagem] pressionando [ACTION:N] e selecione um atributo primário no lado direito da janela.",
     ["You must select your Stat Path in Character Advancement to enter The Manastorm."] = "Você precisa selecionar seu Caminho de Atributos no Avanço do Personagem para entrar na Tempestade de Mana.",
     ["You can also select groups of spells, such as |cff00d1ffSuggested Talents|r or |cff00d1ffSuggested Abilities|r to stop on any spell that may be good for your build!"] = "Você também pode selecionar grupos de feitiços, como |cff00d1ffTalentos Sugeridos|r ou |cff00d1ffHabilidades Sugeridas|r, para parar em qualquer feitiço que possa beneficiar sua composição!",
-    -- Variações em caixa alta usadas pelos cabeçalhos do Character Advancement.
     ["WARRIOR"] = "GUERREIRO",
     ["PALADIN"] = "PALADINO",
     ["HUNTER"] = "CAÇADOR",
@@ -424,21 +428,15 @@ AscensionPTBR.TalentUIExact = {
     ["INQUISITION"] = "INQUISIÇÃO",
 }
 
--- Componentes exibidos na segunda linha do tooltip de jogadores.
--- O cliente do Ascension monta essa linha dinamicamente, por exemplo:
--- "Level 20 Blood Elf Necromancer (Player)".
+-- Usado na linha tipo "Level 20 Blood Elf Necromancer (Player)".
 AscensionPTBR.UnitDescriptorRaces = {
     ["Human"] = "Humano", ["Dwarf"] = "Anão", ["Night Elf"] = "Elfo Noturno",
     ["Gnome"] = "Gnomo", ["Draenei"] = "Draenei", ["Orc"] = "Orc",
     ["Undead"] = "Morto-vivo", ["Tauren"] = "Tauren", ["Troll"] = "Troll",
     ["Blood Elf"] = "Elfo Sangrento",
-    -- Alias interno usado por clientes 3.3.5a para a raça Morto-vivo.
     ["Scourge"] = "Morto-vivo",
 }
 
--- Mapa exclusivo do descritor de unidade. Não depende dos textos da janela de
--- talentos e cobre as classes padrão, as 21 classes do CoA e nomes legados que
--- ainda podem ser devolvidos pelo servidor.
 AscensionPTBR.UnitDescriptorClasses = {
     ["Warrior"] = "Guerreiro", ["Paladin"] = "Paladino",
     ["Hunter"] = "Caçador", ["Rogue"] = "Ladino",
@@ -458,7 +456,6 @@ AscensionPTBR.UnitDescriptorClasses = {
     ["Knight of Xoroth"] = "Cavaleiro de Xoroth", ["Templar"] = "Templário",
     ["Ranger"] = "Patrulheiro",
 
-    -- Nomes ainda presentes em versões ou interfaces legadas do Ascension.
     ["Bloodmage"] = "Mago Sangrento", ["Blood Mage"] = "Mago Sangrento",
     ["Monk"] = "Monge", ["Demon Hunter"] = "Caçador de Demônios",
     ["Hero"] = "Herói",
@@ -469,6 +466,12 @@ AscensionPTBR.UnitDescriptorKinds = {
     ["Pet"] = "Mascote", ["Minion"] = "Lacaio",
     ["Companion"] = "Companheiro", ["NPC"] = "NPC",
 }
+
+for en, pt in pairs(AscensionPTBR.OfficialCreatureTypes or {}) do
+    if AscensionPTBR.UnitDescriptorKinds[en] == nil then
+        AscensionPTBR.UnitDescriptorKinds[en] = pt
+    end
+end
 
 AscensionPTBR.TalentUIGlobals = {
     TALENTS = "Talentos",

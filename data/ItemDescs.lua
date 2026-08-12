@@ -5898,7 +5898,6 @@ T[8518464]="@|cFFCC0000Forjado em Sangue Heroico|r@"
 T[9015251]="Socorristas não têm problema em colocar a mão na massa."
 end)(AscensionPTBR.ItemDesc)
 
--- Nomes e descrições adicionados nesta revisão.
 ;(function(T)
 T[1]="Entregue estes cristais ao Mestre de Guerra da sua facção na Fortaleza Alleriana ou na Fortaleza Quebrapedra para ajudar sua facção a recuperar Auchindoun!"
 T[69]="Este item não pode ser devolvido nem reembolsado depois de comprado."

@@ -1,4 +1,3 @@
--- Arquivo mantido vazio para não quebrar instalações antigas.
--- Adicione aqui apenas falas confirmadas no Conquest of Azeroth.
+-- Reserva pra falas custom do CoA. Só entra coisa confirmada no jogo.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.GossipEN2ES = AscensionPTBR.GossipEN2ES or {}

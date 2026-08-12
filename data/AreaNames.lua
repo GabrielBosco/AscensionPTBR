@@ -1,6 +1,4 @@
--- Nomes de zonas e subzonas exibidos no mapa, minimapa e texto de entrada.
--- Base: AreaTable 3.3.5a cruzada com a localização oficial ptBR.
--- Conteúdo customizado sem correspondência segura permanece em inglês.
+-- Zonas do 3.3.5a. Se a tradução não for segura, deixa o nome original.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.AreaNames = {
     ["7th Legion Front"] = "Front da 7ª Legião",

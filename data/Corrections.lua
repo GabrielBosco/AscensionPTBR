@@ -1,4 +1,4 @@
--- Ajustes de textos antigos que vieram quebrados da base espanhola.
+-- Remendos confirmados da base antiga. Corrigiu na fonte? Pode apagar daqui.
 local A = AscensionPTBR
 if not A then return end
 
@@ -44,7 +44,6 @@ if Q then
     end
 end
 
--- Missões que ainda misturavam espanhol e português.
 do
     local Q = A.QuestData
     if Q then
@@ -91,8 +90,6 @@ do
     end
 end
 
--- Habilidades e arquétipos com tradução quebrada.
--- As chaves em inglês continuam iguais porque o cliente usa essas chaves na busca.
 do
     local S = A.SpellNameEN2ES
     if S then
@@ -174,7 +171,6 @@ end
 
 
 
--- Correções pontuais da base antiga.
 do
     local S = A.SpellNameEN2ES
     if S then
@@ -196,7 +192,6 @@ do
     end
 end
 
--- Resíduos encontrados durante a revisão.
 do
     local S = A.SpellNameEN2ES
     if S then
@@ -229,5 +224,108 @@ do
         C["Complete 130 quests in Boren Tundra"] = "Conclua 130 missões na Tundra Boreana."
         C["Complete 100 Storm Peaks Quests"] = "Conclua 100 missões nos Picos Tempestuosos."
         C["Complete 2000 quests"] = "Conclua 2.000 missões."
+    end
+end
+
+
+do
+    local Q = A.QuestData
+    if Q then
+        if Q[780] then
+            Q[780].p = "A agressividade dos Javaliços continua aumentando. Você já lhes deu uma lição e trouxe alguns focinhos e flancos?"
+            Q[780].c = "Excelente. Esses ingredientes renderão um ótimo ensopado, e a perda desses javaliços servirá de lição aos vis Costagulha."
+        end
+
+        if Q[871] then
+            Q[871].p = "Quanto mais demorarmos para deter esses ataques, mais difícil será abastecer o povo da Encruzilhada."
+        end
+
+        if Q[872] then
+            Q[872].o = "Mate 8 Geomantes Crinavalha, 8 Defensores Crinavalha e Kreenig Rosnento.\n\nDepois leve a Presa de Kreenig Rosnento para Thork, na Encruzilhada."
+            Q[872].p = "Corte a cabeça do líder e o caos se instala, $n. Aprenda bem essa lição; ela poderá ser útil no futuro.\n\nOs javatuscos ficarão sem direção, e conseguiremos retomar os Sertões."
+        end
+
+        if Q[893] then
+            Q[893].p = "Também tenho minhas dúvidas de que um javatusco saiba se virar numa forja, mas o Chefe Guerreiro ordenou e eu cumpro. Preciso descobrir tudo o que puder sobre a tribo Crinavalha.\n\nJá executei tarefas ainda mais triviais e farei esta de bom grado se isso ajudar o povo orc."
+        end
+
+        if Q[1014] then
+            Q[1014].p = "Com a morte de Arugal, poderemos fortalecer a posição da Dama Sombria em Lordaeron."
+            Q[1014].c = "Por fim, a Floresta de Pinhaprata está livre do domínio daquele miserável Arugal. Você prestou um grande serviço à Dama Sombria, $n. Sua tenacidade será recompensada."
+        end
+
+        if Q[354007] then
+            Q[354007].d = "Notícias preocupantes chegam da Plataforma da Asa Etérea. O cruel orc vil Korun subjugou um draco da Asa Etérea e agora cruza os céus livremente, aterrorizando todos em seu caminho. Korun lidera um bando de orcs Presa do Dragão, e sua montaria dracônica lhe dá enorme poder sobre a região. Se não for detido, esmagará a resistência restante e consolidará seu domínio. Não podemos permitir que esse tirano continue oprimindo a ninhada da Asa Etérea! Encontre o Senhor dos Céus Korun, mate-o e liberte o draco maltratado para que o verdadeiro espírito da Asa Etérea possa renascer!"
+            Q[354007].o = "Mate o Senhor dos Céus Korun."
+            Q[354007].c = "Obrigado, herói! Ao derrotar o tirânico Senhor dos Céus Korun, você libertou os Asa Etérea escravizados de sua crueldade. Sem Korun, os Presa do Dragão perderão parte do domínio sobre esses nobres dragões. Hoje você desferiu um golpe em nome da justiça! A ameaça dos Presa do Dragão ainda existe, mas os Asa Etérea e seus aliados agora têm esperança de que as sombras sobre a Plataforma da Asa Etérea finalmente sejam dissipadas."
+        end
+
+        if Q[354121] then
+            Q[354121].d = "Campeão, os orcs Presa do Dragão exploram sem piedade os dragões da Asa Etérea nas Minas da Asa Etérea. Sangue negro escorre do próprio coração do mundo enquanto rebentadores e assoladores aterrorizam os dragões e os escravos alquebrados. Não podemos permitir tamanha crueldade! Infiltre-se nas minas e desmonte as operações dos Presa do Dragão por dentro. Purifique o sangue negro, elimine os rebentadores e os assoladores e enfraqueça as minas para que a Asa Etérea possa voar livre novamente. Confio em seu sucesso!"
+            Q[354121].o = "Vá à Plataforma da Asa Etérea e enfraqueça as forças que mantêm o domínio dos Presa do Dragão sobre o Vale da Lua Negra."
+        end
+
+        if Q[770014] then
+            Q[770014].d = "Tenho outra missão perigosa para você, herói. Espero que tenha alguns companheiros de confiança ao seu lado.\n\nNossos espiões informam que Charlga Talhaflanco vem negociando com a Praga. Entre no Urzal dos Tuscos e derrube Charlga antes que se forme uma aliança entre a Praga e os javatuscos!\n\nEsta missão deve ser entregue antes do nível 39!"
+            Q[770014].o = "Entre no Urzal dos Tuscos e mate Charlga Talhaflanco."
+        end
+
+        if Q[770018] then
+            Q[770018].d = "Você ficou mais forte, herói. Desta vez, quase parece que não estou enviando você para uma missão suicida... quase.\n\nParece que não fomos rápidos o bastante para impedir as negociações dos javatuscos com a Praga. Um lich poderoso está erguendo um exército de mortos-vivos no Urzal dos Mortos. Mate Amnennar, o Frigífero, de uma vez por todas.\n\nEsta missão deve ser entregue antes do nível 49!"
+            Q[770018].o = "Entre no Urzal dos Mortos e mate Amnennar, o Frigífero."
+        end
+
+        for _, id in ipairs({ 81287, 177901 }) do
+            if Q[id] then
+                Q[id].d = "Você ficou mais forte, herói. Desta vez, quase parece que não estou enviando você para uma missão suicida... quase.\n\nParece que não fomos rápidos o bastante para impedir as negociações dos javatuscos com a Praga. Um lich poderoso está erguendo um exército de mortos-vivos no Urzal dos Mortos. Mate Amnennar, o Frigífero, de uma vez por todas."
+                Q[id].o = "Entre no Urzal dos Mortos e mate Amnennar, o Frigífero."
+            end
+        end
+
+        if Q[1660017] then
+            Q[1660017].d = "Uma visitante... Raramente recebemos estranhos entre nós, e por um bom motivo: nossas práticas foram proibidas há milênios.\n\nÀs vezes penso que com razão... Lady Aegya está disposta a fazer coisas que fariam até um sátiro estremecer. Sabe do que estou falando? Crianças élficas oferecidas como tributo; órfãos de guerra de quem ninguém sentiria falta.\n\nAjude-me a salvá-las. Vá ao Grande Ninho e procure entre a carniça. Por seu intermédio, canalizarei meu poder e as transformarei em lindas borboletas.\n\nEncantei esta coroa de flores; sua fragrância será... irresistível. Elas seguirão você aonde quer que vá.\n\nTraga-as até aqui. Eu cuidarei do resto."
+            Q[1660017].o = "Canalize o poder de Eldya sobre os recém-nascidos no Grande Ninho para transformá-los em borboletas. Depois, conduza as borboletas de volta a Eldya."
+            Q[1660017].p = "Você chegou a tempo? Eles ainda estavam vivos?"
+            Q[1660017].c = "<A elfa inspira profundamente ao sentir o aroma da coroa de flores.>\n\nElas seguiram você. Ótimo.\n\nO Grande Abutre ensina muitas lições, mas sacrificar vidas tão jovens à crueldade de seu bico... é uma depravação que eu jamais poderia perdoar em mim mesma.\n\nCuste o que custar, vou garantir que essas crianças estejam seguras."
+        end
+
+        if Q[81337] then
+            Q[81337].o = "Derrote Anub'arak!"
+        end
+
+        for _, id in ipairs({ 4420438, 4420439 }) do
+            local q = Q[id]
+            if q then
+                for _, field in ipairs({ "d", "o", "p", "c" }) do
+                    if type(q[field]) == "string" then
+                        q[field] = q[field]:gsub("velocidadee", "velocidade")
+                    end
+                end
+            end
+        end
+    end
+end
+
+do
+    if A.QuestTitle and A.QuestTitle[1903540] then
+        A.QuestTitle[1903540] = "Caminho da Ascensão: Visite um Estalajadeiro"
+    end
+    local Q = A.QuestData
+    if Q and Q[1903540] then
+        Q[1903540].o = "Visite um Estalajadeiro e selecione 'Faça desta estalagem o seu lar'."
+    end
+
+    if A.QuestTitle and A.QuestTitle[28480] then
+        A.QuestTitle[28480] = "Encomenda para o Estalajadeiro Finmir"
+    end
+    if Q and Q[28480] then
+        Q[28480].d = "Os exilados aqui no Refúgio já suportaram muito. Entre doenças, ferimentos e a longa jornada desde um mundo despedaçado, resta-lhes pouco para cuidar dos feridos.\n\nSe puder fornecer 20 Bandagens Pesadas de Seda, farei com que cheguem aos draeneis que mais precisam. Pode parecer pouco, mas até um simples tecido macio pode trazer esperança."
+        Q[28480].o = "O Estalajadeiro Finmir quer que você use Primeiros Socorros para confeccionar 20 Bandagens Pesadas de Seda e entregue a encomenda ao Estalajadeiro Finmir, no Refúgio, no Pântano das Mágoas."
+        Q[28480].c = "Obrigado. Essas bandagens aliviarão a dor e lembrarão nosso povo de que não foi esquecido. Nesta terra desconhecida, isso importa mais do que você imagina."
+    end
+
+    if Q and Q[28575] then
+        Q[28575].d = "Nossos Vigilantes se defendem de jaguares, crocoliscos, elementais e peixes frenéticos. Eles precisam de braçadeiras para proteger os pulsos enquanto enfrentam essas criaturas. Você parece ter habilidade com couro e agulha. Pode ajudá-los?"
+        Q[28575].o = "O Estalajadeiro Finmir quer que você use Couraria para confeccionar 6 Braçadeiras Verdes de Couro e leve a encomenda a Manaar, o Vigilante, no Refúgio, no Pântano das Mágoas."
     end
 end

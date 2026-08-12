@@ -3,12 +3,13 @@
 ## Notes: Tradução em Português do Brasil para o Project Ascension.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
 ## GitHun-Repo Author: https://github.com/HideXs/AscensionES
-## Version: 1.4.1
+## Version: 1.4.2
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## SavedVariables: AscensionPTBRDB
 
 data\Globals.lua
+data\OfficialPTBR.lua
 data\AreaNames.lua
 data\Patterns.lua
 data\CustomUI.lua

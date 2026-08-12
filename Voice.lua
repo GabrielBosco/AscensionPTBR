@@ -2,7 +2,7 @@ local ADDON_NAME = ...
 local AES = AscensionPTBR
 AES.VoiceFiles = AES.VoiceFiles or {}
 
--- Usa o nome real da pasta do addon.
+-- Usa o nome real da pasta. Se renomear o addon, o áudio continua achando os arquivos.
 local ADDON_PATH = "Interface\\AddOns\\" .. (type(ADDON_NAME) == "string" and ADDON_NAME or "AscensionPTBR") .. "\\"
 local playerKey
 local msgMap = {}
@@ -58,7 +58,7 @@ local function AddMessage(text, err)
     if type(text) ~= "string" or text == "" then return end
     msgMap[text] = err
 
-    -- Aceita a mensagem já traduzida quando Errors.lua está carregado.
+    -- Errors.lua pode já ter traduzido a frase antes de chegar aqui.
     local translated = AES.ErrExact and AES.ErrExact[text]
     if type(translated) == "string" and translated ~= "" then
         msgMap[translated] = err
@@ -126,7 +126,7 @@ local function ApplyVoiceCVar(enabled, recapture)
         end
         SetCVar("Sound_EnableErrorSpeech", 0)
     else
-        -- Garante que o modo inglês restaure as vozes do cliente.
+        -- Desligou o modo ptBR? Devolve a voz padrão do cliente.
         SetCVar("Sound_EnableErrorSpeech", 1)
         originalErrorSpeech = nil
     end
@@ -250,16 +250,16 @@ frame:SetScript("OnEvent", function(self, event, arg1, arg2)
         else
             ApplyVoiceCVar(false, false)
         end
+    -- Não deixa CVar preso quando sair do jogo.
     elseif event == "PLAYER_LOGOUT" then
         if SetCVar then
-            -- Restaura as vozes originais ao sair.
             SetCVar("Sound_EnableErrorSpeech", 1)
             originalErrorSpeech = nil
         end
     elseif event == "UI_ERROR_MESSAGE" then
         if not VoiceEnabled() then return end
 
-        -- O 3.3.5 usa arg1; alguns clientes customizados usam arg2.
+        -- 3.3.5 usa arg1; build custom às vezes manda em arg2.
         local message = type(arg1) == "string" and arg1 or (type(arg2) == "string" and arg2 or nil)
         if not message then return end
 

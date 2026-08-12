@@ -64296,7 +64296,6 @@ T[9200567]="Cutelo de Orgrimmar"
 T[9200568]="Arco de Guerra de Orgrimmar"
 end)(AscensionPTBR.ItemName)
 
--- Nomes e descrições adicionados nesta revisão.
 ;(function(T)
 T[6807]="Ensopado de Perna de Sapo"
 T[11027]="Caixa de Sapo dos Bosques"
@@ -74390,7 +74389,6 @@ T[7832495]="Forjado em Sangue: Braceletes Andassonho"
 T[7833064]="Forjado em Sangue: Elo Andassonho"
 T[7833066]="Forjado em Sangue: Aro da Redenção"
 T[7844934]="Forjado em Sangue: Anel Arcano"
--- Nomes adicionados nesta revisão.
 T[52510]="Pergaminho de Encantamento — Armadura"
 T[52511]="Pergaminho de Encantamento — Arma"
 T[54391]="Alforja do Tecelão de Maldições Cinzento"
@@ -74425,7 +74423,6 @@ T[1388379]="Concha Especial"
 T[1388479]="Capuz do Invocador de Pedra"
 T[1388633]="Apito de Ataque de Snaggle"
 
--- Traduções incluídas nesta revisão.
 T[354469]="Fragmento de K'aresh"
 T[450521]="Dente Morto"
 T[450809]="Palito de Dentes de Jack"
@@ -74462,7 +74459,6 @@ T[99005]="Traje do Neófito Goblin"
 end)(AscensionPTBR.ItemName)
 
 
--- IDs adicionais sincronizados por nomes ingleses idênticos já traduzidos.
 ;(function(T)
 T[86565]="Trombeta de Batalha"
 T[90897]="Raposinha"
@@ -74477,7 +74473,6 @@ T[450704]="Cinto de Flora Encantada"
 end)(AscensionPTBR.ItemName)
 
 
--- Itens usados por objetivos/rastreadores revisados (v28).
 ;(function(T)
 T[159]="Água Refrescante da Fonte"
 T[100582]="Temperos Goblínicos"
@@ -74493,6 +74488,8 @@ T[100610]="Receita: Gulache Fantasmagórico"
 T[100611]="Receita: Sopa de Escamas de Hidra"
 T[100612]="Receita: Petisco de Silitídeo"
 T[100613]="Receita: Sorvete que Nunca Derrete do Funesto"
+T[100994]="Cajado Mágico do Boticário"
+T[2075034]="Cajado da Pira Imortal de Thalnos"
 end)(AscensionPTBR.ItemName)
 
 AscensionPTBR.ItemNameEN = {}
@@ -104717,7 +104714,7 @@ T[200297]="Mystic Scroll: Plague Swarm"
 T[200298]="Mystic Scroll: Ice Prism"
 T[200299]="Mystic Scroll: Grape Shot"
 T[200300]="Mystic Scroll: Pistol Shot"
-T[200301]="Mystic Scroll: Fuego"
+T[200301]="Pergaminho Místico: Fogo"
 T[200302]="Bloodforged Precision Bow"
 T[200304]="Mystic Scroll: Arctis"
 T[200305]="Mystic Scroll: Starborn"
@@ -137186,7 +137183,7 @@ T[403616]="Mystic Scroll: Prayer of Preservation"
 T[403617]="Mystic Scroll: Time-bind"
 T[403618]="Mystic Scroll: Align"
 T[403624]="Mystic Scroll: Grape Shot"
-T[403626]="Mystic Scroll: Fuego"
+T[403626]="Pergaminho Místico: Fogo"
 T[403630]="Mystic Scroll: Shadow Arrow"
 T[403631]="Mystic Scroll: Shadow Artillery"
 T[403632]="Mystic Scroll: Blooming Shot"
@@ -146736,14 +146733,14 @@ T[558899]="SID_bow_1h"
 T[558900]="Base Hacha 1h"
 T[558901]="Base Hacha 2h"
 T[558902]="Base Arco"
-T[558903]="Base Arma de fuego"
+T[558903]="Base de Arma de Fogo"
 T[558904]="Base Maza 1h"
 T[558905]="Base Maza 2h"
 T[558906]="Base Arma de Asta"
 T[558907]="Base Espada 1h"
 T[558908]="Base Espada 2h"
 T[558909]="Base Baston"
-T[558910]="Base Arma de puño"
+T[558910]="Base de Arma de Punho"
 T[558911]="Base Daga"
 T[558912]="Base Arrojadiza"
 T[558913]="Base Ballesta"

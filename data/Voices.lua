@@ -1,4 +1,4 @@
--- Índice dos arquivos de voz pt-BR presentes na pasta sounds.
+-- Índice das vozes ptBR que já existem em sounds.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.VoiceFiles = {
     ["BloodElfFemale"] = {

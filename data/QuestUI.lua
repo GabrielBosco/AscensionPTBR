@@ -1,5 +1,4 @@
--- Textos fixos das janelas de missão.
--- O Ascension recria alguns rótulos, por isso eles ficam nesta tabela.
+-- Rótulos de missão que o Ascension recria na marra.
 AscensionPTBR = AscensionPTBR or {}
 
 AscensionPTBR.QuestUIExact = {
@@ -102,9 +101,18 @@ AscensionPTBR.QuestUIExact = {
     ["Thazz'ril's Pick"] = "Picareta de Thazz'ril",
     ["Click to complete quest"] = "Clique para concluir a missão",
     ["Click to complete quest."] = "Clique para concluir a missão.",
+
+    ["Speak with a Squire of House Darengar"] = "Fale com um Escudeiro da Casa Darengar",
+    ["Speak with a Squire of House Darengar."] = "Fale com um Escudeiro da Casa Darengar.",
+    ["Speak to a Squire of House Darengar"] = "Fale com um Escudeiro da Casa Darengar",
+    ["Speak to a Squire of House Darengar."] = "Fale com um Escudeiro da Casa Darengar.",
+    ["Scout through the Fargodeep Mine"] = "Explore a Mina Vailafundo",
+    ["Scout through the Fargodeep Mine."] = "Explore a Mina Vailafundo.",
+    ["Scout the Fargodeep Mine"] = "Explore a Mina Vailafundo",
+    ["Scout the Fargodeep Mine."] = "Explore a Mina Vailafundo.",
 }
 
--- Globais usadas pelos XMLs do cliente 3.3.5a.
+-- Esses globals são os que o XML velho realmente consulta.
 AscensionPTBR.QuestUIGlobals = {
     OBJECTIVE = "Objetivo",
     OBJECTIVES = "Objetivos",

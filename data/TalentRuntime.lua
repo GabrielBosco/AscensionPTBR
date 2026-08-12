@@ -1,3 +1,4 @@
+-- O painel de talentos redesenha texto direto; o hook precisa ficar no FontString.
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
 
@@ -6,8 +7,6 @@ local function TalentEnabled()
     return not d or d.spells ~= false
 end
 
--- Tradução em tempo real das árvores do CoA.
--- O painel redesenha os textos, então os FontStrings são interceptados.
 local talentUIFSHooked = setmetatable({}, { __mode = "k" })
 local talentUIRootHooked = setmetatable({}, { __mode = "k" })
 local inTalentUIHook = false
@@ -36,7 +35,9 @@ local function TranslateTalentUIText(text)
     local cached = talentTextCache[text]
     if cached ~= nil then return cached ~= false and cached or nil end
 
-    local translated = AES.TalentUIExact and AES.TalentUIExact[text]
+    local advancementID = text:match("^CharacterAdvancement ID%s+(%d+)$")
+    local translated = advancementID and ("ID do Avanço do Personagem " .. advancementID)
+        or (AES.TalentUIExact and AES.TalentUIExact[text])
     if not translated or translated == text then
         translated = AES.SpellNameEN2ES and AES.SpellNameEN2ES[text]
     end
@@ -152,7 +153,7 @@ local function DelayedTalentPass()
         return
     end
 
-    -- Compatibilidade para carregamentos incomuns em que Runtime.lua ainda não exista.
+    -- Runtime faltou? Usa o timer velho e segue o baile sem derrubar a UI.
     if not talentPassTimer then talentPassTimer = CreateFrame("Frame") end
     local elapsed, shot = 0, 0
     talentPassTimer:SetScript("OnUpdate", function(self, dt)
@@ -166,6 +167,7 @@ local function DelayedTalentPass()
     end)
 end
 
+-- Só troca texto. ID, custo e valor continuam vindo do cliente.
 local HookTalentAPIs
 
 local talentEventFrame = CreateFrame("Frame")
@@ -179,8 +181,6 @@ talentEventFrame:SetScript("OnEvent", function()
     DelayedTalentPass()
 end)
 
--- Wrappers das APIs usadas pelas diferentes versões do painel.
--- Só muda texto; IDs e valores continuam iguais.
 local talentAPIWrapped = setmetatable({}, { __mode = "k" })
 local function PackTalentResults(...)
     return { n = select("#", ...), ... }

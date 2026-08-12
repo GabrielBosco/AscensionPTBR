@@ -1,5 +1,8 @@
 OBJECTIVES = "Objetivos"
 SOUNDS = "Som"
+SOUND_LABEL = "Som"
+SOUNDOPTIONS_MENU = "Som"
+SOUND_OPTIONS = "Opções de som"
 ABILITY_ESSENCE_TOTAL = "Essência de habilidade: %s"
 APPEARANCE_COLLECTED = "A aparência |cffff80ff[%s]|r foi adicionada à sua coleção."
 APPEARANCE_UNCOLLECTED = "A aparência |cffff80ff[%s]|r foi removida da sua coleção."
