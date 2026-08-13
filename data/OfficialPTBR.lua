@@ -279,8 +279,8 @@ A.OfficialStatGlobals = {
 local function ApplyGlobalTable(source)
     local applied = 0
     for key, value in pairs(source or {}) do
-        if _G[key] ~= nil and type(value) == "string" then
-            _G[key] = value
+        if type(value) == "string" and type(rawget(_G, key)) == "string" then
+            rawset(_G, key, value)
             applied = applied + 1
         end
     end

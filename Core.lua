@@ -44,6 +44,14 @@ AES.QuestTrackerNameEN2PT = {
     ["Cut of Good Meat"] = "Corte de Carne Boa",
     ["Necrotic Spore"] = "Esporo Necrótico",
     ["Necrotic Spores"] = "Esporos Necróticos",
+    ["Seereth Stonebreak"] = "Seereth Quebra-pedra",
+    ["Venture Co. Logger"] = "Madeireiro da Empreendimentos S.A.",
+    ["Venture Co. Loggers"] = "Madeireiros da Empreendimentos S.A.",
+    ["Gem of Cobrahn"] = "Gema de Cobrahn",
+    ["Gem of Anacondra"] = "Gema de Sucurina",
+    ["Gem of Pythas"] = "Gema de Pítias",
+    ["Gem of Serpentis"] = "Gema de Serpentis",
+    ["Maur Grimtotem"] = "Mauren Temível Totem",
 }
 AES.UnitName       = AES.UnitName or {}
 AES.UnitNameEN     = AES.UnitNameEN or {}
@@ -64,8 +72,68 @@ AES.AchRewardEN    = AES.AchRewardEN or {}
 
 local db
 
-local defaults = { spells = true, items = true, units = true, patterns = true, flavor = true,
+local defaults = { spells = true, items = true, units = true, worldNpcNames = true, patterns = true, flavor = true,
                    ui = true, achievements = true, quests = true, gossip = true }
+
+
+-- Não preenche global inexistente. No Ascension isso evita atropelar objetos criados depois
+-- pelo SharedXML (cores, mixins, templates etc.) com uma string de tradução.
+AES.ApplySafeGlobalStrings = function()
+    if not (db and db.ui) then return 0 end
+    local applied = 0
+    for key, value in pairs(AES.GlobalStrings or {}) do
+        if type(value) == "string" and type(rawget(_G, key)) == "string" then
+            rawset(_G, key, value)
+            applied = applied + 1
+        end
+    end
+    return applied
+end
+
+-- O SharedXML do Ascension espera objetos ColorMixin nesses dois globals. Addons antigos
+-- de 3.3.5 às vezes trocam isso por tabelas { r, g, b, a }, quebrando KeywordTooltip:GetRGBA().
+-- Converte só quando o objeto está inválido e reaproveita a cor atual sempre que der.
+AES.RepairTooltipColors = function()
+    local function hasRGBA(value)
+        return type(value) == "table" and type(value.GetRGBA) == "function"
+    end
+
+    local function repair(name, dr, dg, dbv, da)
+        local value = rawget(_G, name)
+        if hasRGBA(value) then return false end
+
+        local r, g, b, a = dr, dg, dbv, da
+        if type(value) == "table" then
+            r = tonumber(value.r or value[1]) or r
+            g = tonumber(value.g or value[2]) or g
+            b = tonumber(value.b or value[3]) or b
+            a = tonumber(value.a or value[4]) or a
+        end
+
+        local create = rawget(_G, "CreateColor")
+        if type(create) == "function" then
+            local ok, color = pcall(create, r, g, b, a)
+            if ok and hasRGBA(color) then
+                rawset(_G, name, color)
+                return true
+            end
+        end
+
+        -- Fallback para builds em que CreateColor não foi exportado. KeywordTooltip só precisa
+        -- do contrato GetRGBA; mantemos também os campos antigos por compatibilidade.
+        rawset(_G, name, {
+            r = r, g = g, b = b, a = a,
+            GetRGB = function(self) return self.r, self.g, self.b end,
+            GetRGBA = function(self) return self.r, self.g, self.b, self.a end,
+        })
+        return true
+    end
+
+    local fixed = 0
+    if repair("TOOLTIP_DEFAULT_BACKGROUND_COLOR", 0.090, 0.090, 0.188, 1.000) then fixed = fixed + 1 end
+    if repair("TOOLTIP_DEFAULT_COLOR", 1.000, 1.000, 1.000, 1.000) then fixed = fixed + 1 end
+    return fixed
+end
 
 -- Sem índice EN->PT gigante. ID/link vai direto; texto puro fica num cache pequeno.
 local itemTextCache, itemTextCacheCount = {}, 0
@@ -1304,16 +1372,18 @@ local function OnUnitTooltip(tip)
     local _, unit = tip:GetUnit()
     local guid = unit and UnitGUID(unit)
     local npcID = db.units and NpcIdFromGUID(guid)
+    local tipName = tip:GetName()
+    local L1 = tipName and _G[tipName .. "TextLeft1"]
+    local apiName = unit and UnitName and UnitName(unit)
+
     if npcID then
-        local name = tip:GetName()
-        local L1 = _G[name .. "TextLeft1"]
         local text = L1 and L1:GetText()
         local guard = AES.UnitNameEN[npcID]
-        if text and AES.UnitName[npcID] and (not guard or guard == text) then
+        if text and AES.UnitName[npcID] and (not guard or guard == text or guard == apiName) then
             L1:SetText(AES.UnitName[npcID])
         end
 
-        local L2 = _G[name .. "TextLeft2"]
+        local L2 = tipName and _G[tipName .. "TextLeft2"]
         local t2 = L2 and L2:GetText()
         if t2 and AES.UnitSub[npcID] and not t2:match("^Level") and not t2:match("^Nível") then
             local subGuard = AES.UnitSubEN[npcID]
@@ -1323,8 +1393,23 @@ local function OnUnitTooltip(tip)
         end
     end
 
+    -- NPC custom nem sempre tem UnitSub na base 3.3.5. Nesses casos traduz o
+    -- título/função direto do tooltip (ex.: <Guns and Ammo Merchant>).
+    if AES.TranslateNpcRoleText and tipName then
+        for i = 2, math.min(tip:NumLines(), 4) do
+            local fs = _G[tipName .. "TextLeft" .. i]
+            local shown = fs and fs:GetText()
+            local translated = shown and AES.TranslateNpcRoleText(shown)
+            if translated and translated ~= shown then
+                if AES.LearnWorldNpcRole and unit then
+                    pcall(AES.LearnWorldNpcRole, unit, shown, translated)
+                end
+                pcall(fs.SetText, fs, translated)
+            end
+        end
+    end
+
     if AES.TranslateUnitDescriptorText then
-        local tipName = tip:GetName()
         for i = 2, tip:NumLines() do
             local fs = _G[tipName .. "TextLeft" .. i]
             local shown = fs and fs:GetText()
@@ -1334,6 +1419,24 @@ local function OnUnitTooltip(tip)
     end
 
     ApplyLinePatterns(tip)
+
+    -- Aprende também traduções aplicadas por padrões/outros módulos ao título do card.
+    -- Assim NPC custom que já aparece em PT-BR no tooltip passa a alimentar a placa no mundo.
+    if db.units and type(apiName) == "string" and apiName ~= "" and L1 then
+        local shown = L1:GetText()
+        if type(shown) == "string" and shown ~= "" then
+            shown = shown:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+            if shown ~= apiName and not shown:match("^Level%s") and not shown:match("^Nível%s") then
+                AES.UnitNameEN2ES = AES.UnitNameEN2ES or {}
+                AES.UnitNameEN2ES[apiName] = shown
+            end
+        end
+    end
+
+    if AES.TranslateNativeNameplate and unit then
+        pcall(AES.TranslateNativeNameplate, unit)
+    end
+
     ReshowSoon(tip)
 end
 
@@ -1524,9 +1627,8 @@ local areaRootHooked = setmetatable({}, { __mode = "k" })
 local inAreaFSHook = false
 
 local AREA_ROOT_NAMES = {
-    "WorldMapFrame", "WorldMapDetailFrame", "WorldMapButton",
-    "QuestMapFrame", "WorldMapQuestFrame", "MapQuestFrame", "QuestPOIFrame",
-    "AscensionWorldMapFrame", "AscensionQuestMapFrame", "AscensionMapFrame",
+    -- O mapa do Ascension usa frames protegidos. Traduzimos apenas rótulos explícitos
+    -- e os frames de zona/minimapa para não contaminar WorldMapBlobFrame/EnableMouse.
     "MinimapCluster", "BattlefieldMinimap", "ZoneTextFrame", "SubZoneTextFrame",
 }
 
@@ -1666,12 +1768,6 @@ areaWatcher:SetScript("OnEvent", function(_, event, name)
     pcall(TranslateAreaUI)
 end)
 
-for _, functionName in ipairs({ "WorldMapFrame_Update", "WorldMapFrame_UpdateMap",
-                                 "WorldMapFrame_UpdateQuests", "QuestMapUpdateAllQuests" }) do
-    if type(_G[functionName]) == "function" then
-        pcall(hooksecurefunc, functionName, TranslateAreaUI)
-    end
-end
 end
 
 AES.TranslateDescriptionString = function(text)
@@ -1876,9 +1972,6 @@ local function HookStaticPanels()
     pcall(TranslateLiveFramesOnce)
     for _, name in ipairs({ "GameMenuFrame", "VideoOptionsFrame", "InterfaceOptionsFrame",
                             "AchievementFrame", "SpellBookFrame",
-
-                            "WorldMapFrame", "QuestMapFrame", "WorldMapQuestFrame",
-                            "MapQuestFrame", "AscensionWorldMapFrame", "AscensionQuestMapFrame",
 
                             "AscensionLFGFrame", "AscensionPVEFrame", "AscensionPVPFrame",
                             "AscensionRulesetFrame", "PathToAscensionFrame",
@@ -2704,8 +2797,6 @@ local QUEST_UI_ROOT_NAMES = {
     "ObjectiveTrackerFrame", "QuestTrackerFrame",
     "AscensionQuestFrame", "AscensionQuestLogFrame",
     "AscensionObjectiveTracker", "AscensionQuestTracker",
-    "WorldMapFrame", "QuestMapFrame", "WorldMapQuestFrame", "MapQuestFrame",
-    "QuestPOIFrame", "AscensionWorldMapFrame", "AscensionQuestMapFrame",
 }
 
 local QUEST_UI_EXPLICIT_NAMES = {
@@ -3217,9 +3308,14 @@ questFrame:SetScript("OnEvent", function(self, event)
     end
 
     if event == "WORLD_MAP_UPDATE" then
-        local map = WorldMapFrame or _G["AscensionWorldMapFrame"]
-        if map and map.IsVisible and map:IsVisible() then
-            pcall(WalkQuestUI, map, 0, {})
+        -- Não percorre a árvore protegida do mapa. Os rótulos conhecidos são
+        -- atualizados fora da pilha segura, sem taint em WorldMapBlobFrame.
+        if AES.Runtime then
+            AES.Runtime.After("quest-map-safe", 0.05, function()
+                if db and db.quests then pcall(TranslateQuestChrome) end
+            end)
+        else
+            pcall(TranslateQuestChrome)
         end
         return
     end
@@ -4255,102 +4351,9 @@ end)
 
 end
 
-do
-local plateElapsed = 0
-local plateRootsSeen = setmetatable({}, { __mode = "k" })
-local plateFSHooked = setmetatable({}, { __mode = "k" })
-local inPlateFSHook = false
 
-local function TranslatePlateText(text)
-    if type(text) ~= "string" or text == "" or not AES.UnitNameEN2ES then return nil end
-
-    local translated = AES.UnitNameEN2ES[text]
-    if translated then return translated end
-
-    local prefix, body, suffix = text:match("^(%s*)(.-)(%s*)$")
-    if body and body ~= text then
-        translated = AES.UnitNameEN2ES[body]
-        if translated then return prefix .. translated .. suffix end
-    end
-
-    local color, inner, reset = text:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
-    if inner then
-        translated = AES.UnitNameEN2ES[inner]
-        if translated then return color .. translated .. reset end
-    end
-    return nil
-end
-
-local function TranslatePlateFS(fs)
-    if inPlateFSHook or not (db and db.units and AES.UnitNameEN2ES) then return end
-    local text = fs and fs.GetText and fs:GetText()
-    local translated = text and TranslatePlateText(text)
-    if translated and translated ~= text then
-        inPlateFSHook = true
-        pcall(fs.SetText, fs, translated)
-        inPlateFSHook = false
-    end
-end
-
-local function HookPlateFS(fs)
-    if not (fs and fs.SetText) or plateFSHooked[fs] then return end
-    plateFSHooked[fs] = true
-    pcall(hooksecurefunc, fs, "SetText", TranslatePlateFS)
-    if fs.SetFormattedText then
-        pcall(hooksecurefunc, fs, "SetFormattedText", TranslatePlateFS)
-    end
-    TranslatePlateFS(fs)
-end
-
-local function ScanPlateRoot(fr, depth)
-    if not (fr and fr.GetRegions and fr.GetChildren) or depth > 2 then return end
-    for _, region in ipairs({ fr:GetRegions() }) do
-        if region and region.IsObjectType and region:IsObjectType("FontString") then
-            HookPlateFS(region)
-        end
-    end
-    for _, child in ipairs({ fr:GetChildren() }) do
-        ScanPlateRoot(child, depth + 1)
-    end
-end
-
-local plateScanner = CreateFrame("Frame")
--- Placa desligada = scanner desligado também. Sem OnUpdate fantasma.
-local function NameplatesEnabled()
-    if not GetCVar then return true end
-    local okE, enemies = pcall(GetCVar, "nameplateShowEnemies")
-    local okF, friends = pcall(GetCVar, "nameplateShowFriends")
-    local okA, all = pcall(GetCVar, "nameplateShowAll")
-    if not (okE or okF or okA) then return true end
-    return enemies == "1" or friends == "1" or all == "1"
-end
-
-local function RefreshPlateScannerState()
-    if db and db.units and NameplatesEnabled() then
-        plateScanner:Show()
-    else
-        plateScanner:Hide()
-    end
-end
-
-plateScanner:Hide()
-plateScanner:RegisterEvent("PLAYER_ENTERING_WORLD")
-pcall(plateScanner.RegisterEvent, plateScanner, "CVAR_UPDATE")
-plateScanner:SetScript("OnEvent", RefreshPlateScannerState)
-plateScanner:SetScript("OnUpdate", function(_, dt)
-    plateElapsed = plateElapsed + (dt or 0)
-    if plateElapsed < 1.0 then return end
-    plateElapsed = 0
-    if not (db and db.units and AES.UnitNameEN2ES and WorldFrame) then return end
-
-    for _, child in ipairs({ WorldFrame:GetChildren() }) do
-        if not plateRootsSeen[child] then
-            plateRootsSeen[child] = true
-            pcall(ScanPlateRoot, child, 0)
-        end
-    end
-end)
-end
+-- Nameplates ficam em WorldNames.lua. O scanner antigo do WorldFrame foi removido
+-- para não manter OnUpdate, weak tables e hooks duplicados no Core.
 
 local UNITFRAME_ROOTS = {
     "XPerl_Target", "XPerl_TargetTarget", "XPerl_Focus", "XPerl_Player",
@@ -4375,24 +4378,40 @@ local function WalkReplaceExact(root, en, es)
     pcall(visit, root, 0)
 end
 
+local function WalkTranslateNpcRoles(root)
+    if not (root and root.GetRegions and root.GetChildren and AES.TranslateNpcRoleText) then return end
+    local function visit(fr, depth)
+        if depth > 6 then return end
+        for _, r in ipairs({ fr:GetRegions() }) do
+            if r.IsObjectType and r:IsObjectType("FontString") and r.GetText then
+                local shown = r:GetText()
+                local translated = shown and AES.TranslateNpcRoleText(shown)
+                if translated and translated ~= shown then pcall(r.SetText, r, translated) end
+            end
+        end
+        for _, c in ipairs({ fr:GetChildren() }) do
+            visit(c, depth + 1)
+        end
+    end
+    pcall(visit, root, 0)
+end
+
 local function TranslateUnitFrames(unit)
     if not (db and db.units) then return end
     local guid = UnitGUID and UnitGUID(unit)
     local id = guid and NpcIdFromGUID(guid)
-    if not id then return end
 
-    local ptName = AES.UnitName and AES.UnitName[id]
+    local ptName = id and AES.UnitName and AES.UnitName[id]
     local enName = UnitName and UnitName(unit)
-    local guardName = AES.UnitNameEN and AES.UnitNameEN[id]
+    local guardName = id and AES.UnitNameEN and AES.UnitNameEN[id]
     local canName = ptName and enName and ptName ~= enName
         and (not guardName or guardName == enName)
 
-    local enSub = AES.UnitSubEN and AES.UnitSubEN[id]
-    local ptSub = AES.UnitSub and AES.UnitSub[id]
+    local enSub = id and AES.UnitSubEN and AES.UnitSubEN[id]
+    local ptSub = id and AES.UnitSub and AES.UnitSub[id]
     local canSub = type(enSub) == "string" and enSub ~= ""
         and type(ptSub) == "string" and ptSub ~= "" and enSub ~= ptSub
 
-    if not canName and not canSub then return end
     for _, rn in ipairs(UNITFRAME_ROOTS) do
         local root = _G[rn]
         if canName then WalkReplaceExact(root, enName, ptName) end
@@ -4400,6 +4419,7 @@ local function TranslateUnitFrames(unit)
             WalkReplaceExact(root, enSub, ptSub)
             WalkReplaceExact(root, "<" .. enSub .. ">", "<" .. ptSub .. ">")
         end
+        WalkTranslateNpcRoles(root)
     end
 end
 
@@ -4725,6 +4745,9 @@ frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:SetScript("OnEvent", function(self, event, arg1)
     if event == "PLAYER_ENTERING_WORLD" then
+        if AES.ApplySafeGlobalStrings then pcall(AES.ApplySafeGlobalStrings) end
+        if AES.RepairTooltipColors then pcall(AES.RepairTooltipColors) end
+        if AES.ApplyWorldNpcNameplates then pcall(AES.ApplyWorldNpcNameplates) end
         RetranslateStaticUI()
         HookStaticPanels()
 
@@ -4771,9 +4794,11 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         if db[k] == nil then db[k] = v end
     end
 
+    if AES.ApplySafeGlobalStrings then pcall(AES.ApplySafeGlobalStrings) end
     if AES.ApplyOfficialDisplayGlobals then
         pcall(AES.ApplyOfficialDisplayGlobals, db)
     end
+    if AES.RepairTooltipColors then pcall(AES.RepairTooltipColors) end
 
     -- Lixo de opção antiga. Se vier de versão velha, limpa no carregamento.
     for _, key in ipairs({ "capture", "captured", "uicaptured", "qcaptured",
@@ -4818,6 +4843,8 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             AES.UnitNameEN2ES[en] = pt
         end
     end
+
+    if AES.ApplyWorldNpcNameplates then pcall(AES.ApplyWorldNpcNameplates) end
 
 -- Não ressuscitar o índice completo de quests: duplicava texto demais na memória.
     AES.QuestRuntimeTextByID = nil
@@ -4959,6 +4986,12 @@ frame:SetScript("OnEvent", function(self, event, arg1)
     local waiter = CreateFrame("Frame")
     waiter:RegisterEvent("ADDON_LOADED")
     waiter:SetScript("OnEvent", function(w, _, name)
+        if AES.RepairTooltipColors then pcall(AES.RepairTooltipColors) end
+        if db and db.ui and type(name) == "string"
+            and (name:find("Ascension", 1, true) or name:find("Blizzard_", 1, true))
+            and AES.ApplySafeGlobalStrings then
+            pcall(AES.ApplySafeGlobalStrings)
+        end
         if name == "Blizzard_AchievementUI" then
             HookAchievementUI()
         elseif name == "Blizzard_TrainerUI" then
@@ -4989,6 +5022,7 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         db.items = not db.items
     elseif msg == "npcs" or msg == "units" then
         db.units = not db.units
+        if AES.ApplyWorldNpcNameplates then pcall(AES.ApplyWorldNpcNameplates) end
     elseif msg == "linhas" or msg == "patterns" then
         db.patterns = not db.patterns
     elseif msg == "ambiente" or msg == "flavor" then
@@ -5046,4 +5080,4 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.5.6/AscensionES-1.5.9/2026-08-12"
+AscensionPTBR.__firma = "AscensionPTBR/1.5.7/AscensionES-1.5.9/2026-08-12"

@@ -4,7 +4,7 @@ local AES = AscensionPTBR or {}
 if not InterfaceOptions_AddCategory then return end
 
 local DEFAULTS = {
-    spells = true, items = true, flavor = true, units = true,
+    spells = true, items = true, flavor = true, units = true, worldNpcNames = true,
     quests = true, gossip = true, achievements = true,
     patterns = true, ui = true, chat = true, errores = true,
     voice = true, updateCheck = true,
@@ -18,6 +18,7 @@ local OPTIONS = {
             { "items", "Itens e equipamentos", "Traduz nomes, atributos e efeitos dos itens." },
             { "flavor", "Textos de ambientação", "Traduz as citações amarelas dos itens." },
             { "units", "NPCs e criaturas", "Traduz nomes conhecidos sem alterar nomes de jogadores." },
+            { "worldNpcNames", "Nomes de NPCs no mundo", "Traduz nome e função nos frames 3D exibidos pelo cliente. Não altera V, bindings nem CVars de placas." },
             { "quests", "Missões", "Traduz títulos, objetivos, descrições, progresso e conclusão." },
             { "gossip", "Diálogos de NPCs", "Traduz conversas, saudações e balões." },
             { "achievements", "Conquistas", "Traduz títulos, descrições e recompensas." },
@@ -50,6 +51,8 @@ local function ApplySetting(key, enabled)
         AES.SetErrorsEnabled(enabled)
     elseif key == "voice" and AES.SetVoiceEnabled then
         AES.SetVoiceEnabled(enabled)
+    elseif (key == "worldNpcNames" or key == "units") and AES.ApplyWorldNpcNameplates then
+        AES.ApplyWorldNpcNameplates()
     end
 end
 

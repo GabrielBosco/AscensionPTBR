@@ -26,3 +26,10 @@ A adaptação brasileira trabalha sobre o conteúdo do AscensionES para oferecer
 - Preservação dos créditos e notas de autoria originais.
 
 Nenhuma contribuição deve remover, ocultar ou substituir os créditos originais.
+
+
+## Referências de localização pt-BR
+
+**QuestTradutor** — projeto de leoaviana, usado como referência estática para textos clássicos/WotLK quando ID e título da missão eram compatíveis com a base atual do Ascension. O texto inglês do Ascension continua sendo a fonte de verdade para conteúdo customizado e requisitos.
+
+Repositório: <https://github.com/leoaviana/QuestTradutor>

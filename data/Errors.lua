@@ -1,5 +1,8 @@
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.ErrExact = {
+["All Nameplates Turned Off"]="Todas as placas de identificação desativadas",
+["All Nameplates Turned On"]="Todas as placas de identificação ativadas",
+["All Nameplates Turned On (Combat)"]="Todas as placas de identificação ativadas (combate)",
 ["A group leader has removed your voice privileges."]="Um líder do grupo revogou seus privilégios de voz.",
 ["A group leader has restored your voice privileges."]="Um líder do grupo restituiu seus privilégios de voz.",
 ["A mail attachment was invalid."]="Um anexo da mensagem é inválido.",

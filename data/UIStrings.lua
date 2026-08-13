@@ -3531,7 +3531,7 @@ AscensionPTBR.UIStrings = {
 ["EXHAUST_TOOLTIP1"]="|cffffd200%s|r\n|cffffffff%d%% de experiência normal\nobtidos de monstros.|r",
 ["EXHAUST_TOOLTIP2"]="\n|cffff0000Você precisa descansar em uma estalagem.|r",
 ["EXHAUST_TOOLTIP3"]="\n\nNestas condições, você recebe\n%d a mais de experiência de monstros\nantes do próximo estado de descanso.",
-["EXHAUST_TOOLTIP4"]="\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %d\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff.|r",
+["EXHAUST_TOOLTIP4"]="\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %d\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff,|r",
 ["EXIT"]="Sair",
 ["EXIT_GAME"]="Sair do jogo",
 ["EXOTICS"]="Armas exóticas",
@@ -15059,7 +15059,7 @@ T["Enough with your flirting.  I know you think all Dwarven women look the same.
         T["\"Spawn camping\" (\"claiming\" a spawn point in order to repeatedly attack a creep)"] = "\"Aguardar aparecimento\" (\"instalar-se\" no lugar de aparecimento de uma criatura para atacá-la repetidamente)"
         T["\"Training\" (leading enemies to another player to force combat)"] = "\"Treino\" (direcionar inimigos para outro jogador forçar um combate)"
         T["\n\nIn this condition, you can get\n%d more monster experience\nbefore the next rest state."] = "\n\nNestas condições, você recebe\n%d a mais de experiência de monstros\nantes do próximo estado de descanso."
-        T["\n\n|cffffd200Resting|r\n|cffffffffYou must rest for %d additional\nminutes to become|r |cffffd200Fully Rested|r|cffffffff.|r"] = "\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %d\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff.|r"
+        T["\n\n|cffffd200Resting|r\n|cffffffffYou must rest for %d additional\nminutes to become|r |cffffd200Fully Rested|r|cffffffff.|r"] = "\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %d\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff,|r"
         T["\n|cffff0000You should rest at an Inn.|r"] = "\n|cffff0000Você precisa descansar em uma estalagem.|r"
         T["a Random Dungeon"] = "uma Masmorra Aleatória"
         T["a different number of %s and %s gems"] = "um número diferente de gemas %s e %s"

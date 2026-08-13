@@ -4800,4 +4800,5 @@ T[50732]="Jorrassangue, Lâmina da Agonia de Kel'Thuzad"
 T[51964]="Cinto Vigoroso"
 T[51992]="Anel Tumultuoso"
 T[51994]="Manto Tumultuoso"
+T[558534]="Garrafas de Água Refrescante da Selma"
 end)(AscensionPTBR.ItemName)

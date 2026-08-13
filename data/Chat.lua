@@ -5967,7 +5967,7 @@ AscensionPTBR.ChatPatterns = {
 {"^Cast time: |cffffffff(%d+) sec|r$","Tempo de lançamento: |cffffffff%1 s|r"},
 },
 ["Causes"]={
-{"^Causes (%d+)%%%% of normal damage$","Inflige %1%%%2e dano normal"},
+{"^Causes (%d+)%%%% of normal damage$","Causa %1%%%2e dano normal"},
 },
 ["Changed"]={
 {"^Changed Channel: |Hchannel:(%d+)|h%[(.+)%]|h$","Mudança de canal: |Hchannel:%1|h[%2]|h"},
@@ -7027,7 +7027,7 @@ AscensionPTBR.ChatPatterns = {
 {"^|cffff64ff(.+) %(Inactive%)|r$","|cffff64ff%1 (Inativo)|r"},
 },
 ["|cffffd200Resting|r"]={
-{"^\n\n|cffffd200Resting|r\n|cffffffffYou must rest for (%d+) additional\nminutes to become|r |cffffd200Fully Rested|r|cffffffff%.|r$","\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %1\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff.|r"},
+{"^\n\n|cffffd200Resting|r\n|cffffffffYou must rest for (%d+) additional\nminutes to become|r |cffffd200Fully Rested|r|cffffffff%.|r$","\n\n|cffffd200Descansando|r\n|cffffffffVocê precisa descansar mais %1\nminutos para ficar|r |cffffd200Totalmente Descansado|r|cffffffff,|r"},
 },
 ["|cffffd200|r"]={
 {"^|cffffd200(.+)|r\n|cffffffff(%d+)%%%% of normal experience\ngained from monsters%.|r$","|cffffd200%1|r\n|cffffffff%2%%%% p. de experiência normal\nrecebida de monstros.|r"},

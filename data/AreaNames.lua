@@ -1,6 +1,9 @@
 -- Zonas do 3.3.5a. Se a tradução não for segura, deixa o nome original.
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.AreaNames = {
+    ["Northern Stranglethorn"] = "Selva do Espinhaço Setentrional",
+    ["Stratholme - Main Gate"] = "Stratholme — Portão Principal",
+    ["Stratholme - Service Entrance"] = "Stratholme — Entrada de Serviço",
     ["7th Legion Front"] = "Front da 7ª Legião",
     ["Abandoned Armory"] = "Armaria Abandonada",
     ["Abandoned Camp"] = "Acampamento Abandonado",

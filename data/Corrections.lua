@@ -329,3 +329,166 @@ do
         Q[28575].o = "O Estalajadeiro Finmir quer que você use Couraria para confeccionar 6 Braçadeiras Verdes de Couro e leve a encomenda a Manaar, o Vigilante, no Refúgio, no Pântano das Mágoas."
     end
 end
+
+-- Endgame e quests custom que ainda estavam com espanhol/portunhol no meio.
+do
+    local Q = A.QuestData
+    if Q then
+        for _, id in ipairs({ 7786, 207786, 307786, 1307786 }) do
+            local q = Q[id]
+            if q then
+                q.d = "Ao segurar o receptáculo, você ouve um sussurro fraco.\n\n\"Liberte-me... desta... prisão.\"\n\n\"Dois que nos prendem...\n\naço feito de quatro...\n\nessência... senhor do fogo.\"\n\n\"Dimitriano... Silithus...\""
+                q.o = "Para libertar Trovejardus, o Perseguidor dos Ventos, da prisão, entregue o Receptáculo do Renascimento, 10 Barras de Elemêntio e a Essência do Senhor do Fogo ao Grão-lorde Dimitriano, em Silithus."
+                q.p = "Faça o mundo se ajoelhar, se for preciso!"
+                q.c = "Nem em sonhos ousei prever este dia.\n\nContemple, mortal.\n\nCONTEMPLE AQUELE QUE É MAIS ANTIGO QUE A PRÓPRIA EXISTÊNCIA!\n\nCONTEMPLE AQUELE QUE ENFRENTOU TITÃS E DEUSES DE IGUAL PARA IGUAL!\n\nERGA-SE, MEU SENHOR! ROMPA SUAS CORRENTES!"
+            end
+        end
+
+        if Q[77734] then
+            Q[77734].d = "Meu senhor Thunderaan, Príncipe do Ar, foi abençoado com magias poderosas. Posso transmitir algumas delas àqueles que provarem ser dignos de empunhar seu poder.\n\nProve ser inimigo das forças de Ragnaros. Depois, traga-me o próprio poder do ar. Retorne com Essência do Ar, Sopro do Vento e Ar Elemental."
+            Q[77734].o = "Colete o poder do vento."
+        end
+
+        if Q[11094] then
+            Q[11094].p = "Acalme-se, criança."
+        end
+        if Q[11812] then
+            Q[11812].c = "Honre a chama de Desolação!"
+        end
+
+        if Q[255006] then
+            Q[255006].d = "Rohil acha você forte. Forte o bastante para matar Urash. Forte o bastante para quebrar a maldição.\n\nHá uma prova para novos caçadores: enfrentar feras e sobreviver. Quimera, lagarto, mantícora. Sobreviva às três e será um grande caçador.\n\nMas isso não basta para Urash. Enfrente as três e também o grande terror dos céus, a fera que chamamos Shanel'Tefir. Sobreviva, traga provas de cada uma e será um dos maiores caçadores. Grande o bastante para provar que Rohil está certo."
+            Q[255006].o = "Colete troféus das feras ao redor da mina."
+            Q[255006].p = "As feras desta terra são mais fortes que as de fora. Feras grandes e poderosas, abatidas apenas pelos maiores caçadores."
+            Q[255006].c = "Muitos troféus. Grandes, fortes!\n\nVocê é um verdadeiro caçador, como Rohil disse."
+        end
+
+        if Q[255028] then
+            Q[255028].p = "Não sei o que essa naga está fazendo aqui, mas uma naga tão perto de Porto de Bondebico não pode ser coisa boa."
+            Q[255028].c = "Ah, você voltou! Deu um jeito naquela escamosa, viscosa, rastejante, sorrateira e submersa...\n\n...deu, não deu?"
+        end
+
+        if Q[255060] then
+            Q[255060].o = "Mate os Operários Gan'arg e destrua os Protótipos de Canhão Vil no Pântano das Mágoas."
+            Q[255060].p = "Esses relatos estão perto demais do Portal Negro para o meu gosto."
+            Q[255060].c = "Obrigado. Todos estaremos muito mais seguros sem esses Gan'arg operando por perto.\n\nNunca ouvi falar de Gan'arg trabalhando por conta própria. Alguém deve tê-los trazido até aqui..."
+        end
+
+        if Q[255073] then
+            Q[255073].o = "Mate os Filhotes de Viúva Negra na Floresta do Crepúsculo."
+            Q[255073].p = "E então, já cuidou daquelas aranhas terríveis?"
+            Q[255073].c = "Você tem minha gratidão. Dormiremos bem esta noite!\n\n<O olhar dela volta para Brutus enquanto ri baixinho para si mesma.>\n\n...alguns mais do que outros."
+        end
+
+        local warlockText = "Não faço rodeios, verme. A escuridão contida nas peças Coração Pestilento pode muito bem destruir nós dois. É por isso que o preço é tão alto. Se eu for morrer, será como um homem rico.\n\nE não me importa nem um pouco como você morre, desde que faça o que peço. Traga-me o que preciso e ambos sairemos ganhando — ou morreremos; mas isso eu já expliquei..."
+        for id = 209103, 209110 do
+            if Q[id] then
+                Q[id].d = warlockText
+                Q[id].c = "Excelente, $n. Você trouxe tudo o que pedi. A peça Coração Pestilento está pronta."
+            end
+        end
+
+        local priestText = "<Padre Montoy faz alguns gestos estranhos no ar diante de você.>\n\nVocê encontrou as vestes dos caídos? Pobres almas cujos últimos suspiros foram dados no campo de batalha — despojadas de tudo, até da própria dignidade.\n\nTraga-me os restos profanados dos mortos junto com reagentes de purificação, e você conhecerá a fé."
+        for id = 209111, 209118 do
+            if Q[id] then
+                Q[id].d = priestText
+                Q[id].c = "Excelente, $n. Você trouxe tudo exatamente como pedi. Suas vestes estão prontas. Use-as para enfrentar aqueles que ameaçam nosso mundo."
+            end
+        end
+
+        -- Essas duas frases aparecem em um monte de missões do Festival do Fogo.
+        -- Se a zona existe na nossa tabela, aproveita o nome ptBR em vez de deixar inglês.
+        local zones = A.AreaNames or {}
+        for _, q in pairs(Q) do
+            if type(q) == "table" and type(q.cEN) == "string" then
+                local zone = q.cEN:match("^Honor the (.-) flame!$")
+                if zone and zones[zone] then
+                    q.c = "Honre a chama de " .. zones[zone] .. "!"
+                end
+            end
+        end
+    end
+end
+
+-- Algumas descrições de habilidades custom ainda tinham termos literais bem feios.
+do
+    local D = A.DescPairs
+    if D then
+        if D[10] then D[10][2] = "Dispara automaticamente contra o alvo até ser cancelado. Aumenta em {{1}}% sua velocidade de ataque à distância e escala com o Poder de Ataque à distância." end
+        if D[25196] then D[25196][2] = "Clique com o botão direito para evocar ou dispensar seu Príncipe Thunderaan." end
+        if D[35473] then D[35473][2] = "Exibe a Marca Lendária de Thunderaan. Mostre-a com orgulho!" end
+        if D[59427] then D[59427][2] = "Combina as metades esquerda e direita da Prisão de Thunderaan." end
+        if D[59453] then D[59453][2] = "Combina as metades heroicas esquerda e direita da Prisão de Thunderaan." end
+    end
+end
+
+
+-- Acabamento de endgame, Festival do Fogo e habilidades temporais/felinas.
+do
+    local Q = A.QuestData
+    if Q then
+        if Q[11696] then
+            Q[11696].c = "O frio de Ahune se espalha por estas cavernas, $n; uma semente da morte gélida que nos aguarda caso ele alcance todo o seu poder. Agradeço à Mãe Terra por ter enviado você."
+        end
+
+        if Q[13370] then
+            Q[13370].d = "Seu campeão, Bolvar, morreu defendendo nosso mundo. A Horda lamenta a perda de um herói tão grandioso, mas não foi responsável pelos ataques covardes de Putress no Portão da Ira. Também perdemos grandes heróis por causa dessa traição.\n\nDiga ao seu rei que faremos tudo ao nosso alcance para levar os responsáveis por esse ato covarde à justiça. Faremos o possível para evitar um conflito com a Aliança, mas não hesitaremos em nos defender se formos provocados."
+            Q[13370].o = "Use o portal no Forte Grommash para retornar à Bastilha de Ventobravo e entregue a mensagem de Thrall ao Rei Varian Wrynn."
+            Q[13370].c = "Eles perderam a Cidade Baixa? Então a hora de atacar é agora. Nós mesmos lidaremos com Putress e retomaremos as Ruínas de Lordaeron para a Aliança!"
+        end
+
+        if Q[13377] then
+            Q[13377].d = "Nas profundezas da Cidade Baixa se esconde o assassino responsável pela morte de Bolvar e de nossos bravos soldados no Portão da Ira.\n\nVarian trouxe consigo todo o poderio da Aliança para ajudar a derrubá-lo. Junte-se a ele e à Grã-senhora Jaina Proudmoore na caçada e conquiste seu lugar entre os maiores campeões da Aliança!\n\nFale com o Rei Varian Wrynn quando estiver pronto."
+            Q[13377].o = "Ajude o Rei Varian Wrynn e a Grã-senhora Jaina Proudmoore a levar o Grão-boticário Putress à justiça. Se tiver sucesso, apresente-se ao Rei Varian Wrynn."
+            Q[13377].c = "Por tempo demais, deixamos a Horda agir sem controle. Permitimos que seus territórios prosperassem e, em troca da nossa generosidade, eles tramaram nossa ruína.\n\nPaz? Inútil... Não nos levou a lugar algum. Perdemos alguns dos nossos maiores heróis por causa da \"paz\". Vamos ver o que a batalha nos traz...\n\nVolte para Nortúndria, $n. Conquiste-a para o seu rei -- PELA ALIANÇA!"
+        end
+
+        if Q[14232] then
+            Q[14232].o = "Apresente-se a Sergra Espinho Negro na Encruzilhada, nos Sertões."
+        end
+
+        -- O banco antigo tem dezenas de conclusões do Festival do Fogo ainda em inglês.
+        -- Corrige em lote usando a mesma tabela de nomes de zonas do addon.
+        local zones = A.AreaNames or {}
+        local aliases = { ["Elywnn Forest"] = "Elwynn Forest" }
+        for _, q in pairs(Q) do
+            if type(q) == "table" and type(q.cEN) == "string" then
+                local zone = q.cEN:match("^Honor the (.-) flame[%.!]$")
+                if zone then
+                    zone = aliases[zone] or zone
+                    if zones[zone] then q.c = "Honre a chama de " .. zones[zone] .. "!" end
+                else
+                    local faction, dzone = q.cEN:match("^Desecrate the (Alliance)'s (.-) bonfire!$")
+                    if not faction then faction, dzone = q.cEN:match("^Desecrate the (Horde)'s (.-) bonfire!$") end
+                    if faction and dzone then
+                        dzone = aliases[dzone] or dzone
+                        if zones[dzone] then
+                            local factionPT = faction == "Alliance" and "Aliança" or "Horda"
+                            q.c = "Profane a fogueira da " .. factionPT .. " em " .. zones[dzone] .. "!"
+                        end
+                    else
+                        local generic = q.cEN:match("^Desecrate the (.-) bonfire!$")
+                        if generic then
+                            generic = aliases[generic] or generic
+                            if zones[generic] then q.c = "Profane a fogueira de " .. zones[generic] .. "!" end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+-- Habilidades custom de Chronomancer/Feral que ainda estavam literais ou com espanhol.
+do
+    local D = A.DescPairs
+    if D then
+        local chrono = "\nConjurar Lampejo concede a você |cFFFFFFFFDistorção Temporal|r.\n\nVocê aprenderá a criar uma |cFFFFFFFFDobra Temporal|r, permitindo retornar à posição original do Lampejo caso a conjure dentro de 3 segundos.\n\nSeus feitiços de dano com tempo de lançamento prolongam a duração de |cFFFFFFFFDistorção Temporal|r em 1 segundo e reduzem a recarga de Lampejo em 2 segundos."
+        if D[17764] then D[17764][2] = chrono end
+        if D[66786] then D[66786][2] = chrono end
+        if D[57296] then D[57296][2] = "Ensina: Fenda Temporal." end
+        if D[83405] then D[83405][2] = "Ensina: Fenda Temporal." end
+        if D[92242] then D[92242][2] = "Canaliza uma fenda temporal em um dragão inimigo por {{1}}. Enquanto estiver preso na fenda, todo o dano causado ao alvo aumenta em {{2}}%. Além disso, a cada 15.000 de dano causado a um alvo afetado por Fenda Temporal, 1 Carga de Choque é gerada." end
+        if D[53307] then D[53307][2] = "Causar dano ao longo do tempo com Mutilar, Ancinho, Rasgar ou Bote tem {{1}} de chance de potencializar uma das suas habilidades, fazendo com que ela cause {{2}}% a mais de dano e custe {{3}}% mais Energia a cada ativação subsequente.\n\nFrenesi Felino possui 18 segundos de recarga interna." end
+    end
+end

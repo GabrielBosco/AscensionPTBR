@@ -120,6 +120,7 @@ AscensionPTBR.CustomUI = {
     ["Materials"] = "Materiais",
     ["Leather"] = "Couro",
     ["Mail"] = "Malha", -- Aqui Mail é tipo de armadura, não correio.
+    ["Back"] = "Capa", -- Aqui Back é slot/tipo de equipamento, não botão de voltar.
     ["Cloth"] = "Tecido",
     ["Armor"] = "Armadura",
     ["Weapon"] = "Arma",
