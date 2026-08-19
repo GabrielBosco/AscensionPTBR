@@ -1,11 +1,12 @@
 ## Interface: 30300
 ## Title: AscensionPTBR |cff33ff99Português (Brasil)|r
-## Notes: Tradução em Português do Brasil para o Project Ascension.
+## Notes: Tradução pt-BR do Project Ascension, revisada para o cliente enUS.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
-## GitHun-Repo Author: https://github.com/HideXs/AscensionES
-## Version: 1.4.3
+## X-Upstream: HideXs/AscensionES
+## Version: 1.5.0
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
+## OptionalDeps: DragonUI
 ## SavedVariables: AscensionPTBRDB
 
 data\Globals.lua
@@ -15,15 +16,14 @@ data\MapLabels.lua
 data\Patterns.lua
 data\CustomUI.lua
 data\ServerUI.lua
+data\ServerUIExtra.lua
 data\UIStrings.lua
 data\CharacterStats.lua
+data\CharacterPanels.lua
 data\TalentUI.lua
 data\QuestUI.lua
 data\Achievements.lua
-data\SpellNames.lua
-data\SpellDescs.lua
-data\DescExtra.lua
-data\SpellTips.lua
+data\spells\Bootstrap.lua
 data\SpellRanks.lua
 data\ItemNames.lua
 data\ItemNamesExtra.lua
@@ -32,16 +32,68 @@ data\UnitNames.lua
 data\Quests.lua
 data\Corrections.lua
 data\Endgame.lua
-data\SpellPolish.lua
+data\spells\shared\DescByID_01.lua
+data\spells\shared\DescByID_02.lua
+data\spells\shared\DescByID_03.lua
+data\spells\shared\DescByID_04.lua
+data\spells\shared\DescByID_05.lua
+data\spells\shared\DescPairs_01.lua
+data\spells\shared\DescPairs_02.lua
+data\spells\shared\DescPairs_03.lua
+data\spells\shared\DescPairs_04.lua
+data\spells\shared\DescPairs_05.lua
+data\spells\shared\DescPairs_06.lua
+data\spells\shared\DescPairs_07.lua
+data\spells\shared\DescPairs_08.lua
+data\spells\shared\Names_A_F.lua
+data\spells\shared\Names_G_L.lua
+data\spells\shared\Names_M_R.lua
+data\spells\shared\Names_Other.lua
+data\spells\shared\Names_S_Z.lua
+data\spells\shared\TipByID_01.lua
+data\spells\shared\TipByID_02.lua
+data\spells\shared\TipPairs_01.lua
+data\spells\shared\TipPairs_02.lua
+data\spells\shared\TipPairs_03.lua
+data\classes\Barbarian.lua
+data\classes\WitchDoctor.lua
+data\classes\Felsworn.lua
+data\classes\WitchHunter.lua
+data\classes\Stormbringer.lua
+data\classes\KnightOfXoroth.lua
+data\classes\Guardian.lua
+data\classes\Templar.lua
+data\classes\Bloodmage.lua
+data\classes\Ranger.lua
+data\classes\Chronomancer.lua
+data\classes\Necromancer.lua
+data\classes\Pyromancer.lua
+data\classes\Cultist.lua
+data\classes\Starcaller.lua
+data\classes\SunCleric.lua
+data\classes\Tinker.lua
+data\classes\Venomancer.lua
+data\classes\Reaper.lua
+data\classes\Primalist.lua
+data\classes\Runemaster.lua
+data\spells\index\Descriptions.lua
+data\spells\index\Tooltips.lua
 data\QuestPolish.lua
+data\DailyQuests.lua
 data\Gossip.lua
+data\CommandBoard.lua
 data\Errors.lua
 data\Chat.lua
 Runtime.lua
 Core.lua
+Auction.lua
+Integration.lua
+CharacterUI.lua
+DailyQuests.lua
 Map.lua
 Flight.lua
 WorldNames.lua
+Durability.lua
 data\TalentRuntime.lua
 Errors.lua
 data\Voices.lua

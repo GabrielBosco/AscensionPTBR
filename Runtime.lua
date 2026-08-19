@@ -26,6 +26,18 @@ local function HasTasks()
     return next(Runtime.tasks) ~= nil
 end
 
+local function RecomputeNextDue()
+    local nextDue
+    for _, task in pairs(Runtime.tasks) do
+        local due = task and task.due
+        if type(due) == "number" and (not nextDue or due < nextDue) then
+            nextDue = due
+        end
+    end
+    Runtime.nextDue = nextDue
+    return nextDue
+end
+
 local function EnableDriver()
     if Runtime.frame:GetScript("OnUpdate") then return end
     Runtime.frame:SetScript("OnUpdate", Runtime.OnUpdate)
@@ -33,17 +45,24 @@ end
 
 function Runtime.Cancel(key)
     if key ~= nil then Runtime.tasks[key] = nil end
-    if not HasTasks() then Runtime.frame:SetScript("OnUpdate", nil) end
+    if not HasTasks() then
+        Runtime.nextDue = nil
+        Runtime.frame:SetScript("OnUpdate", nil)
+    else
+        RecomputeNextDue()
+    end
 end
 
 function Runtime.After(key, delay, callback)
     if key == nil or type(callback) ~= "function" then return end
+    local due = Runtime.clock + (tonumber(delay) or 0)
     Runtime.tasks[key] = {
-        due = Runtime.clock + (tonumber(delay) or 0),
+        due = due,
         callback = callback,
         interval = nil,
         remaining = 1,
     }
+    if not Runtime.nextDue or due < Runtime.nextDue then Runtime.nextDue = due end
     EnableDriver()
 end
 
@@ -54,18 +73,23 @@ function Runtime.Repeat(key, firstDelay, interval, count, callback)
         Runtime.Cancel(key)
         return
     end
+    local due = Runtime.clock + (tonumber(firstDelay) or 0)
     Runtime.tasks[key] = {
-        due = Runtime.clock + (tonumber(firstDelay) or 0),
+        due = due,
         callback = callback,
         interval = tonumber(interval) or 0,
         remaining = count,
     }
+    if not Runtime.nextDue or due < Runtime.nextDue then Runtime.nextDue = due end
     EnableDriver()
 end
 
 function Runtime.OnUpdate(self, dt)
     Runtime.clock = Runtime.clock + (dt or 0)
     local now = Runtime.clock
+
+    -- Sem tarefa vencida, não fica passeando pela lista à toa.
+    if Runtime.nextDue and now < Runtime.nextDue then return end
 
     for key, task in pairs(Runtime.tasks) do
         if task and now >= task.due then
@@ -90,7 +114,88 @@ function Runtime.OnUpdate(self, dt)
         end
     end
 
-    if not HasTasks() then self:SetScript("OnUpdate", nil) end
+    if not HasTasks() then
+        Runtime.nextDue = nil
+        self:SetScript("OnUpdate", nil)
+    else
+        RecomputeNextDue()
+    end
+end
+
+
+-- Cada tela cuida da sua parte. Aqui só juntamos os pedidos de refresh pra uma não atropelar a outra.
+Runtime.modules = Runtime.modules or {}
+Runtime.moduleOrder = Runtime.moduleOrder or {}
+
+function Runtime.RegisterModule(name, refresh, cleanup)
+    if type(name) ~= "string" or name == "" or type(refresh) ~= "function" then return false end
+    if not Runtime.modules[name] then
+        Runtime.moduleOrder[#Runtime.moduleOrder + 1] = name
+    end
+    Runtime.modules[name] = {
+        refresh = refresh,
+        cleanup = type(cleanup) == "function" and cleanup or nil,
+    }
+    return true
+end
+
+function Runtime.RefreshModule(name, reason)
+    local module = Runtime.modules[name]
+    if not (module and type(module.refresh) == "function") then return false end
+    local ok, result = pcall(module.refresh, reason or "manual")
+    if not ok then
+        ReportError(result)
+        return false
+    end
+    return result ~= false
+end
+
+function Runtime.RefreshModules(reason, names)
+    local refreshed = 0
+    if type(names) == "table" then
+        for i = 1, #names do
+            if Runtime.RefreshModule(names[i], reason) then refreshed = refreshed + 1 end
+        end
+        return refreshed
+    end
+
+    for i = 1, #Runtime.moduleOrder do
+        if Runtime.RefreshModule(Runtime.moduleOrder[i], reason) then refreshed = refreshed + 1 end
+    end
+    return refreshed
+end
+
+function Runtime.QueueModuleRefresh(reason, delay, names)
+    Runtime.After("aptbr-linked-ui-refresh", delay or 0.04, function()
+        Runtime.RefreshModules(reason or "queued", names)
+    end)
+end
+
+AES.RefreshLinkedUI = function(reason)
+    Runtime.QueueModuleRefresh(reason or "api", 0.02)
+end
+
+-- Primeiro passe quando a addon termina de carregar; outro ao entrar no mundo porque o Ascension monta tela nessa hora.
+Runtime.moduleEventFrame = Runtime.moduleEventFrame or CreateFrame("Frame")
+Runtime.moduleEventFrame:RegisterEvent("ADDON_LOADED")
+Runtime.moduleEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+Runtime.moduleEventFrame:SetScript("OnEvent", function(_, event, arg1)
+    if event == "ADDON_LOADED" then
+        if type(arg1) ~= "string" then return end
+        -- Qualquer addon pode criar ou recriar frames depois do AscensionPTBR.
+        -- A chave fixa do scheduler agrupa a rajada de ADDON_LOADED sem varrer a UI a cada evento.
+        Runtime.QueueModuleRefresh("ADDON_LOADED:" .. arg1, arg1 == "AscensionPTBR" and 0.03 or 0.18)
+        return
+    end
+    Runtime.QueueModuleRefresh(event, 0.12)
+end)
+
+SLASH_APTBRREFRESH1 = "/aptbrrefresh"
+SlashCmdList["APTBRREFRESH"] = function()
+    local count = Runtime.RefreshModules("slash")
+    if DEFAULT_CHAT_FRAME then
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r: módulos sincronizados: " .. tostring(count) .. ".")
+    end
 end
 
 

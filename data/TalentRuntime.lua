@@ -1,4 +1,6 @@
--- O painel de talentos redesenha texto direto; o hook precisa ficar no FontString.
+
+-- Traducao da interface de talentos somente na camada visual.
+-- Nao altera C_CharacterAdvancement/C_Ascension nem GlobalStrings usados pela logica do cliente.
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
 
@@ -62,19 +64,21 @@ AES.TranslateTalentUIText = TranslateTalentUIText
 local function HookTalentUIFS(fs)
     if not (fs and fs.SetText) or talentUIFSHooked[fs] then return end
     talentUIFSHooked[fs] = true
-    for _, method in ipairs({ "SetText", "SetFormattedText" }) do
-        if fs[method] then
-            pcall(hooksecurefunc, fs, method, function(self)
-                if inTalentUIHook or not TalentEnabled() then return end
-                local text = self.GetText and self:GetText()
-                local pt = text and TranslateTalentUIText(text)
-                if pt and pt ~= text then
-                    inTalentUIHook = true
-                    pcall(self.SetText, self, pt)
-                    inTalentUIHook = false
-                end
-            end)
+
+    local function Refresh(self)
+        if inTalentUIHook or not TalentEnabled() then return end
+        local text = self.GetText and self:GetText()
+        local pt = text and TranslateTalentUIText(text)
+        if pt and pt ~= text then
+            inTalentUIHook = true
+            pcall(self.SetText, self, pt)
+            inTalentUIHook = false
         end
+    end
+
+    if type(hooksecurefunc) == "function" then
+        if fs.SetText then pcall(hooksecurefunc, fs, "SetText", Refresh) end
+        if fs.SetFormattedText then pcall(hooksecurefunc, fs, "SetFormattedText", Refresh) end
     end
 end
 
@@ -99,17 +103,14 @@ local function WalkTalentUI(root, depth, seen)
             end
         end
     end
+
     if root.GetChildren then
         local ok, children = pcall(function() return { root:GetChildren() } end)
         if ok then
-            for _, child in ipairs(children) do WalkTalentUI(child, depth + 1, seen) end
+            for _, child in ipairs(children) do
+                WalkTalentUI(child, depth + 1, seen)
+            end
         end
-    end
-end
-
-local function ApplyTalentGlobalStrings()
-    for name, translated in pairs(AES.TalentUIGlobals or {}) do
-        if type(rawget(_G, name)) == "string" then rawset(_G, name, translated) end
     end
 end
 
@@ -126,7 +127,6 @@ local function HookTalentRoots()
     end
 end
 
-local talentPassTimer
 local function RootIsVisible(root)
     if not root then return false end
     if not root.IsShown then return true end
@@ -136,29 +136,30 @@ end
 
 local function TranslateTalentChrome()
     if not TalentEnabled() then return end
-    ApplyTalentGlobalStrings()
     HookTalentRoots()
     local seen = {}
     for _, name in ipairs(TALENT_UI_ROOT_NAMES) do
         local root = _G[name]
-        if RootIsVisible(root) then pcall(WalkTalentUI, root, 0, seen) end
+        if RootIsVisible(root) then
+            pcall(WalkTalentUI, root, 0, seen)
+        end
     end
 end
 AES.TranslateTalentChrome = TranslateTalentChrome
 
+local talentPassTimer
 local function DelayedTalentPass()
     TranslateTalentChrome()
     if AES.Runtime and AES.Runtime.Repeat then
-        AES.Runtime.Repeat("talent-ui-refresh", 0.03, 0.12, 2, TranslateTalentChrome)
+        AES.Runtime.Repeat("talent-ui-refresh", 0.05, 0.16, 2, TranslateTalentChrome)
         return
     end
 
-    -- Runtime faltou? Usa o timer velho e segue o baile sem derrubar a UI.
     if not talentPassTimer then talentPassTimer = CreateFrame("Frame") end
     local elapsed, shot = 0, 0
     talentPassTimer:SetScript("OnUpdate", function(self, dt)
         elapsed = elapsed + (dt or 0)
-        local wait = shot == 0 and 0.03 or 0.12
+        local wait = shot == 0 and 0.05 or 0.16
         if elapsed < wait then return end
         elapsed = 0
         shot = shot + 1
@@ -167,56 +168,28 @@ local function DelayedTalentPass()
     end)
 end
 
--- Só troca texto. ID, custo e valor continuam vindo do cliente.
-local HookTalentAPIs
-
 local talentEventFrame = CreateFrame("Frame")
-for _, event in ipairs({ "ADDON_LOADED", "PLAYER_ENTERING_WORLD", "PLAYER_TALENT_UPDATE",
-                          "CHARACTER_POINTS_CHANGED", "ACTIVE_TALENT_GROUP_CHANGED",
-                          "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB" }) do
+for _, event in ipairs({
+    "ADDON_LOADED",
+    "PLAYER_ENTERING_WORLD",
+    "PLAYER_TALENT_UPDATE",
+    "CHARACTER_POINTS_CHANGED",
+    "ACTIVE_TALENT_GROUP_CHANGED",
+    "SPELLS_CHANGED",
+    "LEARNED_SPELL_IN_TAB",
+}) do
     pcall(talentEventFrame.RegisterEvent, talentEventFrame, event)
 end
-talentEventFrame:SetScript("OnEvent", function()
-    HookTalentAPIs()
+
+talentEventFrame:SetScript("OnEvent", function(_, event, arg1)
+    if event == "ADDON_LOADED" then
+        if type(arg1) ~= "string" then return end
+        if AES.Runtime and AES.Runtime.After then
+            AES.Runtime.After("talent-ui-addon-loaded", 0.18, DelayedTalentPass)
+        else
+            DelayedTalentPass()
+        end
+        return
+    end
     DelayedTalentPass()
 end)
-
-local talentAPIWrapped = setmetatable({}, { __mode = "k" })
-local function PackTalentResults(...)
-    return { n = select("#", ...), ... }
-end
-local function WrapTalentStringAPI(api, names)
-    if type(api) ~= "table" then return end
-    for _, fname in ipairs(names) do
-        local wrapped = talentAPIWrapped[api]
-        if not wrapped then wrapped = {}; talentAPIWrapped[api] = wrapped end
-        local orig = api[fname]
-        if type(orig) == "function" and not wrapped[fname] then
-            wrapped[fname] = true
-            local ok = pcall(function()
-                api[fname] = function(...)
-                    local values = PackTalentResults(orig(...))
-                    for i = 1, values.n do
-                        if type(values[i]) == "string" then
-                            values[i] = TranslateTalentUIText(values[i]) or values[i]
-                        end
-                    end
-                    return unpack(values, 1, values.n)
-                end
-            end)
-            if not ok then wrapped[fname] = nil end
-        end
-    end
-end
-HookTalentAPIs = function()
-    WrapTalentStringAPI(_G.C_CharacterAdvancement, {
-        "GetEntryInfo", "GetTalentInfo", "GetTreeInfo", "GetClassInfo",
-        "GetRaceInfo", "GetRacialInfo", "GetSpecializationInfo", "GetArchetypeInfo",
-    })
-    WrapTalentStringAPI(_G.C_Ascension, {
-        "GetTalentInfo", "GetClassTalentInfo", "GetRacialTalentInfo",
-        "GetSpecializationInfo", "GetMentorSpecializationInfo",
-    })
-end
-AES.HookTalentAPIs = HookTalentAPIs
-HookTalentAPIs()

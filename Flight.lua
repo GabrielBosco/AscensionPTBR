@@ -23,7 +23,8 @@ local suffixes = {
 }
 
 local function Enabled()
-    return not AscensionPTBRDB or AscensionPTBRDB.ui ~= false
+    if AES.IsFeatureEnabled then return AES.IsFeatureEnabled("maps", true) end
+    return not AscensionPTBRDB or AscensionPTBRDB.maps ~= false
 end
 
 local function Trim(text)
@@ -213,10 +214,13 @@ end
 eventFrame:SetScript("OnEvent", function(_, event, addon)
     if event == "ADDON_LOADED" then
         if type(addon) ~= "string" then return end
-        local relevant = addon == "AscensionPTBR"
-            or addon == "Blizzard_TaxiUI"
-            or addon:find("Ascension", 1, true)
-        if not relevant then return end
+        -- Addons podem recriar botões/labels de viagem. Reaplica sem fazer trabalho pesado por evento.
+        if AES.Runtime and AES.Runtime.After then
+            AES.Runtime.After("flight-map-addon-load", 0.18, ApplyTaxiUI)
+        else
+            pcall(ApplyTaxiUI)
+        end
+        return
     end
 
     pcall(ApplyTaxiUI)

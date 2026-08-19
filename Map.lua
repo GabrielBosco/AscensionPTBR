@@ -8,9 +8,10 @@ local function questsEnabled()
     return db == nil or db.quests ~= false
 end
 
-local function uiEnabled()
+local function mapEnabled()
+    if A.IsFeatureEnabled then return A.IsFeatureEnabled("maps", true) end
     local db = rawget(G, "AscensionPTBRDB")
-    return db == nil or db.ui ~= false
+    return db == nil or db.maps ~= false
 end
 
 local function renderQuest(text)
@@ -24,11 +25,23 @@ local function renderQuest(text)
     return out
 end
 
+local mapLabelsLower = {}
+for source, translated in pairs(A.MapLabels or {}) do
+    if type(source) == "string" and type(translated) == "string" then
+        mapLabelsLower[source:lower()] = translated
+    end
+end
+
+local function mapLabelText(text)
+    if type(text) ~= "string" or text == "" then return nil end
+    return (A.MapLabels and A.MapLabels[text]) or mapLabelsLower[text:lower()]
+end
+
 local function exactMapText(text)
     if type(text) ~= "string" or text == "" then return nil end
 
     local value = (A.AreaNames and A.AreaNames[text])
-        or (A.MapLabels and A.MapLabels[text])
+        or mapLabelText(text)
         or (A.ChatExact and A.ChatExact[text])
         or (A.ServerUI and A.ServerUI[text])
         or (A.CustomUI and A.CustomUI[text])
@@ -38,28 +51,46 @@ local function exactMapText(text)
     return nil
 end
 
-local function translateMapText(text)
+local translateMapSingleLine
+
+local function translateAreaValue(text)
+    if type(text) ~= "string" or text == "" then return nil end
+    if A.TranslateAreaText then
+        local ok, area = pcall(A.TranslateAreaText, text)
+        if ok and type(area) == "string" and area ~= "" and area ~= text then return area end
+    end
+    return exactMapText(text)
+end
+
+translateMapSingleLine = function(text)
     if type(text) ~= "string" or text == "" then return nil end
 
-    local direct = exactMapText(text)
+    local direct = translateAreaValue(text)
     if direct then return direct end
 
-    local color, inner, reset = text:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    -- Tooltips do mapa costumam colorir a linha inteira.
+    local color, inner, reset = text:match("^(|[cC]%x%x%x%x%x%x%x%x)(.-)(|[rR])$")
     if inner then
-        local translated = exactMapText(inner)
+        local translated = translateMapSingleLine(inner)
         if translated then return color .. translated .. reset end
     end
 
+    -- Ex.: "Durotar (10-20)".
     local area, levels = text:match("^(.-)(%s+%(%d+[%d%s%-–—]*%))$")
     if area then
-        local translated = exactMapText(area)
+        local translated = translateAreaValue(area)
         if translated then return translated .. levels end
     end
 
-    local first, rest = text:match("^([^\n]+)(\n.+)$")
-    if first then
-        local translated = exactMapText(first)
-        if translated then return translated .. rest end
+    -- Informações do mapa chegam como "Zone: Durotar", "Date: ..." etc.
+    -- O valor pode ser um nome de área ou apenas um dado que deve ser preservado.
+    local label, value = text:match("^([^:\n]+):%s*(.+)$")
+    if label and value then
+        local labelPT = mapLabelText(label) or exactMapText(label)
+        local valuePT = translateAreaValue(value)
+        if labelPT or valuePT then
+            return (labelPT or label) .. ": " .. (valuePT or value)
+        end
     end
 
     -- Descrições de POI às vezes já existem nas tabelas gerais da interface.
@@ -71,6 +102,29 @@ local function translateMapText(text)
     end
 
     return nil
+end
+
+local function translateMapText(text)
+    if type(text) ~= "string" or text == "" then return nil end
+
+    -- Caixas de informação do Ascension podem usar várias linhas no mesmo FontString.
+    -- Traduzimos cada linha sem tocar nos valores que não possuem equivalente.
+    if text:find("\n", 1, true) then
+        local out, changed = {}, false
+        for line in (text .. "\n"):gmatch("(.-)\n") do
+            local translated = translateMapSingleLine(line)
+            if translated and translated ~= line then
+                out[#out + 1] = translated
+                changed = true
+            else
+                out[#out + 1] = line
+            end
+        end
+        if changed then return table.concat(out, "\n") end
+        return nil
+    end
+
+    return translateMapSingleLine(text)
 end
 A.TranslateMapText = translateMapText
 
@@ -87,6 +141,7 @@ local function setTranslated(fs)
 end
 
 local MAP_FONTSTRINGS = {
+    "ZoneTextString", "SubZoneTextString", "MinimapZoneText",
     "WorldMapFrameAreaLabel", "WorldMapFrameAreaDescription",
     "WorldMapFrameTitleText", "WorldMapZoneInfo", "WorldMapZoneText",
     "WorldMapZoneDropDownText", "WorldMapContinentDropDownText",
@@ -94,15 +149,44 @@ local MAP_FONTSTRINGS = {
     "QuestMapFrameTitleText", "AscensionMapZoneText", "AscensionWorldMapZoneText",
 }
 
+-- O nome da área sob o mouse pode mudar sem disparar WorldMapFrame_Update.
+-- Hookamos apenas os FontStrings do próprio mapa; assim cada SetText recebe a
+-- tradução na hora e não precisamos de OnUpdate/polling enquanto o mouse se move.
+local hookedMapFontStrings = setmetatable({}, { __mode = "k" })
+local translatingMapFontString = false
+local function hookMapFontString(fs)
+    if not (fs and fs.GetText and fs.SetText) or hookedMapFontStrings[fs] then return end
+    hookedMapFontStrings[fs] = true
+    if type(G.hooksecurefunc) ~= "function" then return end
+
+    for _, method in ipairs({ "SetText", "SetFormattedText" }) do
+        if type(fs[method]) == "function" then
+            pcall(G.hooksecurefunc, fs, method, function(self)
+                if translatingMapFontString or not mapEnabled() then return end
+                local ok, shown = pcall(self.GetText, self)
+                if not ok or type(shown) ~= "string" or shown == "" then return end
+                local translated = translateMapText(shown)
+                if translated and translated ~= shown then
+                    translatingMapFontString = true
+                    pcall(self.SetText, self, translated)
+                    translatingMapFontString = false
+                end
+            end)
+        end
+    end
+end
+
 local function patchKnownMapText()
-    if not uiEnabled() then return end
+    if not mapEnabled() then return end
     for i = 1, #MAP_FONTSTRINGS do
-        setTranslated(G[MAP_FONTSTRINGS[i]])
+        local fs = G[MAP_FONTSTRINGS[i]]
+        hookMapFontString(fs)
+        setTranslated(fs)
     end
 end
 
 local function patchClassicPOIs()
-    if not uiEnabled() then return end
+    if not mapEnabled() then return end
     local count = tonumber(rawget(G, "NUM_WORLDMAP_POIS")) or 0
     if count <= 0 then count = 128 end
     for i = 1, count do
@@ -130,7 +214,7 @@ local function patchClassicPOIs()
 end
 
 local function patchDropdownButtons()
-    if not uiEnabled() then return end
+    if not mapEnabled() then return end
     for level = 1, 2 do
         for i = 1, 64 do
             local button = G["DropDownList" .. level .. "Button" .. i]
@@ -289,14 +373,7 @@ local function translateExactMapFontString(fs)
     local ok, shown = pcall(fs.GetText, fs)
     if not ok or type(shown) ~= "string" or shown == "" then return false end
 
-    local translated = exactMapText(shown)
-    if not translated then
-        local color, inner, reset = shown:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
-        if inner then
-            local innerTranslated = exactMapText(inner)
-            if innerTranslated then translated = color .. innerTranslated .. reset end
-        end
-    end
+    local translated = translateMapText(shown)
     if translated and translated ~= shown then
         pcall(fs.SetText, fs, translated)
         return true
@@ -305,7 +382,7 @@ local function translateExactMapFontString(fs)
 end
 
 local function patchMapFrameLabels()
-    if not uiEnabled() then return end
+    if not mapEnabled() then return end
     local root = G.WorldMapFrame
     if not (root and root.IsShown and root:IsShown()) then return end
 
@@ -320,7 +397,9 @@ local function patchMapFrameLabels()
             for i = 1, #regions do
                 local region = regions[i]
                 if region and region.GetObjectType and region:GetObjectType() == "FontString" then
-                    translateExactMapFontString(region)
+                    -- Só mantém hook nos textos que realmente pertencem à tradução do mapa.
+                    -- Os FontStrings nativos de área já são hookados em patchKnownMapText().
+                    if translateExactMapFontString(region) then hookMapFontString(region) end
                 end
             end
         end
@@ -333,22 +412,58 @@ local function patchMapFrameLabels()
     end
 end
 
+local MAP_TOOLTIP_NAMES = {
+    "WorldMapTooltip", "WorldMapFrameTooltip", "AscensionWorldMapTooltip",
+    "AscensionMapTooltip", "MapTooltip", "GameTooltip",
+}
+
+local function patchTooltipFrame(tooltip)
+    if not tooltip then return end
+    local queue, head, visited = { tooltip }, 1, 0
+    while queue[head] and visited < 120 do
+        local frame = queue[head]
+        head = head + 1
+        visited = visited + 1
+
+        if frame.GetRegions then
+            local ok, regions = pcall(function() return { frame:GetRegions() } end)
+            if ok and regions then
+                for i = 1, #regions do
+                    local region = regions[i]
+                    if region and region.IsObjectType and region:IsObjectType("FontString") then
+                        setTranslated(region)
+                    end
+                end
+            end
+        end
+        if frame.GetChildren then
+            local ok, children = pcall(function() return { frame:GetChildren() } end)
+            if ok and children then
+                for i = 1, #children do queue[#queue + 1] = children[i] end
+            end
+        end
+    end
+end
+
 local function patchMapTooltipText()
-    if not uiEnabled() then return end
+    if not mapEnabled() then return end
     local map = G.WorldMapFrame
     if not (map and map.IsShown and map:IsShown()) then return end
 
+    -- Compatibilidade com tooltips clássicos e com os tooltips próprios do Ascension.
     for _, prefix in ipairs({ "WorldMapTooltipTextLeft", "WorldMapTooltipTextRight", "GameTooltipTextLeft", "GameTooltipTextRight" }) do
-        for i = 1, 20 do
-            setTranslated(G[prefix .. i])
-        end
+        for i = 1, 30 do setTranslated(G[prefix .. i]) end
     end
+    for i = 1, #MAP_TOOLTIP_NAMES do patchTooltipFrame(G[MAP_TOOLTIP_NAMES[i]]) end
 end
 
 local function scheduleMapTooltipPatch()
     patchMapTooltipText()
     if A.Runtime and A.Runtime.After then
+        -- Tooltip muda bastante enquanto o mouse anda pelo mapa. Mantemos só dois
+        -- repasses pequenos e debounced, sem revarrer a árvore inteira do mapa.
         A.Runtime.After("map-tooltip-ptbr", 0.02, patchMapTooltipText)
+        A.Runtime.After("map-tooltip-ptbr-late", 0.10, patchMapTooltipText)
     end
 end
 
@@ -405,39 +520,76 @@ for _, name in ipairs({
     hook(name, patchDropdownButtons)
 end
 
-if G.WorldMapTooltip and G.WorldMapTooltip.HookScript then
-    pcall(G.WorldMapTooltip.HookScript, G.WorldMapTooltip, "OnShow", scheduleMapTooltipPatch)
-end
-if G.GameTooltip and G.GameTooltip.HookScript then
-    pcall(G.GameTooltip.HookScript, G.GameTooltip, "OnShow", function()
-        if G.WorldMapFrame and G.WorldMapFrame.IsShown and G.WorldMapFrame:IsShown() then
-            scheduleMapTooltipPatch()
+local mapTooltipHooked = setmetatable({}, { __mode = "k" })
+local function hookMapTooltip(tooltip)
+    if not tooltip or mapTooltipHooked[tooltip] then return end
+    mapTooltipHooked[tooltip] = true
+
+    if tooltip.HookScript then
+        pcall(tooltip.HookScript, tooltip, "OnShow", function()
+            if G.WorldMapFrame and G.WorldMapFrame.IsShown and G.WorldMapFrame:IsShown() then
+                scheduleMapTooltipPatch()
+            end
+        end)
+    end
+    if type(G.hooksecurefunc) == "function" then
+        for _, method in ipairs({ "SetText", "AddLine", "AddDoubleLine", "AppendText" }) do
+            if type(tooltip[method]) == "function" then
+                pcall(G.hooksecurefunc, tooltip, method, function()
+                    if G.WorldMapFrame and G.WorldMapFrame.IsShown and G.WorldMapFrame:IsShown() then
+                        scheduleMapTooltipPatch()
+                    end
+                end)
+            end
         end
-    end)
+    end
+end
+
+local function HookMapTooltips()
+    for i = 1, #MAP_TOOLTIP_NAMES do hookMapTooltip(G[MAP_TOOLTIP_NAMES[i]]) end
+end
+HookMapTooltips()
+
+local function RefreshMapUI(reason)
+    if not mapEnabled() then return false end
+    patchKnownMapText()
+    patchClassicPOIs()
+    patchQuestList()
+    patchMapFrameLabels()
+    HookMapTooltips()
+    return true
+end
+A.RefreshMapUI = RefreshMapUI
+
+local function QueueMapRefresh()
+    if not mapEnabled() then return end
+    RefreshMapUI("event")
+    if A.Runtime and A.Runtime.After then
+        -- O texto grande da zona costuma ser preenchido um pouco depois do evento.
+        A.Runtime.After("map-ptbr-refresh-1", 0.05, function() RefreshMapUI("late") end)
+        A.Runtime.After("map-ptbr-refresh-2", 0.20, function() RefreshMapUI("late") end)
+        A.Runtime.After("map-ptbr-refresh-3", 0.55, function() RefreshMapUI("late") end)
+    end
 end
 
 local events = CreateFrame("Frame")
-events:RegisterEvent("PLAYER_ENTERING_WORLD")
-events:RegisterEvent("QUEST_LOG_UPDATE")
-pcall(events.RegisterEvent, events, "WORLD_MAP_UPDATE")
+for _, eventName in ipairs({
+    "PLAYER_ENTERING_WORLD", "QUEST_LOG_UPDATE", "WORLD_MAP_UPDATE",
+    "ZONE_CHANGED", "ZONE_CHANGED_INDOORS", "ZONE_CHANGED_NEW_AREA", "MINIMAP_ZONE_CHANGED",
+}) do
+    pcall(events.RegisterEvent, events, eventName)
+end
 events:SetScript("OnEvent", function(_, event)
     if event == "QUEST_LOG_UPDATE" then
-        if G.WorldMapFrame and G.WorldMapFrame.IsShown and G.WorldMapFrame:IsShown() then
-            patchQuestList()
-        end
+        if G.WorldMapFrame and G.WorldMapFrame.IsShown and G.WorldMapFrame:IsShown() then patchQuestList() end
         return
     end
-    if A.Runtime and A.Runtime.After then
-        A.Runtime.After("map-ptbr-refresh", 0.05, function()
-            patchClassicPOIs()
-            patchQuestList()
-            patchKnownMapText()
-            patchMapFrameLabels()
-        end)
-    else
-        patchClassicPOIs()
-        patchQuestList()
-        patchKnownMapText()
-        patchMapFrameLabels()
-    end
+    QueueMapRefresh()
 end)
+
+if A.Runtime and A.Runtime.RegisterModule then
+    A.Runtime.RegisterModule("map-ui", function()
+        QueueMapRefresh()
+        return true
+    end)
+end

@@ -1,26 +1,27 @@
--- Nomes no mundo sem ficar varrendo o WorldFrame o tempo todo.
--- A ideia aqui é aproveitar a ancora 3D das NamePlates do Ascension, traduzir o
--- nome quando a placa nasce e reaplicar quando o cliente reciclar/reexibir o frame.
+-- Nomes no mundo e placas sociais sem varrer o WorldFrame o tempo todo.
+-- NPCs usam a ancora 3D das NamePlates do Ascension para nome/função traduzidos.
+-- Jogadores aliados ganham uma placa leve com nome, guilda e nível.
 
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
-AES.WorldNamesV10 = true
+AES.WorldNamesV12 = true
 
 local hookedNames = setmetatable({}, { __mode = "k" })
 local nameGuards = setmetatable({}, { __mode = "k" })
-local friendlyOptionsByFrame = setmetatable({}, { __mode = "k" })
 local hookedPlates = setmetatable({}, { __mode = "k" })
 local hookedUnitFrames = setmetatable({}, { __mode = "k" })
 local knownPlates = setmetatable({}, { __mode = "k" })
 local applyingPlates = setmetatable({}, { __mode = "k" })
 local roleTextByFrame = setmetatable({}, { __mode = "k" })
+local allyStyleByFrame = setmetatable({}, { __mode = "k" })
+local safeOptionsByFrame = setmetatable({}, { __mode = "k" })
 local roleCacheByID = {}
 local roleCacheByGUID = {}
 local roleScanAttempts = {}
 local shuttingDown = false
 
--- Este módulo não altera atalhos nem CVars de nameplate. Ele apenas traduz
--- os frames 3D que o próprio cliente/Ascension decidir exibir.
+-- No cliente padrão do Ascension este módulo mantém apenas as placas amigáveis
+-- necessárias para NPCs e aliados. Addons externos de nameplate assumem prioridade.
 
 -- Títulos que aparecem bastante nos NPCs custom do Ascension e nem sempre existem
 -- na base 3.3.5. O resto ainda passa pelo UnitSub oficial antes de cair aqui.
@@ -305,8 +306,26 @@ local function NpcIDFromGUID(guid)
     elseif guid:sub(1, 2) == "0x" then
         local hex = guid:sub(3)
         if #hex == 16 and hex:match("^F1[345]") then
-            local id = tonumber(hex:sub(5, 10), 16)
+            local id = tonumber(hex:sub(5, 8), 16)
             if id and id > 0 then return id end
+        end
+    end
+end
+
+local NPC_NAME_PREFIX = {
+    ["Auctioneer "] = "Leiloeiro ",
+    ["Innkeeper "] = "Estalajadeiro ",
+    ["Banker "] = "Banqueiro ",
+    ["Quartermaster "] = "Intendente ",
+    ["Flight Master "] = "Mestre de Voo ",
+    ["Stable Master "] = "Mestre de Estábulos ",
+}
+
+local function TranslateNpcNamePattern(name)
+    if type(name) ~= "string" or name == "" then return nil end
+    for prefix, ptPrefix in pairs(NPC_NAME_PREFIX) do
+        if name:sub(1, #prefix) == prefix and #name > #prefix then
+            return ptPrefix .. name:sub(#prefix + 1)
         end
     end
 end
@@ -349,6 +368,10 @@ local function ResolveName(unit, shownText)
         if known == shownText then ptName = shownText end
     end
 
+    if not ptName then
+        ptName = TranslateNpcNamePattern(enName)
+    end
+
     if ptName then
         AES.UnitNameEN2ES = AES.UnitNameEN2ES or {}
         AES.UnitNameEN2ES[enName] = ptName
@@ -363,6 +386,9 @@ local function GetScanner()
     local ok, tip = pcall(CreateFrame, "GameTooltip", "AscensionPTBRWorldNameScanner", UIParent, "GameTooltipTemplate")
     if not ok or not tip then return nil end
     scanner = tip
+    -- O Core ignora tooltips internos. Sem esta marca, o scanner de função de
+    -- NPC pode receber os hooks pesados de tooltip e travar a câmera em cidades.
+    scanner.__aptbrPrivateScanner = true
     scanner:SetOwner(UIParent, "ANCHOR_NONE")
     scanner:Hide()
     return scanner
@@ -485,6 +511,10 @@ end
 
 local function HookNameFontString(fs, unit)
     if not (fs and fs.GetText and fs.SetText) then return false end
+    -- Core.lua possui um tradutor genérico de FontStrings. Marcar a nameplate aqui
+    -- impede que os dois módulos processem o mesmo SetText quando a câmera gira
+    -- ou quando uma placa é reciclada para outro jogador/NPC.
+    fs.__aptbrWorldName = true
     fs.__aptbrUnit = unit
 
     if not hookedNames[fs] then
@@ -546,92 +576,145 @@ local function ResolvePlateUnit(plate)
     if unit and UnitExists and UnitExists(unit) then return unit end
 end
 
-local function BuildFriendlyNameOnlyOptions(unitFrame)
-    local source = _G.DefaultCompactNamePlateFriendlyFrameOptions
-    if type(source) ~= "table" then return nil end
-
-    local options = friendlyOptionsByFrame[unitFrame]
+local function BuildSafeFriendlyOptions(unitFrame, isPlayerUnit)
+    local source = unitFrame and unitFrame.optionTable
+        or _G.DefaultCompactNamePlateFriendlyFrameOptions
+        or {}
+    local options = safeOptionsByFrame[unitFrame]
     if not options then
         options = {}
-        friendlyOptionsByFrame[unitFrame] = options
+        safeOptionsByFrame[unitFrame] = options
     else
         for key in pairs(options) do options[key] = nil end
     end
-
     for key, value in pairs(source) do options[key] = value end
-    options.nameOnly = true
-    options.displayName = true
-    options.hideCastbar = true
+
+    -- O CompactUnitFrame do Ascension tenta calcular ameaça até em placa amigável.
+    -- Para os frames sociais que forçamos como âncora isso não faz sentido e pode
+    -- gerar UnitDetailedThreatSituation("player", "nameplateXX").
+    options.displayAggroHighlight = false
+    options.playLoseAggroHighlight = false
+    options.considerSelectionInCombatAsHostile = false
+    options.tankNoThreatBorderColor = nil
+    options.tankNoThreatTargetBorderColor = nil
+    options.tankThreatBorderColor = nil
+    options.tankThreatTargetBorderColor = nil
+    options.hoverBorderColor = nil
+    options.selectedBorderColor = nil
+    options.defaultBorderColor = nil
+    options.displayHealPrediction = false
     options.displayPowerBar = false
     options.displayStatusText = false
-    options.showNPCLevel = false
-    options.showPlayerLevel = false
+    options.hideCastbar = true
     options.showClassificationIndicator = false
-    options.showQuestIcons = false
+    options.showPlayerLevel = false
+    options.showNPCLevel = false
+    options.showQuestObjectives = not isPlayerUnit
+    -- O marcador de missao 3D do proprio cliente ja existe sobre o NPC.
+    -- Deixar o CompactUnitFrame exibir outro icone gera dois "!" sobrepostos.
     options.showQuestNPCIcons = false
-    options.showQuestObjectives = false
+    options.showQuestIcons = false
     return options
+end
+
+local function HideObject(object)
+    if object and object.Hide then pcall(object.Hide, object) end
+end
+
+local function ApplySafeFriendlyFrame(unitFrame, unit)
+    if not unitFrame or not IsFriendly(unit) then return end
+    local options = BuildSafeFriendlyOptions(unitFrame, IsPlayer(unit))
+    -- Não chamamos SetUpFrame aqui. O Ascension já montou o frame; só trocamos
+    -- a tabela usada pelos eventos seguintes para uma versão sem lógica de ameaça.
+    unitFrame.optionTable = options
+
+    HideObject(unitFrame.healthBar)
+    HideObject(unitFrame.powerBar)
+    HideObject(unitFrame.castBar)
+    HideObject(unitFrame.BuffFrame)
+    HideObject(unitFrame.ClassificationFrame)
+    HideObject(unitFrame.LevelFrame)
+    HideObject(unitFrame.aggroHighlight)
+    HideObject(unitFrame.selectionHighlight)
+    -- Nunca usamos o icone de quest da nameplate amigavel. O jogo ja desenha
+    -- o marcador 3D nativo dos NPCs, e manter os dois causa duplicacao.
+    HideObject(unitFrame.questIcon)
+end
+
+local function GetPlayerClassColor(unit)
+    local _, class = UnitClass and UnitClass(unit)
+    local color = class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[class]
+    if color then return color.r or 0.67, color.g or 0.67, color.b or 1 end
+    return 0.67, 0.67, 1
+end
+
+local function EnsureAllyStyle(unitFrame)
+    local style = allyStyleByFrame[unitFrame]
+    if style then return style end
+    if not (unitFrame and unitFrame.CreateFontString) then return nil end
+
+    style = {}
+    allyStyleByFrame[unitFrame] = style
+
+    style.name = unitFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    style.guild = unitFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    style.name.__aptbrWorldName = true
+    style.guild.__aptbrWorldName = true
+
+    if style.name.SetFont then pcall(style.name.SetFont, style.name, "Fonts\\FRIZQT__.TTF", 12, "OUTLINE") end
+    if style.guild.SetFont then pcall(style.guild.SetFont, style.guild, "Fonts\\FRIZQT__.TTF", 10, "OUTLINE") end
+
+    style.name:SetPoint("BOTTOM", unitFrame, "CENTER", 0, 9)
+    style.guild:SetPoint("TOP", style.name, "BOTTOM", 0, -1)
+    style.name:SetJustifyH("CENTER")
+    style.guild:SetJustifyH("CENTER")
+    style.name:SetWidth(220)
+    style.guild:SetWidth(220)
+    style.guild:SetTextColor(0.72, 0.82, 0.92, 1)
+    return style
+end
+
+local function HideAllyStyle(unitFrame)
+    local style = unitFrame and allyStyleByFrame[unitFrame]
+    if not style then return end
+    HideObject(style.name)
+    HideObject(style.guild)
+end
+
+local function UpdateAllyStyle(unitFrame, unit)
+    if not (unitFrame and unit and IsPlayer(unit) and IsFriendly(unit)) then
+        HideAllyStyle(unitFrame)
+        return false
+    end
+    local style = EnsureAllyStyle(unitFrame)
+    if not style then return false end
+
+    local name = UnitName and UnitName(unit) or ""
+    local guild = GetGuildInfo and GetGuildInfo(unit)
+    local r, g, b = GetPlayerClassColor(unit)
+
+    style.name:SetText(name)
+    style.name:SetTextColor(r, g, b, 1)
+    style.name:Show()
+
+    if type(guild) == "string" and guild ~= "" then
+        style.guild:SetText("<" .. guild .. ">")
+        style.guild:Show()
+    else
+        style.guild:SetText("")
+        style.guild:Hide()
+    end
+
+
+    local defaultName = unitFrame.name or unitFrame.Name or unitFrame.nameText
+    if defaultName then defaultName.__aptbrWorldName = true end
+    HideObject(defaultName)
+    return true
 end
 
 local function HideRole(frame)
     local role = frame and roleTextByFrame[frame]
     if role and role.Hide then pcall(role.Hide, role) end
-end
-
-local function ApplyAscensionFriendlyNameOnly(unitFrame, unit)
-    -- Só estiliza o frame quando o próprio cliente já criou uma placa para o NPC.
-    -- Não escondemos jogadores aliados e não ligamos placas amigáveis por conta própria.
-    if not IsFriendlyNPC(unit) then return false end
-
-    local options = BuildFriendlyNameOnlyOptions(unitFrame)
-    if options then
-        local ok = false
-
-        if DefaultCompactNamePlateFrameSetup then
-            ok = pcall(DefaultCompactNamePlateFrameSetup, unitFrame, options)
-        elseif _G.DefaultCompactNamePlateFriendlyFrameSetup and unitFrame.SetUpFrame then
-            local globalOptions = _G.DefaultCompactNamePlateFriendlyFrameOptions
-            local oldNameOnly = globalOptions and globalOptions.nameOnly
-            local oldDisplayName = globalOptions and globalOptions.displayName
-            if globalOptions then
-                globalOptions.nameOnly = true
-                globalOptions.displayName = true
-            end
-            ok = pcall(unitFrame.SetUpFrame, unitFrame, _G.DefaultCompactNamePlateFriendlyFrameSetup)
-            if globalOptions then
-                globalOptions.nameOnly = oldNameOnly
-                globalOptions.displayName = oldDisplayName
-            end
-            if ok and unitFrame.SetOptionTable then
-                pcall(unitFrame.SetOptionTable, unitFrame, options)
-            end
-        end
-
-        if ok then
-            if unitFrame.BuffFrame then
-                if unitFrame.BuffFrame.SetActive then pcall(unitFrame.BuffFrame.SetActive, unitFrame.BuffFrame, false) end
-                if unitFrame.BuffFrame.Hide then pcall(unitFrame.BuffFrame.Hide, unitFrame.BuffFrame) end
-            end
-            if unitFrame.castBar and unitFrame.castBar.Hide then pcall(unitFrame.castBar.Hide, unitFrame.castBar) end
-            if unitFrame.questIcon and unitFrame.questIcon.Hide then pcall(unitFrame.questIcon.Hide, unitFrame.questIcon) end
-            if unitFrame.Show then pcall(unitFrame.Show, unitFrame) end
-            local fs = unitFrame.name or unitFrame.Name or unitFrame.nameText
-            if fs and fs.Show then pcall(fs.Show, fs) end
-            return true
-        end
-    end
-
-    for _, key in ipairs({
-        "healthBar", "powerBar", "castBar", "BuffFrame", "ClassificationFrame",
-        "LevelFrame", "RaidTargetFrame", "aggroHighlight", "selectionHighlight",
-    }) do
-        local object = unitFrame[key]
-        if object and object.Hide then pcall(object.Hide, object) end
-    end
-    local fs = unitFrame.name or unitFrame.Name or unitFrame.nameText
-    if unitFrame.Show then pcall(unitFrame.Show, unitFrame) end
-    if fs and fs.Show then pcall(fs.Show, fs) end
-    return true
 end
 
 local function ApplyRoleText(container, nameFS, roleText)
@@ -647,9 +730,13 @@ local function ApplyRoleText(container, nameFS, roleText)
     if not role and container.CreateFontString then
         local ok, created = pcall(container.CreateFontString, container, nil, "OVERLAY", "GameFontNormalSmall")
         if ok then role = created end
-        if role then roleTextByFrame[container] = role end
+        if role then
+            role.__aptbrWorldName = true
+            roleTextByFrame[container] = role
+        end
     end
     if not role then return false end
+    role.__aptbrWorldName = true
 
     if role.ClearAllPoints then pcall(role.ClearAllPoints, role) end
     if role.SetPoint then pcall(role.SetPoint, role, "TOP", nameFS, "BOTTOM", 0, -1) end
@@ -697,6 +784,7 @@ end
 
 local function HookPlateLifecycle(plate)
     if not plate then return end
+    plate.__aptbrNameplateRoot = true
     knownPlates[plate] = true
     if hookedPlates[plate] or not plate.HookScript then return end
     hookedPlates[plate] = true
@@ -724,27 +812,44 @@ ApplyToUnit = function(unit, suppliedPlate)
     if applyingPlates[plate] then return false end
     applyingPlates[plate] = true
 
+    plate.__aptbrNameplateRoot = true
     plate.__aptbrUnit = unit
     HookPlateLifecycle(plate)
 
     local unitFrame = plate.UnitFrame
     local applied = false
     if unitFrame then
+        unitFrame.__aptbrNameplateRoot = true
         unitFrame.__aptbrUnit = unit
         HookUnitFrameLifecycle(unitFrame, plate)
 
-        ApplyAscensionFriendlyNameOnly(unitFrame, unit)
+        if IsFriendly(unit) then
+            ApplySafeFriendlyFrame(unitFrame, unit)
+        end
 
         if IsPlayer(unit) or (UnitPlayerControlled and UnitPlayerControlled(unit)) then
             HideRole(unitFrame)
+            applied = UpdateAllyStyle(unitFrame, unit) or applied
             applyingPlates[plate] = nil
-            return true
+            return applied
         end
 
-        local nameFS = unitFrame.name or unitFrame.Name or unitFrame.nameText
-        if nameFS then applied = HookNameFontString(nameFS, unit) or applied end
+        HideAllyStyle(unitFrame)
 
-        if IsRoleNPC(unit) then
+        local enName = UnitName and UnitName(unit)
+        local ptName = ResolveName(unit)
+        local nameFS = unitFrame.name or unitFrame.Name or unitFrame.nameText
+        if not nameFS and type(enName) == "string" and enName ~= "" then
+            nameFS = FindExactNameFontString(unitFrame, enName, ptName, 0)
+                or FindExactNameFontString(plate, enName, ptName, 0)
+        end
+
+        if nameFS then
+            if nameFS.Show then pcall(nameFS.Show, nameFS) end
+            applied = HookNameFontString(nameFS, unit) or applied
+        end
+
+        if IsRoleNPC(unit) and nameFS then
             local roleText = ResolveSubtitle(unit)
             ApplyRoleText(unitFrame, nameFS, roleText)
         else
@@ -820,50 +925,94 @@ local function ApplyToActivePlates()
     end
 end
 
--- Para traduzir o texto 3D do NPC precisamos de uma placa amigável real como
--- âncora. O nome verde nativo do mundo é desenhado pelo cliente e não é um
--- FontString acessível ao Lua. Então mantemos somente a categoria de NPC amigável
--- ligada e deixamos jogadores/pets fora das placas.
+-- NPC traduzido e placa social dos aliados usam as placas amigáveis nativas como
+-- âncora 3D. Em vez de esconder jogadores, damos a eles um visual próprio, simples,
+-- com nome e guilda. Inimigos continuam separados.
 --
--- O detalhe importante está no V: no cliente do Ascension os bindings NAMEPLATES e
--- ALLNAMEPLATES também mexem em nameplateShowFriends. Por isso, se deixarmos o
--- binding original agir, ele derruba a âncora dos NPCs. Em vez de brigar com CVars
--- depois de cada tecla, fazemos um override temporário do V para um botão invisível
--- que alterna APENAS nameplateShowEnemies. O binding salvo do jogador não é alterado.
+-- No Ascension, NAMEPLATES também escreve nameplateShowFriends=0. Quando usamos o
+-- modo social nativo, interceptamos SOMENTE a ação NAMEPLATES (V) e fazemos ela
+-- alternar apenas nameplateShowEnemies. O binding
+-- salvo do jogador não é alterado e o override some quando um addon externo de
+-- nameplates é detectado ou quando a tradução é desativada.
 
-local NPC_ANCHOR_CVARS = {
-    { "nameplateShowFriends", "1", "_aptbrNpcAnchorFriendsBeforeV10" },
-    { "nameplateShowFriendlyNPCs", "1", "_aptbrNpcAnchorNpcsBeforeV10" },
-    { "nameplateShowFriendlyPlayers", "0", "_aptbrNpcAnchorPlayersBeforeV10" },
-    { "nameplateShowFriendlyPets", "0", "_aptbrNpcAnchorPetsBeforeV10" },
-    { "nameplateShowFriendlyMinions", "0", "_aptbrNpcAnchorMinionsBeforeV10" },
-    { "nameplateShowFriendlyGuardians", "0", "_aptbrNpcAnchorGuardiansBeforeV10" },
-    { "nameplateShowFriendlyTotems", "0", "_aptbrNpcAnchorTotemsBeforeV10" },
-    -- Garante que os nicknames normais dos jogadores aliados continuem aparecendo.
-    { "UnitNameFriendlyPlayerName", "1", "_aptbrFriendlyPlayerWorldNameBeforeV10" },
+local EXTERNAL_NAMEPLATE_ADDONS = {
+    "ElvUI", "Kui_Nameplates", "Kui_Nameplates_Core", "KuiNameplates",
+    "Plater", "Plater_Nameplates", "TidyPlates", "NeatPlates",
+    "ThreatPlates", "TidyPlates_ThreatPlates",
 }
 
-local NPC_ANCHOR_CVAR_SET = {}
-for _, info in ipairs(NPC_ANCHOR_CVARS) do
-    NPC_ANCHOR_CVAR_SET[string.lower(info[1])] = true
+local function IsAddonLoadedSafe(name)
+    if not IsAddOnLoaded then return false end
+    local ok, loaded = pcall(IsAddOnLoaded, name)
+    return ok and loaded and true or false
 end
 
-local anchorMutation = false
-local anchorRefreshPending = false
-local bindingRefreshPending = false
-local bindingMutation = false
-local bindingOwner = CreateFrame("Frame")
-local enemyToggleButton = CreateFrame("Button", "AscensionPTBREnemyNameplateToggleButton", UIParent)
-local vOverrideActive = false
-local vBaseAction
+local function ExternalNameplateAddon()
+    for _, name in ipairs(EXTERNAL_NAMEPLATE_ADDONS) do
+        if IsAddonLoadedSafe(name) then return name end
+    end
+end
 
-if enemyToggleButton then
-    if enemyToggleButton.SetSize then pcall(enemyToggleButton.SetSize, enemyToggleButton, 1, 1) end
-    if enemyToggleButton.SetPoint then pcall(enemyToggleButton.SetPoint, enemyToggleButton, "TOPLEFT", UIParent, "BOTTOMLEFT", -100, -100) end
-    if enemyToggleButton.SetAlpha then pcall(enemyToggleButton.SetAlpha, enemyToggleButton, 0) end
-    if enemyToggleButton.EnableMouse then pcall(enemyToggleButton.EnableMouse, enemyToggleButton, false) end
-    if enemyToggleButton.RegisterForClicks then pcall(enemyToggleButton.RegisterForClicks, enemyToggleButton, "AnyUp") end
-    if enemyToggleButton.Show then pcall(enemyToggleButton.Show, enemyToggleButton) end
+local savedFriendlyOptionValues
+local NIL_OPTION = {}
+local function PatchGlobalFriendlyOptions()
+    local options = _G.DefaultCompactNamePlateFriendlyFrameOptions
+    if type(options) ~= "table" then return false end
+    if not savedFriendlyOptionValues then
+        savedFriendlyOptionValues = {}
+        for _, key in ipairs({
+            "displayAggroHighlight", "playLoseAggroHighlight",
+            "considerSelectionInCombatAsHostile", "tankNoThreatBorderColor",
+            "tankNoThreatTargetBorderColor", "tankThreatBorderColor",
+            "tankThreatTargetBorderColor",
+        }) do
+            local value = options[key]
+            savedFriendlyOptionValues[key] = value == nil and NIL_OPTION or value
+        end
+    end
+    options.displayAggroHighlight = false
+    options.playLoseAggroHighlight = false
+    options.considerSelectionInCombatAsHostile = false
+    options.tankNoThreatBorderColor = nil
+    options.tankNoThreatTargetBorderColor = nil
+    options.tankThreatBorderColor = nil
+    options.tankThreatTargetBorderColor = nil
+    return true
+end
+
+local function RestoreGlobalFriendlyOptions()
+    local options = _G.DefaultCompactNamePlateFriendlyFrameOptions
+    if type(options) ~= "table" or not savedFriendlyOptionValues then return end
+    for key, value in pairs(savedFriendlyOptionValues) do
+        options[key] = value == NIL_OPTION and nil or value
+    end
+end
+
+-- Sanitiza antes do PLAYER_ENTERING_WORLD. Assim, se o usuário já deixou placas
+-- amigáveis ligadas na sessão anterior, o CompactUnitFrame não entra na rotina de
+-- ameaça inválida antes de o nosso primeiro evento rodar.
+if Enabled() and not ExternalNameplateAddon() then PatchGlobalFriendlyOptions() end
+
+local SOCIAL_CVARS = {
+    { "nameplateShowFriends", "1", "_aptbrSocialFriendsBeforeV12" },
+    { "nameplateShowFriendlyNPCs", "1", "_aptbrSocialNpcsBeforeV12" },
+    { "nameplateShowFriendlyPlayers", "1", "_aptbrSocialPlayersBeforeV12" },
+    { "nameplateShowFriendlyPets", "0", "_aptbrSocialPetsBeforeV12" },
+    { "nameplateShowFriendlyMinions", "0", "_aptbrSocialMinionsBeforeV12" },
+    { "nameplateShowFriendlyGuardians", "0", "_aptbrSocialGuardiansBeforeV12" },
+    { "nameplateShowFriendlyTotems", "0", "_aptbrSocialTotemsBeforeV12" },
+}
+
+local bindingOwner = CreateFrame("Frame")
+local toggleButton = CreateFrame("Button", "AscensionPTBRToggleCombatNameplates", UIParent)
+local bindingKeys = {}
+
+if toggleButton then
+    if toggleButton.SetSize then pcall(toggleButton.SetSize, toggleButton, 1, 1) end
+    if toggleButton.SetPoint then pcall(toggleButton.SetPoint, toggleButton, "TOPLEFT", UIParent, "BOTTOMLEFT", -100, -100) end
+    if toggleButton.SetAlpha then pcall(toggleButton.SetAlpha, toggleButton, 0) end
+    if toggleButton.EnableMouse then pcall(toggleButton.EnableMouse, toggleButton, false) end
+    if toggleButton.RegisterForClicks then pcall(toggleButton.RegisterForClicks, toggleButton, "AnyUp") end
 end
 
 local function BoolCVar(value)
@@ -871,208 +1020,128 @@ local function BoolCVar(value)
     return value == "1" or value == "true" or value == "TRUE"
 end
 
-local function ToggleEnemyNameplatesOnly()
-    if not Enabled() then return end
+local function ToggleCombatNameplates()
     local current = GetCVarValue("nameplateShowEnemies")
     if current == nil then return end
     SetCVarValue("nameplateShowEnemies", BoolCVar(current) and "0" or "1")
 end
 
-if enemyToggleButton and enemyToggleButton.SetScript then
-    enemyToggleButton:SetScript("OnClick", ToggleEnemyNameplatesOnly)
+if toggleButton and toggleButton.SetScript then
+    toggleButton:SetScript("OnClick", ToggleCombatNameplates)
 end
 
-local function CleanupLegacyNameplateState(db)
-    if not db or db._aptbrNpcAnchorLegacyCleanV10 then return end
+local function ClearPlateBindingOverrides()
+    if bindingOwner and ClearOverrideBindings then pcall(ClearOverrideBindings, bindingOwner) end
+    for k in pairs(bindingKeys) do bindingKeys[k] = nil end
+end
 
-    -- Estados deixados pelos experimentos anteriores. Primeiro devolvemos o valor
-    -- original quando ele ainda existir; depois limpamos as chaves antigas para que
-    -- elas nunca mais sejam reaplicadas por engano.
-    local legacy = {
-        { "nameplateShowFriends", "_aptbrFriendlyMasterBefore" },
+local function AddBindingKeysForAction(action)
+    if not GetBindingKey then return end
+    local ok, k1, k2 = pcall(GetBindingKey, action)
+    if not ok then return end
+    if k1 and k1 ~= "" then bindingKeys[k1] = true end
+    if k2 and k2 ~= "" then bindingKeys[k2] = true end
+end
+
+local function ApplyPlateBindingOverrides()
+    ClearPlateBindingOverrides()
+    if not (Enabled() and not ExternalNameplateAddon()) then return false end
+    if not (SetOverrideBindingClick and toggleButton) then return false end
+
+    AddBindingKeysForAction("NAMEPLATES")
+    for key in pairs(bindingKeys) do
+        pcall(SetOverrideBindingClick, bindingOwner, false, key, "AscensionPTBRToggleCombatNameplates")
+    end
+    return next(bindingKeys) ~= nil
+end
+
+local function RestoreSocialCVars()
+    local db = DB()
+    if not db then return end
+    for _, info in ipairs(SOCIAL_CVARS) do
+        if db[info[3]] ~= nil then
+            SetCVarValue(info[1], db[info[3]])
+            db[info[3]] = nil
+        end
+    end
+end
+
+local function CleanupOldNameplateOverrides()
+    local db = DB()
+    if not db or db._aptbrSocialMigrationV12 then return end
+
+    local old = {
+        { "nameplateShowFriends", "_aptbrNpcAnchorFriendsBeforeV10" },
         { "nameplateShowFriends", "_aptbrFriendlyMasterBeforeV2" },
-        { "nameplateShowFriendlyNPCs", "_aptbrFriendlyNpcCVarBefore" },
+        { "nameplateShowFriends", "_aptbrFriendlyMasterBefore" },
+        { "nameplateShowFriendlyNPCs", "_aptbrNpcAnchorNpcsBeforeV10" },
         { "nameplateShowFriendlyNPCs", "_aptbrFriendlyNpcCVarBeforeV2" },
-        { "nameplateShowFriendlyPlayers", "_aptbrFriendlyPlayersCVarBefore" },
-        { "nameplateShowFriendlyPets", "_aptbrFriendlyPetsCVarBefore" },
-        { "nameplateShowFriendlyMinions", "_aptbrFriendlyMinionsCVarBefore" },
-        { "nameplateShowFriendlyGuardians", "_aptbrFriendlyGuardiansCVarBefore" },
-        { "nameplateShowFriendlyTotems", "_aptbrFriendlyTotemsCVarBefore" },
+        { "nameplateShowFriendlyNPCs", "_aptbrFriendlyNpcCVarBefore" },
+        { "nameplateShowFriendlyNPCs", "_friendlyNpcNamesBeforePTBR" },
+        { "nameplateShowFriendlyPlayers", "_aptbrNpcAnchorPlayersBeforeV10" },
+        { "nameplateShowFriendlyPets", "_aptbrNpcAnchorPetsBeforeV10" },
+        { "nameplateShowFriendlyMinions", "_aptbrNpcAnchorMinionsBeforeV10" },
+        { "nameplateShowFriendlyGuardians", "_aptbrNpcAnchorGuardiansBeforeV10" },
+        { "nameplateShowFriendlyTotems", "_aptbrNpcAnchorTotemsBeforeV10" },
+        { "UnitNameFriendlyPlayerName", "_aptbrFriendlyPlayerWorldNameBeforeV10" },
+        { "nameplateShowFriendlyNPCs", "_aptbrFriendlyNpcOnlyBeforeV11" },
     }
 
-    if db._aptbrFriendlyNpcCVarBefore == nil and db._friendlyNpcNamesBeforePTBR ~= nil then
-        db._aptbrFriendlyNpcCVarBefore = db._friendlyNpcNamesBeforePTBR
-        db._friendlyNpcNamesBeforePTBR = nil
-    end
-
-    anchorMutation = true
-    for _, info in ipairs(legacy) do
-        local value = db[info[2]]
-        if value ~= nil then
-            SetCVarValue(info[1], value)
+    for _, info in ipairs(old) do
+        if db[info[2]] ~= nil then
+            SetCVarValue(info[1], db[info[2]])
             db[info[2]] = nil
         end
     end
-    anchorMutation = false
-
     db._aptbrForcedFriendlyMaster = nil
-    db._aptbrNameplateStateRestoredV8 = nil
-    db._aptbrLegacyFriendlyCVarsCleaned = nil
-    db._aptbrLegacyFriendlyCVarsCleanedV2 = nil
-    db._aptbrNpcAnchorLegacyCleanV10 = true
+    db._aptbrSocialMigrationV12 = true
 end
 
-local function SaveAndSetAnchor(db, cvar, wanted, key)
-    local current = GetCVarValue(cvar)
-    if current == nil then return false end
-    if db[key] == nil then db[key] = current end
-    if tostring(current) ~= tostring(wanted) then
-        SetCVarValue(cvar, wanted)
-    end
-    return true
-end
-
-local function RestoreNpcAnchorState(clearSaved)
-    local db = DB()
-    if not db then return end
-
-    anchorMutation = true
-    for _, info in ipairs(NPC_ANCHOR_CVARS) do
-        local saved = db[info[3]]
-        if saved ~= nil then
-            SetCVarValue(info[1], saved)
-            if clearSaved then db[info[3]] = nil end
-        end
-    end
-    anchorMutation = false
-end
-
-local function EnsureNpcAnchorMode()
+local function EnsureSocialPlates()
     local db = DB()
     if not db then return false end
-    CleanupLegacyNameplateState(db)
+    CleanupOldNameplateOverrides()
 
-    if not Enabled() then
-        RestoreNpcAnchorState(true)
+    if not Enabled() or ExternalNameplateAddon() then
+        RestoreSocialCVars()
+        RestoreGlobalFriendlyOptions()
+        ClearPlateBindingOverrides()
         return false
     end
 
-    anchorMutation = true
-    local supported = false
-    for _, info in ipairs(NPC_ANCHOR_CVARS) do
-        if SaveAndSetAnchor(db, info[1], info[2], info[3]) then
-            supported = true
+    PatchGlobalFriendlyOptions()
+    for _, info in ipairs(SOCIAL_CVARS) do
+        local current = GetCVarValue(info[1])
+        if current ~= nil then
+            if db[info[3]] == nil then db[info[3]] = current end
+            if tostring(current) ~= tostring(info[2]) then SetCVarValue(info[1], info[2]) end
         end
     end
-    anchorMutation = false
-    return supported
-end
-
-local function IsNameplateBindingAction(action)
-    if type(action) ~= "string" or action == "" then return false end
-    action = string.upper(action)
-    return string.find(action, "NAMEPLATE", 1, true) ~= nil
-end
-
-local function ClearVEnemyOverride()
-    if ClearOverrideBindings and bindingOwner then
-        bindingMutation = true
-        pcall(ClearOverrideBindings, bindingOwner)
-        bindingMutation = false
-    end
-    vOverrideActive = false
-end
-
-local function ApplyVEnemyOnlyOverride()
-    if InCombatLockdown and InCombatLockdown() then
-        bindingRefreshPending = true
-        return false
-    end
-
-    ClearVEnemyOverride()
-    if not Enabled() then
-        bindingRefreshPending = false
-        return false
-    end
-
-    local action
-    if GetBindingAction then
-        local ok, value = pcall(GetBindingAction, "V")
-        if ok then action = value end
-    end
-    vBaseAction = action
-
-    -- Não roubamos V se o usuário usa a tecla para outra coisa.
-    if not IsNameplateBindingAction(action) then
-        bindingRefreshPending = false
-        return false
-    end
-
-    local ok = false
-    if SetOverrideBindingClick and enemyToggleButton and enemyToggleButton.GetName then
-        local name = enemyToggleButton:GetName()
-        if name then
-            bindingMutation = true
-            ok = pcall(SetOverrideBindingClick, bindingOwner, false, "V", name, "LeftButton")
-            bindingMutation = false
-        end
-    end
-
-    if not ok and SetOverrideBinding and enemyToggleButton and enemyToggleButton.GetName then
-        local name = enemyToggleButton:GetName()
-        if name then
-            bindingMutation = true
-            ok = pcall(SetOverrideBinding, bindingOwner, false, "V", "CLICK " .. name .. ":LeftButton")
-            bindingMutation = false
-        end
-    end
-
-    vOverrideActive = ok and true or false
-    bindingRefreshPending = false
-    return vOverrideActive
-end
-
-local function QueueAnchorRepair()
-    if shuttingDown or anchorMutation or anchorRefreshPending then return end
-    anchorRefreshPending = true
-
-    local function run()
-        anchorRefreshPending = false
-        if shuttingDown or not Enabled() then return end
-        EnsureNpcAnchorMode()
-        ApplyToActivePlates()
-    end
-
-    if AES.Runtime then
-        AES.Runtime.After("world-npc-anchor-repair", 0.03, run)
-    else
-        run()
-    end
+    ApplyPlateBindingOverrides()
+    return true
 end
 
 local function QueueRefresh()
     if shuttingDown or not Enabled() then return end
-    EnsureNpcAnchorMode()
-
     if AES.Runtime then
-        AES.Runtime.Repeat("world-names-rebuild", 0.03, 0.12, 6, function()
+        AES.Runtime.Repeat("world-names-rebuild", 0.03, 0.12, 5, function()
+            EnsureSocialPlates()
             ApplyToActivePlates()
         end)
     else
+        EnsureSocialPlates()
         ApplyToActivePlates()
     end
 end
 
 AES.ApplyWorldNpcNameplates = function()
-    local supported = EnsureNpcAnchorMode()
+    CleanupOldNameplateOverrides()
+    EnsureSocialPlates()
     if Enabled() then
-        ApplyVEnemyOnlyOverride()
         ApplyToActivePlates()
         QueueRefresh()
-    else
-        ClearVEnemyOverride()
     end
-    return supported
+    return (C_NamePlateManager ~= nil or C_NamePlate ~= nil)
 end
 
 local events = CreateFrame("Frame")
@@ -1082,9 +1151,11 @@ events:RegisterEvent("PLAYER_ENTERING_WORLD")
 events:RegisterEvent("PLAYER_TARGET_CHANGED")
 events:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 events:RegisterEvent("PLAYER_LOGOUT")
-pcall(events.RegisterEvent, events, "PLAYER_REGEN_ENABLED")
 pcall(events.RegisterEvent, events, "UPDATE_BINDINGS")
-pcall(events.RegisterEvent, events, "CVAR_UPDATE")
+
+-- Se outro addon de nameplates entrar depois, devolvemos CVars/opções e passamos
+-- para modo passivo para não disputar layout nem atalhos com ElvUI/Kui/Plater/etc.
+pcall(events.RegisterEvent, events, "ADDON_LOADED")
 
 events:SetScript("OnEvent", function(_, event, arg1)
     if event == "NAME_PLATE_UNIT_ADDED" then
@@ -1100,28 +1171,27 @@ events:SetScript("OnEvent", function(_, event, arg1)
         ApplyToUnit("target")
     elseif event == "UPDATE_MOUSEOVER_UNIT" then
         ApplyToUnit("mouseover")
-    elseif event == "PLAYER_REGEN_ENABLED" then
-        if bindingRefreshPending then ApplyVEnemyOnlyOverride() end
-        if anchorRefreshPending then QueueAnchorRepair() end
     elseif event == "UPDATE_BINDINGS" then
-        if not bindingMutation then ApplyVEnemyOnlyOverride() end
-    elseif event == "CVAR_UPDATE" then
-        if type(arg1) == "string" and NPC_ANCHOR_CVAR_SET[string.lower(arg1)] and not anchorMutation then
-            QueueAnchorRepair()
+        ApplyPlateBindingOverrides()
+    elseif event == "ADDON_LOADED" then
+        if ExternalNameplateAddon() then
+            RestoreSocialCVars()
+            RestoreGlobalFriendlyOptions()
+            ClearPlateBindingOverrides()
+        else
+            EnsureSocialPlates()
         end
     elseif event == "PLAYER_LOGOUT" then
         shuttingDown = true
-        ClearVEnemyOverride()
-        RestoreNpcAnchorState(false)
+        RestoreSocialCVars()
+        RestoreGlobalFriendlyOptions()
+        ClearPlateBindingOverrides()
     elseif event == "PLAYER_ENTERING_WORLD" then
-        EnsureNpcAnchorMode()
-        ApplyVEnemyOnlyOverride()
+        CleanupOldNameplateOverrides()
+        EnsureSocialPlates()
         if AES.Runtime then
             AES.Runtime.After("world-names-enter", 0.12, function()
-                if Enabled() then
-                    EnsureNpcAnchorMode()
-                    ApplyToActivePlates()
-                end
+                if Enabled() then ApplyToActivePlates() end
             end)
         else
             ApplyToActivePlates()
@@ -1129,8 +1199,9 @@ events:SetScript("OnEvent", function(_, event, arg1)
     end
 end)
 
--- O Ascension cria a UnitFrame quando a placa entra no gerenciador. Traduzimos
--- nesse ponto e também no OnShow para cobrir reciclagem do pool.
+-- O Ascension cria a UnitFrame quando a placa entra no gerenciador. Não chamamos
+-- SetUpFrame: apenas neutralizamos lógica de ameaça em placas amigáveis, traduzimos
+-- NPCs e desenhamos o overlay social dos jogadores aliados.
 if EventRegistry and EventRegistry.RegisterCallback then
     pcall(EventRegistry.RegisterCallback, EventRegistry, "NamePlateManager.UnitAdded", function(_, unit, plate)
         ApplyToUnit(unit, plate)
@@ -1146,19 +1217,18 @@ if EventRegistry and EventRegistry.RegisterCallback then
     end, events)
 end
 
--- Diagnóstico curto. Não altera configuração; só mostra o estado real da build.
 SLASH_APTBRPLATES1 = "/aptbrplates"
 SlashCmdList["APTBRPLATES"] = function()
-    local action = vBaseAction or "<n/a>"
     local friends = GetCVarValue("nameplateShowFriends") or "<n/a>"
     local npcs = GetCVarValue("nameplateShowFriendlyNPCs") or "<n/a>"
-    local players = GetCVarValue("nameplateShowFriendlyPlayers") or "<n/a>"
-    local nativePlayers = GetCVarValue("UnitNameFriendlyPlayerName") or "<n/a>"
     local enemies = GetCVarValue("nameplateShowEnemies") or "<n/a>"
+    local players = GetCVarValue("nameplateShowFriendlyPlayers") or "<n/a>"
+    local guild = GetCVarValue("UnitNamePlayerGuild") or "<n/a>"
+    local external = ExternalNameplateAddon() or "nenhum"
+    local override = next(bindingKeys) and "sim" or "não"
     DEFAULT_CHAT_FRAME:AddMessage(string.format(
-        "|cff33ff99AscensionPTBR|r: Vbase=%s override=%s | friends=%s NPC=%s playersPlate=%s playerName=%s enemies=%s",
-        tostring(action), vOverrideActive and "SIM" or "NÃO", tostring(friends), tostring(npcs),
-        tostring(players), tostring(nativePlayers), tostring(enemies)))
+        "|cff33ff99AscensionPTBR|r: friends=%s NPC=%s aliados=%s enemies=%s guild=%s override=%s addonPlacas=%s",
+        tostring(friends), tostring(npcs), tostring(players), tostring(enemies), tostring(guild), tostring(override), tostring(external)))
 end
 
 SLASH_APTBRNPC1 = "/aptbrnpc"

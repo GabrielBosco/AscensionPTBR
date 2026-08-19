@@ -2,6 +2,9 @@
 AscensionPTBR = AscensionPTBR or {}
 AscensionPTBR.ItemName = AscensionPTBR.ItemName or {}
 ;(function(T)
+-- Sobrescritas CoA que ainda estavam em inglês na tabela principal.
+T[98463]="Extrato Místico"
+T[375250]="Runa da Ascensão"
 T[875]="Evocação de Cavalo Castanho"
 T[886]="Espada Curta de Metal Preto"
 T[901]="Evocação de Garanhão Branco Obsoleto (Montaria)"

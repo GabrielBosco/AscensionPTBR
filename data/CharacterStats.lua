@@ -5,6 +5,8 @@ local A = AscensionPTBR
 -- Fica separado da UI geral porque a ficha do personagem atualiza isso direto.
 A.CharacterStatExact = {
     ["Attributes"] = "Atributos",
+    ["Base Stats"] = "Atributos básicos",
+    ["Base Statistics"] = "Atributos básicos",
     ["General"] = "Geral",
     ["Melee"] = "Corpo a corpo",
     ["Ranged"] = "À distância",
@@ -12,6 +14,31 @@ A.CharacterStatExact = {
     ["Spells"] = "Feitiços",
     ["Defenses"] = "Defesas",
     ["Resistances"] = "Resistências",
+
+    -- Cabeçalhos e grupos da ficha customizada do Ascension
+    ["Equipment"] = "Equipamento",
+    ["Enhanced Attributes"] = "Atributos Aprimorados",
+    ["Enhanced Attribute"] = "Atributo Aprimorado",
+    ["Character"] = "Personagem",
+    ["Character Info"] = "Informações do Personagem",
+    ["Statistics"] = "Estatísticas",
+    ["Stats"] = "Estatísticas",
+    ["Attack"] = "Ataque",
+    ["Resistance"] = "Resistência",
+
+    -- Atributos aprimorados do CoA
+    ["Avoidance"] = "Evasão",
+    ["Critical Strike Avoidance"] = "Evasão de acerto crítico",
+    ["Damage Taken"] = "Dano recebido",
+    ["Healing Taken"] = "Cura recebida",
+    ["Physical Damage"] = "Dano físico",
+    ["Ranged Damage"] = "Dano à distância",
+    ["Spell Damage"] = "Dano de feitiço",
+    ["Spell Healing"] = "Cura de feitiço",
+    ["Mana per 5"] = "Mana a cada 5 s",
+    ["Mana Per 5"] = "Mana a cada 5 s",
+    ["Out of Combat Regeneration"] = "Regeneração fora de combate",
+    ["Mana Cost"] = "Custo de mana",
 
     ["Strength"] = "Força",
     ["Agility"] = "Agilidade",
@@ -40,6 +67,13 @@ A.CharacterStatExact = {
     ["Spell Power"] = "Poder mágico",
     ["Bonus Damage"] = "Bônus de dano",
     ["Bonus Healing"] = "Bônus de cura",
+    ["Bonus Spell Damage"] = "Bônus de dano mágico",
+    ["Bonus Spell Healing"] = "Bônus de cura mágica",
+    ["Spell Crit"] = "Crítico com feitiços",
+    ["Spell Crit Chance"] = "Chance de crítico com feitiços",
+    ["Mana Regen."] = "Regen. de mana",
+    ["Mana Regen"] = "Regen. de mana",
+    ["Acceleration"] = "Aceleração",
 
     ["Increases attack power with melee weapons."] =
         "Aumenta o poder de ataque com armas corpo a corpo.",
@@ -365,6 +399,19 @@ function A.TranslateCharacterStatLine(text)
     if cached ~= nil then return cached ~= false and cached or nil end
 
     local translated = A.CharacterStatExact[text]
+    if not translated then
+        -- Alguns painéis customizados juntam rótulo e valor no mesmo FontString
+        -- (ex.: "Strength: 37" ou "Hit Rating 1/31"). Traduz apenas quando a
+        -- parte esquerda é um atributo conhecido, preservando o valor exatamente.
+        local label, suffix = text:match("^(.-)(:%s*.+)$")
+        local ptLabel = label and A.CharacterStatExact[label]
+        if ptLabel then translated = ptLabel .. suffix end
+        if not translated then
+            label, suffix = text:match("^(.-)(%s+[%+%-]?[%d%.,]+%%?.*)$")
+            ptLabel = label and A.CharacterStatExact[label]
+            if ptLabel then translated = ptLabel .. suffix end
+        end
+    end
     if not translated then
         local first = text:sub(1, 1)
         local key = first:match("%a") and first:lower() or nil

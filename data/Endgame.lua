@@ -202,7 +202,7 @@ do
         end
 
         patch(80651, {
-            d = "O guerreiro sem prática é o primeiro a cair. Duele com outros jogadores e aperfeiçoe suas habilidades de combate. Aproveite a experiência e leve o que aprender para as próximas batalhas.",
+            d = "O guerreiro sem prática é o primeiro a cair. Enfrente outros jogadores em duelos e aperfeiçoe suas habilidades de combate. Aproveite a experiência e leve o que aprender para as próximas batalhas.",
             o = "Duele com cinco outros heróis.",
             p = "Você foi desafiado a duelar com cinco outros heróis.",
             c = "Desafio concluído. Cada duelo deixa você mais preparado para a próxima batalha."

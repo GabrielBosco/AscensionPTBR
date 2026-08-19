@@ -705,6 +705,330 @@ QuestFix(826, {
     o="Derrote Zalazane.\n\nMate 8 Trolls Vodu e 8 Trolls Enfeitiçados.\n\nLeve a Cabeça de Zalazane para Mestre Gadrin."
 })
 
+-- Campos antigos que ainda misturavam espanhol e português.
+QuestFix(138, {
+    p="Este parece ser o barril certo."
+})
+QuestFix(700, {
+    c="O granito parece uma homenagem pequena diante da grandeza daquele anão, mas ninguém vive para sempre.\n\nQue este monumento atravesse as eras e lembre às futuras gerações que bravos soldados como Sully Caxias deram a vida por elas."
+})
+QuestFix(770, {
+    c="Mal posso acreditar no que vejo! Você derrotou o grande Uivo Fantasma? Passo a olhar para você com muito respeito, jovem $c. Você demonstra uma habilidade extraordinária para a caça!\n\nMeus dias de caçador terminaram, mas eu ficaria honrado se usasse uma de minhas armas em suas jornadas.\n\nQue ela sempre atinja o alvo e traga reconhecimento a você. E que o espírito de Uivo Fantasma finalmente tenha encontrado a paz."
+})
+QuestFix(915, {
+    p="Eu queria que fizessem outros sabores além de morango, mas ainda bem que morango é o meu favorito!"
+})
+QuestFix(951, {
+    p="$n, sua exploração das Ruínas de Mathistra rendeu bons frutos?",
+    c="Obrigado. Estas relíquias pertencem ao tempo em que Mathistra ainda resplandecia. A antiga fortaleza é apenas uma sombra do que foi, mas fragmentos da magia daquele povo permanecem. Espero que consigamos desvendar seus segredos antes dos nossos inimigos...\n\nMantenha-se alerta, $n."
+})
+QuestFix(981, {
+    c="Eu sabia que você estaria à altura da tarefa, $n.\n\nPressinto grandes feitos em seu futuro e acredito que você corrigirá muitos dos males que assolam nossas terras. Leve minhas bênçãos, $n, e aceite também este presente."
+})
+QuestFix(1401, {
+    p="Está feito? Você pôs fim ao sofrimento dele?"
+})
+QuestFix(2204, {
+    p="Você nem parou para se arrumar depois de sair de Uldaman, não é? Veio direto para cá, sem se importar com o cheiro persistente da masmorra. Espero que esta visita seja apenas desagradável ao nariz, e não inútil também.\n\nTrouxe a fonte de energia para o colar?",
+    c="Ora, veja só! Fico feliz que você e a fonte de energia tenham chegado inteiros. Agora que as gemas estão unidas, vou levar apenas um instante para fundir a magia da fonte ao colar. Quando terminar, ele será seu!\n\nEstá $gansioso:ansiosa;, não é? Dá até para sentir o frio na barriga! Agora... onde deixei aquele foco de feitiço?"
+})
+QuestFix(28661, {
+    c="Ah, um trabalho prazeroso! Agora que tenho os materiais adequados, a encomenda de Jahan será fácil. Obrigado, $c."
+})
+QuestFix(53004, {
+    c="Seu juramento foi testemunhado, $n. A partir deste momento, você será escudo e abrigo para os necessitados.\n\nO Guardião permanece onde os outros não conseguem, suporta o que os outros não suportariam e protege aqueles que não podem se defender. Seu juramento não é apenas um conjunto de palavras: ele se torna parte da sua própria essência e transforma você em um baluarte vivo contra todas as formas de dano.\n\nVocê aprenderá a tecer escudos de pura força de vontade, barreiras capazes de proteger exércitos inteiros do sopro de dragões ou de bombardeios. Sua presença inspirará coragem nos aliados e lançará dúvidas sobre os inimigos.\n\nMas entenda: o caminho do Guardião exige sacrifício. Repetidas vezes, você se colocará entre o perigo e os inocentes. Suportará a dor para que outros não precisem suportá-la. Permanecerá só diante de possibilidades impossíveis enquanto os demais recuam. Isso não é um fardo, mas um privilégio: ser o escudo que nunca se parte e a muralha que nunca cai.\n\nBoas-vindas à vigilância eterna, $n. Que o mal se despedace contra suas defesas!"
+})
+QuestFix(175268, {
+    d="<O antigo golem permanece imóvel entre as ruínas, como mais uma estátua no pátio sacerdotal.>\n\n<Uma sucessão de imagens fragmentadas invade seus pensamentos: um templo intacto, sacerdotes Jubafria entoando cânticos, uma oferenda...>\n\n<Então a sensação muda. Exaustão. Submissão. Séculos de passos sem rumo. Guardiões privados de propósito, protegendo salões vazios e altares destruídos.>\n\n<O golem ergue lentamente uma das mãos na direção dos outros constructos que patrulham as ruínas.>\n\n<Ele quer que você lhes conceda descanso.>",
+    o="Destrua os constructos drakkari no Palácio Sacerdotal para libertar os restos espirituais aprisionados dentro deles.",
+    p="<O golem espera em silêncio. Uma vibração tênue percorre a pedra de seu corpo.>",
+    c="<Ao retornar, o antigo golem recebe você com algo parecido com uma reverência.>\n\n<Onde os constructos tombaram, fios azul-claros de energia espiritual flutuam e desaparecem entre a neve e a rocha. Não há vozes, mas você sente algo semelhante a alívio.>\n\n<O golem estende uma mão rachada em sua direção. Por um breve instante, sua mente é preenchida por uma última impressão: uma gratidão antiga, pesada como uma montanha.>"
+})
+QuestFix(255012, {
+    d="Estou começando a me sentir como se estivesse lidando com coelhos na fazenda: derrubamos um e logo aparecem outros três. Pela Luz, eu queria que fossem coelhos!\n\nSe pretende ajudar, mate alguns orcs até que o avanço deles desacelere. Não espero que acabe com a ofensiva por conta própria, mas ao menos nos dê um pouco de fôlego. Estou pronto para esmagar mais alguns crânios, mas os outros não estão acostumados a lutar tanto tempo sem descanso.",
+    c="Você matou quantos?!\n\nRetiro o que disse sobre os coelhos. Nem eles são tão persistentes. Foi uma boa tentativa, obrigado.\n\nVamos, pessoal. Parece que ainda ficaremos aqui por um bom tempo."
+})
+QuestFix(255079, {
+    d="Ah... então nem a flauta foi suficiente para animá-la. Que pena, amigo. A melodia era doce, mas o coração dela continua pesado.\n\nMas não vamos desistir! Precisamos apenas de algo mais forte, mais barulhento... um tambor! É disso que precisamos!\n\nRhuna, a curtidora, poderia costurar um para nós se tivesse os materiais certos. Você faria isso por minha pobre irmã mais velha?",
+    c="Precisa de um tambor, é?\n\nVeio ao lugar certo. Ninguém nos Sertões trabalha o couro melhor do que eu!"
+})
+QuestFix(255151, {
+    d="Um grupo de saqueadores nos atacou perto da Fortaleza de Desterro — ou do que restou dela.\n\nNossa companhia transportava várias relíquias pela estrada principal e esperava repelir qualquer ladrão que cruzasse nosso caminho. Infelizmente, falhamos e ainda estamos nos recuperando da viagem.\n\nVocê poderia recuperar nossos pertences roubados antes que esses saqueadores destruam peças tão valiosas da história?",
+    c="Ahá! Você as encontrou...\n\n<O Historiador examina as relíquias, e a expressão dele desaba.>\n\nAh... não..."
+})
+QuestFix(499997, {
+    d="Escute bem, $r. Coelhos são criaturas magníficas. São gentis e confiantes, além de terem os pelos mais macios dos Reinos do Leste. Dá para fazer praticamente qualquer peça confortável com pele de coelho: botas, luvas, roupas de baixo. Foi por isso que veio, não é? Procurando um belo par de ceroulas de pele de coelho?\n\n[Opção de diálogo: Não, George. Coelhos são amigos, não acessórios.]\n\nOra, que resposta adorável. Então me diga, $r: se ama tanto os coelhos, estaria disposto a fazer qualquer coisa por eles? Até mesmo provar sua lealdade trazendo uma cenoura bem grande?",
+    o="Prove a George Candarte que você é amigo dos coelhos levando até ele uma Cenoura Grande.",
+    p="Ora, essa é a maior cenoura que já vi na vida."
+})
+QuestFix(499999, {
+    d="Ah, bom dia, $r. Os espíritos desejam a você uma feliz Jardinova. Pena que a ocasião não seja tão feliz para eles...\n\nUma estranha tristeza emana dos nobres espíritos, herói. Ao longe, em Mulgore, algo clama em desespero. Você estaria disposto a viajar até lá e descobrir a origem dessa tristeza? A Jardinova deveria ser uma ocasião alegre para todos.",
+    o="Viaje até Mulgore e descubra a origem da tristeza.",
+    p="Jardinova — texto provisório nº 14."
+})
+QuestFix(500005, {
+    d="Mandaram você? Se for mais um daqueles gerentes de contrato imprestáveis, dê meia-volta e volte por onde veio. Estou atolado em encomendas ruins e papelada ainda pior.\n\nAcabamos de receber um pedido extra de Altaforja. Grande e urgente. Em vez de mandarem mais trabalhadores, trocaram toda a equipe de lenhadores. Não há tempo para treinamento nem planejamento; só querem o serviço pronto.\n\nEstou atrasado, e odeio ficar atrasado. Se sabe usar um machado e não se importa com o frio, sua ajuda seria bem-vinda. Precisamos de doze Troncos de Pinheiro Gélido das árvores próximas.\n\nNão é caridade. Garanto que valerá a pena.",
+    o="Derrube árvores próximas ao Acampamento Talhafrio, em Dun Morogh, e traga 12 Troncos de Pinheiro Gélido.",
+    c="Isto serve. Não está perfeito, mas é melhor do que nada. Você acabou de me livrar de um sermão e de uma noite congelante fora do alojamento.\n\nPegue isto. Você merece mais do que apenas um agradecimento."
+})
+QuestFix(4004, {
+    c="<Thrall fica visivelmente abalado com as informações que você trouxe.>\n\nUma nova ameaça surge no horizonte. À medida que os anos de Magni chegam ao fim, abre-se o caminho para que uma criança ainda não nascida dos Ferro Negro governe Altaforja.\n\nVocê cumpriu a tarefa que lhe confiei e será $grecompensado:recompensada; por isso.\n\nAgora vá, $n. Preciso conversar com Sylvana e Caerne."
+})
+QuestFix(9370, {
+    p="Você voltou, $n. Pôs fim à loucura dos draeneis?"
+})
+QuestFix(9518, {
+    p="Enquanto o Feitor Gorthak viver, continuarei combatendo-o. Que notícias você traz, $n?"
+})
+QuestFix(13043, {
+    p="Você recuperou o tomo do doutor, mas não acabou com ele usando o gigante de carne?\n\nVolte lá e mate-o antes que seja tarde demais!"
+})
+QuestFix(13164, {
+    p="Finalmente estamos livres daquele aspirante a Arthas?"
+})
+QuestFix(13190, {
+    c="Ah!\n\nQue o odor zombeteiro do fracasso consuma as almas vazias deles!\n\nObrigado, $c. Hoje você desferiu um golpe contra os mortos-vivos."
+})
+QuestFix(13283, {
+    c="Eu sabia que você era a pessoa certa para este trabalho!\n\nTenho que admitir: neste momento, você é meu $c favorito de todos os tempos.\n\nQue tal repetir a façanha amanhã? Posso recompensar bem seu esforço."
+})
+QuestFix(13307, {
+    p="Você matou os portadores dos estandartes e impediu a tentativa deles de usar os caídos contra nós?"
+})
+QuestFix(24562, {
+    c="Espero que entenda que não posso simplesmente permitir sua entrada na Nascente do Sol, $n. Este é o lugar mais sagrado dos sin'dorei, e só recentemente recuperamos o controle dele.\n\nVocê pretende alimentar as esperanças do nosso povo com histórias sobre Quel'Delar? Sem uma prova da veracidade de suas afirmações, não tenho motivo para acreditar em sua palavra."
+})
+QuestFix(49986, {
+    d="Que visão magnífica, $n! Esta escritura brilha com a luz cálida da aurora, e sua leitura me enche de esperança e vigor renovados. O texto dourado fala da cura por meio da energia solar e da canalização do poder vital do sol. Uma magia tão radiante traz apenas bênçãos e renovação ao mundo.",
+    o="Leia a Escritura Solar e procure a Capelã Nysoni no Vale de Vila Norte.",
+    p="Sua presença aquece este lugar sagrado, $n. Trouxe a Escritura Solar? A bênção do sol flui por aqueles escolhidos para curar.",
+    c="Você recebeu a bênção, $n! A luz radiante do sol flui por seu ser, marcando você como alguém escolhido para a cura e a renovação. Como Clérigo Solar, você levará esperança aos desesperados e luz aos lugares mais sombrios.\n\nSeu caminho de cura começa agora. Que sua luz jamais se apague e que você sempre leve a aurora aos que se perderam nas trevas."
+})
+QuestFix(255075, {
+    d="Dos quatro, eu era quem melhor conhecia a tribo Bosque Negro. Muitos deles já dominaram o poder do vento e, embora suas mentes tenham sido corrompidas, vários ainda conservam essa habilidade.\n\nNão tenho forças para salvá-los, mas talvez eles próprios ainda tenham. Embora me desagrade pedir que os machuque, traga os totens que abençoei em nome deles. Muitos ainda os carregam.\n\nTalvez o vento ainda consiga levar embora a corrupção.",
+    o="Colete Totens do Vento dos Totêmicos e Xamãs Bosque Negro para Losir.",
+    p="Não quero que sofram, mas assim ao menos alguns poderão viver, e a tribo terá a chance de se reerguer com o tempo.",
+    c="Eu nunca quis tomar de volta os totens que abençoei, mas, no estado atual, eles não conseguem usar essas bênçãos.\n\nPode levar algum tempo, mas farei tudo o que puder para salvá-los. Obrigado."
+})
+QuestFix(255114, {
+    title="Bênçãos da Luz"
+})
+
+-- Revisão em blocos: missões clássicas, contratos e murais de comando.
+QuestFix(639, {o="Obtenha o Selo de Strom para Zengu, em Ruína do Martelo.",p="Já encontrou o primeiro selo? É provável que um dos agentes da Camarilha em Stromgarde esteja com ele.",c="Excelente, camarada. É um bom começo. Precisaremos de todos os selos para retirar Trol'kalar da tumba de Matatroll."})
+QuestFix(640, {o="Recupere os 5 Fragmentos do Selo dos defensores de Stromgarde e leve-os a Tor'gan, em Ruína do Martelo.",c="Ah, você precisa que eu reconstrua este selo? Não será difícil... Todas as peças estão aqui, e restaurar a estrutura mágica será simples.\n\nTalvez seja melhor fechar os olhos."})
+QuestFix(641, {o="Leve o Selo de Thoradin restaurado para Zengu, em Ruína do Martelo.",p="$n! Trouxe o segundo selo?",c="Já estamos na metade do caminho para retirar Trol'kalar da tumba de Matatroll. Ainda não sabemos exatamente onde está o terceiro selo, pois seus portadores circulam bastante por Arathi, mas confio que você o encontrará."})
+QuestFix(643, {o="Recupere o Selo de Arathor e leve-o a Zengu, em Ruína do Martelo.",p="Valente não será fácil de localizar, $n. Montado, ele percorre grandes distâncias rapidamente. Ainda assim, precisamos do selo.",c="A perda do líder da cavalaria será um duro golpe para os defensores de Stromgarde. Melhor ainda: agora falta apenas um selo para tomarmos Trol'kalar."})
+QuestFix(644, {o="Mate o Príncipe Galen Matatroll e leve o Selo de Matatroll para Zengu, em Ruína do Martelo.",p="Você voltou, $n. A linhagem de Ignaeus Matatroll foi encerrada?",c="Este é um grande dia, $c. O sangue de Matatroll não assombrará mais meu povo, e os selos necessários para obter Trol'kalar estão em nossas mãos. Em breve atacaremos os odiados trolls de Zul'Gurub."})
+QuestFix(645, {o="Recupere Trol'kalar na tumba de Matatroll, em Stromgarde.",p="As gravações na pedra da tumba de Matatroll correspondem às linhas brilhantes do Selo de Ignaeus..."})
+QuestFix(2380, {c="É importante que a Mão Despedaçada permaneça alerta diante das mudanças que Thrall pretende trazer à Horda. Nossos números não bastarão para superar o governo dele: precisamos dominar a furtividade e a dissimulação."})
+QuestFix(3781, {p="Que a paz e a serenidade acompanhem você. Veio a serviço do próprio arquidruida, não é?"})
+QuestFix(3782, {p="Que a paz e a serenidade acompanhem você. Veio a serviço do próprio arquidruida, não é?"})
+
+local cenarionSkinner = "Um Sinalizador Cenariano permite que um esfolador experiente identifique retalhos de pele contaminada nas criaturas caçadas na Selva Maleva. Transformo esses retalhos aparentemente inúteis em uma pasta espessa, usada como catalisador para o Bálsamo Vegetal Cenariano. Ao esfolar suas presas na Selva Maleva, mantenha um sinalizador com você.\n\nQuando obtiver Retalhos Contaminados, traga-os para mim e entregarei alguns bálsamos já preparados."
+local cenarionComplete = "É exatamente disso que preciso. Pegue estes Bálsamos Vegetais e use-os para recuperar a Selva Maleva da corrupção. Precisamos perseverar, $n!"
+for _, id in ipairs({4106, 4111, 5885, 5890}) do QuestFix(id, {p=cenarionSkinner,c=cenarionComplete}) end
+
+local dawnMantle = "Seu serviço à Aurora Argêntea merece reconhecimento, $n. Você é verdadeiramente reverenciado entre nós. Fui autorizado a permitir que adquira um dos itens mais valiosos da Aurora: nossos mantos de resistência mágica.\n\nAplicar um desses mantos às suas ombreiras aumentará sua resistência à magia de uma entre cinco maneiras. Como prova de sua dedicação contínua à causa, peço dez Símbolos de Bravura em troca do acesso aos mantos."
+local dawnProgress = "Ah, nobre $c! Trouxe os Símbolos de Bravura solicitados? Quando entregá-los, nossos diversos mantos ficarão disponíveis para compra."
+local dawnComplete = "Excelente! Sua contribuição à Aurora foi devidamente registrada, $n. Agora posso disponibilizar nossos mantos para compra. Enquanto mantiver sua reputação conosco, poderá adquiri-los com qualquer intendente autorizado da Aurora Argêntea.\n\nPela Aurora, $gmeu irmão:minha irmã;!"
+QuestFix(5504, {d=dawnMantle,p=dawnProgress,c=dawnComplete})
+QuestFix(5507, {d=dawnMantle,p=dawnProgress,c=dawnComplete})
+
+local allianceCommand = {
+ [14206]={d="Por ordem de Sua Alteza Real, todos os cidadãos aptos da Aliança devem se apresentar a Manivela Chumbomela, na Angra do Butim.\n\nSiga ao sul pelo Cabo do Espinhaço até a movimentada cidade portuária goblínica. Manivela fica próximo às docas e precisa de ajuda em tarefas importantes para o equilíbrio de poder na região.\n\nPela glória e honra da Aliança!",o="Apresente-se a Manivela Chumbomela na Angra do Butim, no Cabo do Espinhaço."},
+ [14207]={d="Por ordem de Sua Alteza Real, todos os cidadãos aptos da Aliança devem se apresentar ao Intendente Lungertz, na Fortaleza de Etergarde.\n\nA guarnição precisa urgentemente de ajuda na Barreira do Inferno. Siga ao sul pelo Pântano das Mágoas e tome a estrada para leste até a fortaleza.\n\nPela glória e honra da Aliança!",o="Apresente-se ao Intendente Lungertz na Fortaleza de Etergarde."},
+ [14208]={d="Por ordem de Sua Alteza Real, todos os cidadãos aptos da Aliança devem se apresentar à Comandante Althea Ebanez, em Vila Sombria.\n\nPara chegar a Vila Sombria, no Bosque do Crepúsculo, siga pela estrada ao sul entre a Floresta de Elwynn e as Montanhas Cristarrubra.\n\nPela glória e honra da Aliança!",o="Apresente-se à Comandante Althea Ebanez em Vila Sombria, no Bosque do Crepúsculo."},
+ [14210]={d="Por ordem de Sua Alteza Real, todos os cidadãos aptos da Aliança devem se apresentar a Oralius, na Vigília de Morgan, nas Estepes Ardentes.\n\nSua ajuda é urgente para deter a ameaça dos orcs Rocha Negra. Atravesse a Montanha Rocha Negra ao sul da Garganta Abrasadora para chegar às Estepes Ardentes.\n\nPela glória e honra da Aliança!",o="Apresente-se a Oralius na Vigília de Morgan, nas Estepes Ardentes."},
+}
+for id, patch in pairs(allianceCommand) do QuestFix(id, patch) end
+
+local hordeReports = {
+ [14230]="Greta Casco Musgoso no Santuário Esmeralda, na Selva Maleva",
+ [14231]="Mitsuwa no Posto Avançado Zoram'gar, no Vale Gris",
+ [14232]="Sergra Espinho Negro na Encruzilhada, nos Sertões",
+ [14233]="Mebok Borratrelha em Vila Catraca, nos Sertões",
+ [14234]="Maggran Moldaterra no Retiro Rocha do Sol, nas Cordilheiras das Torres de Pedra",
+ [14235]="Takata Lamináurea no Posto do Andarilho Fantasma, em Desolação",
+ [14236]="Krog na Aldeia Muralha Verde, no Pântano Vadeoso",
+ [14237]="Mandingueiro Uzer'i no Acampamento Mojache, em Feralas",
+ [14238]="Hagar Casco de Raio no Morro Livre dos Ventos, nas Mil Agulhas",
+ [14239]="Engenheiro-chefe Parafuseta em Geringontzan, em Tanaris",
+ [14240]="Williden Marechal no Refúgio do Marechal, na Cratera Un'Goro",
+ [14241]="Clamaventos Chifre Altivo no Forte Cenariano, em Silithus",
+ [14242]="Dalar Tecelauro no Sepulcro, na Floresta de Pinhaprata",
+ [14243]="Sicário Samsa na Serraria Tarren, na Contraforte de Eira dos Montes",
+ [14244]="Tor'gan em Ruína do Martelo, nas Terras Altas Arathi",
+ [14245]="Otho Moji'ko na Aldeia Revatusco, nas Terras Agrestes",
+ [14246]="Alto-executor Derrington no Baluarte, nas Terras Pestilentas Ocidentais",
+ [14247]="Arquimaga Angela Dosantos na Capela Esperança da Luz, nas Terras Pestilentas Orientais",
+ [14248]="Hansel Mãos-pesadas no Posto de Tório, na Garganta Abrasadora",
+ [14249]="Gorn em Karrath, nos Ermos",
+ [14250]="Dar em Pedregal, no Pântano das Mágoas",
+}
+for id, destination in pairs(hordeReports) do
+    QuestFix(id, {
+        d="Por ordem do Chefe Guerreiro, todos os membros aptos da Horda devem se apresentar a " .. destination .. ".\n\nAs forças da Horda na região precisam de reforços. O destino chama!",
+        o="Apresente-se a " .. destination .. ".",
+        c="Pela força e pela fúria da Horda!",
+    })
+end
+
+-- Campos que existiam, mas ainda estavam em espanhol ou portunhol.
+QuestFix(2848, {
+    p="Trouxe os seis Kits de Armadura Grossa e a Vinha Selvagem?\n\nNão pense que confeccionar kits de armadura é um trabalho monótono. A prática constante desenvolve a precisão necessária para produzir peças de Couro Silvestre. Há um bom motivo para este exercício.",
+    c="Estes kits de armadura são de excelente qualidade, $n. Se há algo que exijo no meu trabalho e no de quem trabalha comigo, é qualidade.\n\nVocê fez por merecer este molde. Espero que ele lhe traga tantas recompensas quanto trouxe a mim."
+})
+QuestFix(2855, {
+    p="Trouxe os seis Kits de Armadura Grossa e a Vinha Selvagem?\n\nConsidere a confecção dos kits uma lição de técnica e consistência. A prática prepara suas mãos para o trabalho delicado exigido pelas armaduras de Couro Silvestre. Toda lição tem um propósito, $n.",
+    c="Estes kits de armadura são de excelente qualidade, $n. Exijo esse mesmo cuidado tanto no meu trabalho quanto no daqueles que ensino.\n\nVocê fez por merecer este molde. Espero que ele lhe traga tantas recompensas quanto trouxe a mim."
+})
+QuestFix(8892, {p="Ensinou uma lição àqueles Ignóbeis?"})
+QuestFix(9137, {
+    p="Para cada conjunto de Frondes Selvagens que entregar, você poderá escolher entre uma Insígnia da Aurora ou uma Insígnia da Cruzada.\n\nAs insígnias podem ser entregues ao intendente em troca de diversas recompensas.",
+    c="Obrigado, $n. Seu trabalho é essencial para o sucesso da nossa campanha contra o Flagelo."
+})
+QuestFix(9759, {c="Você salvou as ilhas Névoa Rubra e Névoa Lazúli e garantiu o futuro dos draeneis em Azeroth, $n. Não existem palavras nem recompensas capazes de expressar toda a nossa gratidão.\n\nMuitos ainda ficaram para trás em Draenor e não puderam testemunhar este momento histórico. Encontre um caminho de volta a Terralém, Herói de Argus. Traga nosso povo para casa — para Azeroth, a terra que você ajudou a salvar."})
+QuestFix(10042, {
+    p="Então, o que descobriu, $gmeu rapaz:minha moça;?",
+    c="Notícias terríveis! Parece que acertei ao enviar você para ajudar Semanas. A última coisa de que precisamos é o Concílio das Sombras se estabelecendo bem diante de nossas portas.\n\n$n, em reconhecimento aos seus esforços na Aldeia Grangol'var, concedo a você o direito de escolher uma destas recompensas."
+})
+QuestFix(11318, {
+    d="Então você quer experimentar as corridas de carneiros? Espero que esteja preparad$go:a; para a velocidade! Antes de liberar você pela CervaFest, preciso ter certeza de que sabe controlar um desses animais.\n\nVou emprestar um carneiro e as rédeas de corrida. Mantenha-o em trote, meio-galope e galope durante oito segundos em cada velocidade. Se precisar de instruções, fale com meu aprendiz, Pol Ambarmanso.",
+    o="Cavalgue o carneiro e mantenha cada um dos três níveis de velocidade durante 8 segundos. Você tem 4 minutos.",
+    p="Conseguiu dominar as três velocidades?",
+    c="Muito bem! Leva algum tempo para dominar um carneiro de corrida, mas depois disso qualquer montaria comum parece lenta.\n\nOnde está sua recompensa? Ora, você acabou de montar um dos carneiros mais rápidos da região! Ainda quer mais? Então ajude o pessoal da CervaFest. Há bastante trabalho — e boas recompensas — para quem tem disposição."
+})
+QuestFix(12262, {p="Vejo sangue em suas mãos... Então está feito?",c="Eles imploraram por suas vidas miseráveis? Fracos."})
+QuestFix(13539, {
+    p="Meu desprezo pelos bruxos só é superado pelo ódio que sinto pelos mortos-vivos. Ainda assim, ambos podem ser úteis de vez em quando.",
+    c="Para derrotar o inimigo, nossos homens precisam ser tomados pela fúria; para que a vitória tenha valor, devem receber sua recompensa. Espero que isto seja suficiente por seu serviço à Horda."
+})
+QuestFix(17006, {p="Os Défias já foram eliminados?",c="Ah, graças à Luz — e graças a você, herói. Hoje você prestou um grande serviço ao rei. Agora só preciso encontrar homens disponíveis para entregar estes suprimentos."})
+QuestFix(77725, {title="Obtenha o Conhecimento Proibido",d="A busca pelo Conhecimento Proibido oferece grandes recompensas. Persiga seus inimigos com a mesma ambição ardente com que persegue o conhecimento!",o="Obtenha o Conhecimento Proibido com Theldurin."})
+
+local dungeonDiving = {
+    [81316]="Normal",
+    [81317]="Heroica",
+    [81318]="Mítica",
+}
+for id, difficulty in pairs(dungeonDiving) do
+    QuestFix(id, {
+        title=difficulty == "Normal" and "Exploração de Masmorra" or ("Exploração de Masmorra " .. difficulty),
+        d="O Quadro de Chamados oferece recompensas valiosas a aventureiros capazes de concluir uma masmorra " .. difficulty .. ". Use o Localizador de Masmorras, entre em um grupo e prove seu valor. Depois, leve a comprovação da vitória ao Quadro de Chamados para receber sua recompensa.",
+    })
+end
+
+QuestFix(172008, {
+    title="Campos de Gêiseres: Erradicando os Nerub'ar",
+    o="Mate Cospe-venenos, Guerreiros e Escavadores Nerub'ar nos Campos de Gêiseres.",
+    c="Você demonstrou grande habilidade em batalha, herói. Os Cospe-venenos, Guerreiros e Escavadores Nerub'ar não foram páreo para sua força. Com essas criaturas eliminadas, os Campos de Gêiseres voltaram a ser seguros. Sua coragem não passará despercebida, e sua recompensa está garantida."
+})
+QuestFix(172009, {
+    title="Campos de Gêiseres: Interrompendo a Ninhada",
+    o="Destrua os Sacos de Ovos Nerub'ar nos Campos de Gêiseres.",
+    c="Sua ação decisiva impediu uma infestação que poderia ter tomado os Campos de Gêiseres e colocado nosso povo em grave perigo. Mais uma vez, sua rapidez e determinação foram essenciais. Sua bravura será devidamente reconhecida."
+})
+QuestFix(172010, {
+    p="Trabalho incrível, herói! Você reuniu a Carne do Flagelo dos mamutes assolados e as Amostras de Sangue do Flagelo dos magnatauros pestilentos. Essas amostras ampliarão nosso conhecimento sobre os métodos de corrupção do Flagelo.",
+    c="Graças à sua coragem, nossos pesquisadores poderão aprofundar o estudo dos efeitos do Flagelo sobre a fauna local. Sua contribuição é vital para restaurar o equilíbrio da Tundra Boreana. Você provou seu valor mais uma vez e receberá a recompensa merecida."
+})
+QuestFix(172012, {
+    title="Talramas: Crônicas dos Mortos-vivos",
+    d="Herói, recebemos informações sobre quatro poderosos tomos necromânticos escondidos em Talramas e na Cidade-Templo de En'kilah. Esses livros descrevem os métodos usados pelo Flagelo para ressuscitar os mortos e controlar seus exércitos.\n\nInfiltre-se nessas fortalezas, recupere os quatro tomos e traga-os para nós. O conhecimento contido neles pode revelar como enfraquecer as forças do Flagelo.",
+    o="Colete os quatro tomos necromânticos em Talramas e na Cidade-Templo de En'kilah.",
+    c="Com esses tomos proibidos em nosso poder, poderemos estudar as artes sombrias do Flagelo e desenvolver maneiras de combatê-las. Sua coragem e inteligência foram essenciais, herói. Estamos um passo mais perto da vitória, e seu nome será lembrado entre aqueles que enfrentaram o Flagelo."
+})
+QuestFix(580200, {
+    title="Caminho da Ascensão — Curinga: Bilhetes de Negraluna",
+    d="Você recebe Bilhetes de Negraluna ao abrir Pacotes de Cartas Selados.\n\nTroque os bilhetes com Silas Negraluna por Cartas de Habilidade Comuns, Incomuns, Raras e Épicas. Guarde-os para adquirir cartas importantes para sua composição.\n\nTambém é possível comprar recompensas cosméticas. As Bolsas de Bilhetes de Negraluna permitem transferir bilhetes entre personagens da mesma conta.",
+    o="Visite Silas Negraluna em uma capital, abra o menu de recompensas e compre uma Bolsa de Bilhetes de Negraluna por 25 bilhetes.",
+    c="Agora você sabe como obter e gastar Bilhetes de Negraluna. Use-os para ampliar sua coleção de Cartas de Habilidade, adquirir recompensas cosméticas ou transferi-los entre personagens da conta."
+})
+QuestFix(967492, {
+    d="Você adquiriu poder suficiente para cumprir minha vontade, Forjado pelo Vil. Chegou a hora de massacrar nossos inimigos. Grandes recompensas aguardam quem levar nosso Plano Mestre à conclusão.\n\nOs orcs Mag'har sobreviveram em Terralém por tempo demais. Precisamos agir antes que recebam reforços da Horda. Viaje até o Posto Mag'har e ceife suas almas!",
+    o="Massacre os orcs Mag'har.",
+    p="O Plano Mestre ainda não foi concluído. Volte quando tiver cumprido suas ordens."
+})
+
+
+-- Segunda passada: resíduos em inglês/portunhol e conteúdo custom do CoA.
+QuestFix(7623, {c="Minha paciência atravessa milênios, <class>. Mas não pense que isso lhe dá mais do que um instante do meu tempo..."})
+QuestFix(7646, {
+    c="São exemplares excelentes, <name> — as últimas peças finalmente estão no lugar. Enfim, chegou a sua hora!\n\nNas profundezas do Grande Ossuário de Scolomântia estão os restos mortais de incontáveis seres. Entre eles há um corcel que um dia foi nobre. A alma esvaziada dessa criatura agora serve de montaria ao Cavaleiro da Morte Trevassol. É ele quem você enfrentará, e é sobre esse corcel que você dará seu veredito. Só você, <name>, pode redimir a alma dele e libertá-lo do tormento dessa servidão."
+})
+QuestFix(9195, {c="Agora você está falando a minha língua, <class>. Coisas que fazem BOOM!"})
+QuestFix(9198, {c="Tubos de tório? Nossa, obrigado.\n\n<O Caravaneiro Esmagapedra joga a pilha de tubos de tório sobre um grande monte de sucata variada.>"})
+QuestFix(9200, {c="A utilidade disto dispensa explicações."})
+QuestFix(9359, {c="Veio ajudar? Excelente!\n\nA batalha contra os trolls Amani cobrou um preço alto, e combatentes capazes como você são sempre bem-vindos."})
+QuestFix(9643, {c="Estas vinhas parecem resistentes o bastante para o trabalho. Obrigado pela ajuda, <name>. Sua contribuição para a defesa da Vigília de Sangue não será esquecida."})
+QuestFix(9914, {
+    c="Nunca duvidei de você nem por um segundo, amigo. A maioria destas presas está em ótimo estado, apesar de um pouco suja e arranhada. Ainda assim, acredito que valham o preço que combinamos.\n\nEspero que possamos continuar fazendo negócios no futuro."
+})
+QuestFix(10091, {
+    c="To'gun esteve aqui há pouco para apresentar o relatório. Ele deveria ter ficado com você para ajudar!\n\nMandei-o de volta para auxiliar Grik'tha. Acho que os dois formam um belo casal.\n\nEntão estes são os dispositivos de alma que o Concílio das Sombras usava para fortalecer suas evocações? Parecem perigosos. Talvez os Áugures saibam o que fazer com eles.\n\nPor favor, aceite uma destas recompensas por ter prejudicado a operação do Concílio das Sombras no labirinto."
+})
+
+QuestFix(255144, {
+    o="Vasculhe os montes de escombros em busca de materiais reaproveitáveis e entregue-os aos Trabalhadores de Dalaran na Cratera de Dalaran.",
+    c="Aprecio seus esforços. Espero que isto ajude a acelerar o trabalho.\n\nDo jeito que as coisas estão, pouco me resta além de esperar e observar como tudo se desenrola.\n\nAinda assim... suponho que paciência seja uma virtude que estou sendo obrigado a praticar hoje."
+})
+QuestFix(255145, {
+    o="Destrua a Anomalia Arcana na margem leste da Cratera de Dalaran."
+})
+QuestFix(255146, {
+    d="Agora que a situação aqui está relativamente sob controle, como você pôde ver com os próprios olhos... importaria-se de voltar ao meu aprendiz um tanto zeloso demais e garantir a ele que tenho tudo sob controle?\n\nFrancamente, ser importunado dessa maneira pelo próprio aprendiz...\n\n<O Arcimago suspira profundamente.>",
+    o="Volte ao Conselheiro Belview, em Costa Sul, e conte a ele sobre seu trabalho na Cratera de Dalaran.",
+    c="Ah... que atrevimento!\n\nPor pouco não me teletransporto até lá para dizer umas boas verdades àquele sujeito pessoalmente!\n\nDito isso... mesmo que ele tenha usado você para se livrar do próprio trabalho, fico aliviado em saber que o Arcimago manteve a barreira e que o progresso continua.\n\nTalvez, pelo menos por enquanto, eu possa voltar toda a minha atenção para Costa Sul.\n\nObrigado, aventureiro."
+})
+QuestFix(255147, {
+    o="Derrote 6 Saqueadores Ravenclaw e 6 Escravos Ravenclaw na Fazenda de Olsen."
+})
+QuestFix(255148, {
+    o="Ajude o Padre Dayton a libertar os espíritos da família Denholm no Campo dos Mortos."
+})
+QuestFix(255149, {
+    o="Mate Silkshadow no Contraforte de Eira dos Montes.",
+    p="O covil dela fica a leste, perto da muralha, onde pode atacar viajantes desprevenidos... é uma criatura astuta, não é?"
+})
+QuestFix(255150, {
+    d="Antes de pendurar minha lança de vez, ainda há uma última ameaça nestas colinas que precisa ser abatida.\n\nMas preste atenção... não enfrente esta caçada sozinho. Esta fera está além das capacidades de um único caçador.\n\nChamam-no Highclaw, o maior e mais esquivo leão-da-montanha que já rastreei. Leões raramente são um problema, pelo menos para mim... mas este é diferente. Ele caça pessoas de propósito. Acampamentos, caravanas, tanto faz. Para ele, todos nós somos presas.\n\nSeja rápido e ataque sem hesitar. Não sei o que faria se ele matasse você.",
+    o="Mate Highclaw no Contraforte de Eira dos Montes.",
+    p="Então... está feito?"
+})
+QuestFix(255151, {
+    d="Fomos atacados por um bando de ladrões perto do Forte do Desterro — ou do que restou dele, pelo menos.\n\nNosso grupo transportava diversas relíquias pela estrada principal e esperava conseguir repelir qualquer ladrão que cruzasse nosso caminho. Infelizmente, fracassamos, e ainda estamos nos recuperando da viagem.\n\nVocê estaria disposto a recuperar nossos bens roubados antes que esses pilhadores destruam peças tão valiosas da história?",
+    o="Recupere 8 Relíquias Roubadas do Sindicato no Forte do Desterro.",
+    p="Conseguiu localizar parte da nossa carga?",
+    c="Ahá! Você encontrou...!\n\n<O Historiador examina as relíquias e sua expressão desaba.>\n\nOh... oh, não..."
+})
+QuestFix(255152, {
+    d="Embora pareçam estar em bom estado para uma pessoa comum, qualquer especialista percebe o quanto estas peças foram danificadas.\n\nNas condições atuais, não tenho certeza de que sobreviveriam a uma viagem sem se desfazer por completo.\n\nEnquanto você esteve fora, perguntei pela cidade e descobri que há um membro da Liga dos Exploradores por aqui — uma organização de arqueólogos renomados. Se houver algo que possamos fazer para preparar estes artefatos para a jornada, talvez ele tenha algum conselho para nós.",
+    o="Leve o pacote de relíquias danificadas ao representante da Liga dos Exploradores em Costa Sul.",
+    c="Pelas minhas barbas! Que tipo de trogg pôs as mãos nestas preciosidades?!\n\n<O anão resmunga, encarando você de forma acusadora.>\n\nMãos pesadas são uma coisa, mas trate estas peças com um pouco mais de cuidado se sabe o que é bom para você!"
+})
+QuestFix(255153, {
+    o="Entregue com segurança a caixa de relíquias extremamente frágeis ao Arqueólogo Flagongut, no Porto de Menethil.",
+    p="Eu não estava esperando uma entrega..."
+})
+QuestFix(255154, {
+    d="Não quero ofender, mas alguém como você realmente não deveria manusear artefatos tão frágeis.\n\nDito isso, ficarei mais do que feliz em tirá-los das suas mãos.\n\nAgora, não quero que você vá embora de mãos vazias... leve esta moeda à pessoa de quem estou comprando estas preciosidades e, depois disso, estará livre para seguir seu caminho.",
+    o="Leve o pagamento do Arqueólogo de volta ao Historiador Wendell, em Costa Sul.",
+    p="Você voltou! Mas... onde estão as relíquias?"
+})
+QuestFix(255155, {
+    c="Obrigada. Isso é muito generoso da sua parte. Pode ter certeza de que vou aproveitar tudo muito bem."
+})
+QuestFix(255156, {
+    c="Isso será de grande ajuda. Vou colocar tudo em uso o mais rápido possível."
+})
+QuestFix(255157, {
+    p="Estamos quase prontos para sair da casa da minha filha, mas sempre parece faltar mais tecido. Se encontrar algum de que não precise, ele será muito bem aproveitado aqui."
+})
+QuestFix(255158, {
+    c="Isso será de enorme ajuda. Com este material, a barricada deve aguentar por mais algum tempo.\n\nSe a Luz nos favorecer, talvez tempo suficiente para que logo nem precisemos mais dela. Obrigado."
+})
+
 local Q = AscensionPTBR.QuestData
 local T = AscensionPTBR.QuestTitle
 
@@ -721,3 +1045,7 @@ for id, patch in pairs(P) do
         if patch.c ~= nil then quest.c = patch.c end
     end
 end
+
+-- O arquivo principal já tem cobertura PT-BR para todos os campos existentes.
+-- Mantemos o contador por compatibilidade com o diagnóstico antigo.
+AscensionPTBR.QuestMissingFieldFallbacks = 0

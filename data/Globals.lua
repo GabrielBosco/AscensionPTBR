@@ -3,6 +3,116 @@ AscensionPTBR = AES
 AES.GlobalStrings = AES.GlobalStrings or {}
 local G = AES.GlobalStrings
 
+-- Defesa contra instalacao parcial: o Bootstrap recria estas tabelas no fluxo
+-- normal, mas os bancos de spells nao devem explodir com N/D/T nil se um arquivo
+-- estiver faltando durante uma atualizacao manual.
+AES.SpellNameEN2ES = AES.SpellNameEN2ES or {}
+AES.NameToIDs = AES.NameToIDs or {}
+AES.DescPairs = AES.DescPairs or {}
+AES.DescByID = AES.DescByID or {}
+AES.TipPairs = AES.TipPairs or {}
+AES.TipByID = AES.TipByID or {}
+AES.DescByPrefix = AES.DescByPrefix or {}
+AES.TipByPrefix = AES.TipByPrefix or {}
+AES.SpellClassLate = AES.SpellClassLate or {}
+
+-- Algumas revisões antigas ainda consultam estes globals, então eles ficam aqui.
+
+-- Preferências da addon. Valor já salvo pelo jogador sempre ganha do padrão.
+AES.FeatureDefaults = AES.FeatureDefaults or {
+    -- Tradução
+    spells = true, items = true, auctionSearchPTBR = true, flavor = true, units = true, worldNpcNames = true,
+    quests = true, gossip = true, achievements = true, patterns = true, ui = true, maps = true,
+    chat = true, errores = true, voice = true, raidTranslation = true,
+
+    -- Telas / integrações
+    characterUI = true, dailyQuests = true, dynamicUI = true,
+    unitFrameNumbers = true, durabilityWidget = true, lootOverlay = true,
+    dragonUICompat = true, detailsCompat = true, updateCheck = true, authorMessage = true,
+
+    -- HUD de durabilidade. A posição é salva separadamente quando o jogador move.
+    durabilityHudLocked = true,
+    durabilityHudShowWorst = true,
+    durabilityHudHideAtFull = false,
+    durabilityWarningEnabled = true,
+    durabilityWarningSound = true,
+    durabilityWarningChat = true,
+    durabilityWarningThreshold = 50,
+    durabilityUpdateInterval = 1,
+    durabilityHudScale = 100,
+    durabilityHudOpacity = 92,
+}
+
+-- Garante o banco logo no carregamento. Sem isso algumas telas só acordavam ao abrir Interface.
+AscensionPTBRDB = AscensionPTBRDB or {}
+
+-- Migra só o que mudou de comportamento nesta revisão. Depois disso, o painel volta a mandar.
+do
+    local db = AscensionPTBRDB
+    local revision = tonumber(db.__aptbrUiRevision) or 0
+    if revision < 6 then
+        -- O C e os mapas não dependem mais do antigo botão genérico de Interface.
+        db.characterUI = true
+        db.dynamicUI = true
+        db.maps = true
+
+        -- A identificação de jogadores aliados saiu da addon. Deixa o cliente cuidar deles.
+        db.friendlyPlayerPlates = false
+        db.nameplateStyle = false
+        db.plateShowHealthBar = nil
+        db.plateShowHealthText = nil
+        db.plateShowGuild = nil
+        db.plateShowLevel = nil
+        db.plateNameFont = nil
+        db.plateSubFont = nil
+
+        -- A HUD nova reaproveita a opção antiga de durabilidade, mas agora fica na tela.
+        if db.durabilityWidget == nil then db.durabilityWidget = true end
+        if db.durabilityHudLocked == nil then db.durabilityHudLocked = true end
+        if db.durabilityHudShowWorst == nil then db.durabilityHudShowWorst = true end
+        if db.durabilityHudScale == nil then db.durabilityHudScale = 100 end
+        if db.durabilityHudOpacity == nil then db.durabilityHudOpacity = 92 end
+        if db.durabilityHudHideAtFull == nil then db.durabilityHudHideAtFull = false end
+        if db.durabilityWarningEnabled == nil then db.durabilityWarningEnabled = true end
+        if db.durabilityWarningSound == nil then db.durabilityWarningSound = true end
+        if db.durabilityWarningChat == nil then db.durabilityWarningChat = true end
+        if db.durabilityWarningThreshold == nil then db.durabilityWarningThreshold = 50 end
+        if db.durabilityUpdateInterval == nil then db.durabilityUpdateInterval = 1 end
+        db.__aptbrUiRevision = 6
+    end
+    if revision < 7 then
+        if db.auctionSearchPTBR == nil then db.auctionSearchPTBR = true end
+        db.__aptbrUiRevision = 7
+    end
+end
+
+-- Um caminho só para ler e salvar opção. Menos chance de um módulo entender diferente do outro.
+function AES.GetSetting(key, fallback)
+    local db = AscensionPTBRDB
+    local value = db and db[key]
+    if value == nil then
+        value = AES.FeatureDefaults[key]
+        if value == nil then value = fallback end
+    end
+    return value
+end
+
+function AES.IsFeatureEnabled(key, fallback)
+    return AES.GetSetting(key, fallback) ~= false
+end
+
+function AES.SetSetting(key, value)
+    AscensionPTBRDB = AscensionPTBRDB or {}
+    AscensionPTBRDB[key] = value
+    return value
+end
+
+function AES.GetDefaultSettingsCopy()
+    local copy = {}
+    for key, value in pairs(AES.FeatureDefaults or {}) do copy[key] = value end
+    return copy
+end
+
 -- Guarda aqui e aplica no Core só quando o global original já existe e ainda é texto.
 G["OBJECTIVES"] = "Objetivos"
 G["SOUNDS"] = "Som"
@@ -170,3 +280,18 @@ G["TUTORIAL_TIP_WC_STARTER_CARDS"] = "Você pode filtrar a lista de cartas de ha
 G["TUTORIAL_TIP_WC_USE_SKILL_CARDS"] = "Para obter as |cffFFFF00habilidades iniciais|r desejadas, use |cffFFFF00cartas de habilidade|r."
 G["WC_RAPID_ROLL_DESIRED"] = "|cffFFFFFFDesejado|r"
 G["WC_RAPID_ROLL_SCROLLS_SPENT"] = "Pergaminhos usados: %s"
+
+
+-- Crédito curto no login. Pode ser desligado nas opções.
+do
+    local frame = CreateFrame("Frame")
+    frame:RegisterEvent("PLAYER_LOGIN")
+    frame:SetScript("OnEvent", function(self)
+        self:UnregisterEvent("PLAYER_LOGIN")
+        self:SetScript("OnEvent", nil)
+
+        if DEFAULT_CHAT_FRAME and (not AES.IsFeatureEnabled or AES.IsFeatureEnabled("authorMessage", true)) then
+            DEFAULT_CHAT_FRAME:AddMessage("|cff69ccf0AscensionPTBR|r |cff8f8f8f• Boa aventura! — GabrielBosco|r")
+        end
+    end)
+end
