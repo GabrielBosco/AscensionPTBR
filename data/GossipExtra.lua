@@ -202,3 +202,132 @@ Add("Raider's Commendations", "Comendas do Incursor")
 -- Avisos/diálogos endgame custom que apareceram nas capturas.
 Add("The Glorious Azzar Faire has opened its gates! Step through the portal outside Orgrimmar and be among the first to experience the wonders hidden across Dawnrise Island!",
     "A Gloriosa Feira de Azzar abriu seus portões! Atravesse o portal nos arredores de Orgrimmar e esteja entre os primeiros a descobrir as maravilhas escondidas pela Ilha Dawnrise!")
+
+-- Revisao NPCs/AscensionDB 2026-08-24
+-- Kelm Hargunth possui varias entradas/variantes no AscensionDB e o texto
+-- exibido pelo cliente CoA pode trazer a classe ja renderizada em vez de $c.
+Add("Do you have more advanced gear to sell me?",
+    "Você tem equipamentos mais avançados para me vender?")
+Add("What goods have I earned the right to purchase for use in Warsong Gulch?",
+    "Quais mercadorias conquistei o direito de comprar para usar na Ravina Brado Guerreiro?")
+Add("Zug zug, my friend!  I am Kelm Hargunth, the main supplier for the Warsong Outriders.  As you improve your standing with the Outriders, I will make available to you a fine selection of goods that you can use inside Warsong Gulch.  Should you find yourself in need of item repair, I also provide those services.",
+    "Zug zug, meu amigo! Sou Kelm Hargunth, o principal fornecedor dos Pioneiros do Brado Guerreiro. Conforme sua reputação com os Pioneiros melhorar, disponibilizarei uma excelente seleção de mercadorias para você usar na Ravina Brado Guerreiro. Se precisar reparar seus itens, também ofereço esse serviço.")
+
+local GOSSIP_CLASS_PT = {
+    ["Barbarian"] = "Bárbaro",
+    ["Bloodmage"] = "Mago Sangrento",
+    ["Blood Mage"] = "Mago Sangrento",
+    ["Chronomancer"] = "Cronomante",
+    ["Cultist"] = "Cultista",
+    ["Felsworn"] = "Juramentado Vil",
+    ["Guardian"] = "Guardião",
+    ["Knight of Xoroth"] = "Cavaleiro de Xoroth",
+    ["Necromancer"] = "Necromante",
+    ["Primalist"] = "Primalista",
+    ["Pyromancer"] = "Piromante",
+    ["Ranger"] = "Patrulheiro",
+    ["Reaper"] = "Ceifador",
+    ["Runemaster"] = "Mestre das Runas",
+    ["Starcaller"] = "Invocador Estelar",
+    ["Stormbringer"] = "Portador da Tempestade",
+    ["Sun Cleric"] = "Clérigo Solar",
+    ["SunCleric"] = "Clérigo Solar",
+    ["Templar"] = "Templário",
+    ["Tinker"] = "Inventor",
+    ["Venomancer"] = "Venomante",
+    ["Witch Doctor"] = "Médico Bruxo",
+    ["WitchHunter"] = "Caçador de Bruxas",
+    ["Witch Hunter"] = "Caçador de Bruxas",
+}
+
+local previousGossipPatternFallback = AscensionPTBR.GossipPatternFallback
+function AscensionPTBR.GossipPatternFallback(text)
+    local normalized = Normalize(text)
+    if normalized
+        and normalized:find("I am Kelm Hargunth, the main supplier for the Warsong Outfitters of Ashenvale.", 1, true)
+        and normalized:find("As you improve your standing with us", 1, true)
+        and normalized:find("Should you find yourself in need of item repair", 1, true) then
+        local classEN = normalized:match("^Zug zug, (.-)%.%.%.") or "herói"
+        local classPT = GOSSIP_CLASS_PT[classEN]
+        if not classPT and AscensionPTBR.TranslateStaticText then
+            local ok, translated = pcall(AscensionPTBR.TranslateStaticText, classEN)
+            if ok and type(translated) == "string" and translated ~= "" and translated ~= classEN then
+                classPT = translated
+            end
+        end
+        classPT = classPT or classEN
+        return "Zug zug, " .. classPT .. "...\n\n"
+            .. "Eu sou Kelm Hargunth, o principal fornecedor do corpo de suprimentos do Brado Guerreiro no Vale Gris.\n\n"
+            .. "Conforme sua reputação conosco melhorar, disponibilizarei uma excelente seleção de mercadorias que podem ser úteis para você.\n\n"
+            .. "Se precisar reparar seus itens, também ofereço esse serviço."
+    end
+
+    if previousGossipPatternFallback then
+        return previousGossipPatternFallback(text)
+    end
+    return nil
+end
+
+-- AscensionDB NPC dialogue sweep 1.5.3 - 2026-08-24
+-- Falas custom de NPCs que não existiam no Gossip.lua original.
+-- A mesma tabela é usada pelos eventos CHAT_MSG_MONSTER_* no Integration.lua.
+
+-- Fashionable Necromancer (ID 110941)
+Add("The loom is MINE!", "O tear é MEU!")
+Add("I don't care how ethereal those fingers are, work faster!", "Não me importa o quanto esses dedos sejam etéreos. Trabalhem mais rápido!")
+Add("Stitch like your afterlife depends on it - because it does!", "Costurem como se a pós-vida de vocês dependesse disso — porque depende!")
+Add("Put some spirit into it, you lazy wraith!", "Coloque um pouco de espírito nisso, espectro preguiçoso!")
+Add("The loom… slips from my grasp.", "O tear... escapa das minhas mãos.")
+
+-- Verac the Wraithbound <Reaper of Souls> (ID 899403)
+Add("What are you doing? You're blowing my cover. That damned gnome is mine!", "O que está fazendo? Você está estragando meu disfarce. Aquele gnomo maldito é meu!")
+Add("You will not claim it! It is mine — by right of the dead!", "Você não vai tomá-la! Ela é minha — por direito dos mortos!")
+Add("I have seen the Shadowlands. I fear nothing.", "Eu vi as Terras Sombrias. Não temo nada.")
+Add("Can you not hear them? The dagger calls... it calls for me!", "Você não consegue ouvi-los? A adaga chama... ela chama por mim!")
+Add("It... was never meant... for either of us...", "Ela... nunca foi destinada... a nenhum de nós...")
+
+-- Necromancer Adept / Cultist trainer
+Add("Ghouls are so disgusting, do we really have to do this?", "Carniçais são tão nojentos... precisamos mesmo fazer isso?")
+Add("The end is near! The true gods are here! Join me!", "O fim está próximo! Os verdadeiros deuses estão aqui! Juntem-se a mim!")
+
+-- Xarthos <Subject Zero> (ID 12538). Seleção de falas de encontro para cobrir
+-- as mensagens mais visíveis sem transformar o arquivo em um dump bruto da DB.
+Add("A pity... But the show must go on!", "Que pena... Mas o espetáculo tem que continuar!")
+Add("I've collected sufficient data under these conditions. Now, let us observe how the subjects respond to a sudden temperature shift.",
+    "Já coletei dados suficientes nestas condições. Agora veremos como os sujeitos respondem a uma mudança repentina de temperatura.")
+Add("Most intriguing! I must see how Subject 1 performs outside containment. Try not to expire too quickly!",
+    "Muito intrigante! Preciso ver como o Sujeito 1 se comporta fora da contenção. Tente não morrer tão rápido!")
+Add("Curious... Subject 4 displayed tremendous survival instinct, followed by an abrupt and disappointing cessation of function.",
+    "Curioso... O Sujeito 4 demonstrou um tremendo instinto de sobrevivência, seguido por uma interrupção abrupta e decepcionante das funções.")
+Add("Remarkable! Subject 12 expired only after total nervous collapse. I must replicate these conditions immediately!",
+    "Notável! O Sujeito 12 só morreu após um colapso nervoso completo. Preciso reproduzir essas condições imediatamente!")
+Add("Curious... I hadn't anticipated this outcome... These results will require... deep analysis... You are all... dismissed...",
+    "Curioso... Eu não havia previsto este resultado... Isso exigirá... uma análise profunda... Vocês estão todos... dispensados...")
+
+-- Polimento global de opções comuns de instrutores/vendedores.
+-- GossipExtra carrega depois do dump principal, então estes valores corrigem
+-- traduções antigas/espanholas sem alterar milhares de linhas do arquivo-base.
+Add("Train me.", "Treine-me.")
+Add("I would like to train.", "Gostaria de treinar.")
+Add("I wish to train.", "Desejo treinar.")
+Add("I require training.", "Preciso de treinamento.")
+Add("I would like training.", "Gostaria de receber treinamento.")
+Add("What can you teach me?", "O que você pode me ensinar?")
+Add("Let me browse your goods.", "Deixe-me ver suas mercadorias.")
+Add("I want to browse your goods.", "Quero ver suas mercadorias.")
+Add("I would like to browse your goods.", "Gostaria de ver suas mercadorias.")
+Add("Show me your goods.", "Mostre-me suas mercadorias.")
+Add("Train me in Alchemy.", "Treine-me em Alquimia.")
+Add("Train me in Blacksmithing.", "Treine-me em Ferraria.")
+Add("Train me in Cooking.", "Treine-me em Culinária.")
+Add("Train me in Enchanting.", "Treine-me em Encantamento.")
+Add("Train me in Engineering.", "Treine-me em Engenharia.")
+Add("Train me in First Aid.", "Treine-me em Primeiros Socorros.")
+Add("Train me in Fishing.", "Treine-me em Pesca.")
+Add("Train me in Herbalism.", "Treine-me em Herborismo.")
+Add("Train me in Inscription.", "Treine-me em Escrivania.")
+Add("Train me in Jewelcrafting.", "Treine-me em Joalheria.")
+Add("Train me in Leatherworking.", "Treine-me em Couraria.")
+Add("Train me in Mining.", "Treine-me em Mineração.")
+Add("Train me in Skinning.", "Treine-me em Esfolamento.")
+Add("Train me in Tailoring.", "Treine-me em Alfaiataria.")

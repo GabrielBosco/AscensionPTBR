@@ -3,7 +3,7 @@
 ## Notes: Tradução pt-BR do Project Ascension, revisada para o cliente enUS.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
 ## X-Upstream: HideXs/AscensionES
-## Version: 1.5.0
+## Version: 1.5.1
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## OptionalDeps: DragonUI
@@ -30,8 +30,7 @@ data\ItemNamesExtra.lua
 data\ItemDescs.lua
 data\UnitNames.lua
 data\Quests.lua
-data\Corrections.lua
-data\Endgame.lua
+data\QuestBulk.lua
 data\spells\shared\DescByID_01.lua
 data\spells\shared\DescByID_02.lua
 data\spells\shared\DescByID_03.lua
@@ -78,9 +77,12 @@ data\classes\Primalist.lua
 data\classes\Runemaster.lua
 data\spells\index\Descriptions.lua
 data\spells\index\Tooltips.lua
+data\Corrections.lua
+data\Endgame.lua
 data\QuestPolish.lua
 data\DailyQuests.lua
 data\Gossip.lua
+data\GossipExtra.lua
 data\CommandBoard.lua
 data\Errors.lua
 data\Chat.lua
@@ -88,6 +90,7 @@ Runtime.lua
 Core.lua
 Auction.lua
 Integration.lua
+EndgameUI.lua
 CharacterUI.lua
 DailyQuests.lua
 Map.lua

@@ -8,6 +8,8 @@ AscensionPTBR = A
 local reverseIndex
 local searchKeys
 local slowExactCache = {}
+local slowExactCacheCount = 0
+local SLOW_EXACT_CACHE_LIMIT = 1024
 local originalQueryAuctionItems
 local hookInstalled = false
 local pendingQuery
@@ -128,6 +130,13 @@ local function FindExactItemIDSlow(text)
         end
     end
 
+    if slowExactCache[raw] == nil then
+        slowExactCacheCount = slowExactCacheCount + 1
+        if slowExactCacheCount > SLOW_EXACT_CACHE_LIMIT then
+            slowExactCache = {}
+            slowExactCacheCount = 1
+        end
+    end
     slowExactCache[raw] = found or false
     return found ~= false and found or nil
 end

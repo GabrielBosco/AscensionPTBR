@@ -18,7 +18,56 @@ local safeOptionsByFrame = setmetatable({}, { __mode = "k" })
 local roleCacheByID = {}
 local roleCacheByGUID = {}
 local roleScanAttempts = {}
+local roleCacheByIDCount = 0
+local roleCacheByGUIDCount = 0
+local roleScanAttemptsCount = 0
+local ROLE_ID_CACHE_LIMIT = 4096
+local ROLE_GUID_CACHE_LIMIT = 1536
+local ROLE_ATTEMPT_CACHE_LIMIT = 3072
 local shuttingDown = false
+
+local function ResetTransientRoleCaches()
+    roleCacheByGUID = {}
+    roleScanAttempts = {}
+    roleCacheByGUIDCount = 0
+    roleScanAttemptsCount = 0
+end
+
+local function CacheRoleByID(id, value)
+    if not id or type(value) ~= "string" or value == "" then return end
+    if roleCacheByID[id] == nil then
+        roleCacheByIDCount = roleCacheByIDCount + 1
+        if roleCacheByIDCount > ROLE_ID_CACHE_LIMIT then
+            roleCacheByID = {}
+            roleCacheByIDCount = 1
+        end
+    end
+    roleCacheByID[id] = value
+end
+
+local function CacheRoleByGUID(guid, value)
+    if not guid or type(value) ~= "string" or value == "" then return end
+    if roleCacheByGUID[guid] == nil then
+        roleCacheByGUIDCount = roleCacheByGUIDCount + 1
+        if roleCacheByGUIDCount > ROLE_GUID_CACHE_LIMIT then
+            roleCacheByGUID = {}
+            roleCacheByGUIDCount = 1
+        end
+    end
+    roleCacheByGUID[guid] = value
+end
+
+local function RememberRoleScanAttempt(key, tries)
+    if not key then return end
+    if roleScanAttempts[key] == nil then
+        roleScanAttemptsCount = roleScanAttemptsCount + 1
+        if roleScanAttemptsCount > ROLE_ATTEMPT_CACHE_LIMIT then
+            roleScanAttempts = {}
+            roleScanAttemptsCount = 1
+        end
+    end
+    roleScanAttempts[key] = tries
+end
 
 -- No cliente padrão do Ascension este módulo mantém apenas as placas amigáveis
 -- necessárias para NPCs e aliados. Addons externos de nameplate assumem prioridade.
@@ -84,6 +133,20 @@ local ROLE_EXACT = {
     ["Hybrid Risk System"] = "Sistema de Risco Híbrido",
     ["The Scarlet Crusade"] = "A Cruzada Escarlate",
     ["Scarlet Crusade"] = "Cruzada Escarlate",
+    ["Supply Officer"] = "Oficial de Suprimentos",
+    ["Warsong Veteran"] = "Veterano do Brado Guerreiro",
+    ["Warsong Supply Officer"] = "Oficial de Suprimentos do Brado Guerreiro",
+    ["Warsong Supply Officer (Honored)"] = "Oficial de Suprimentos do Brado Guerreiro (Honrado)",
+    ["Silverwing Supply Officer"] = "Oficial de Suprimentos da Asa de Prata",
+    -- Project Ascension / Conquest of Azeroth (AscensionDB)
+    ["Subject Zero"] = "Sujeito Zero",
+    ["Reaper of Souls"] = "Ceifador de Almas",
+    ["Cult of the Damned"] = "Culto dos Malditos",
+    ["Boss"] = "Chefe",
+    ["Runemaster"] = "Mestre das Runas",
+    ["Glyphic Runemaster"] = "Mestre das Runas Glífico",
+    ["Runemaster Mystic Scrolls"] = "Pergaminhos Místicos de Mestre das Runas",
+    ["Runemaster Adept"] = "Adepto das Runas",
 }
 
 local ROLE_SUBJECT = {
@@ -112,6 +175,32 @@ local ROLE_SUBJECT = {
     ["Mage"] = "Magos",
     ["Warlock"] = "Bruxos",
     ["Druid"] = "Druidas",
+    -- Classes custom do Conquest of Azeroth. Usadas em títulos como
+    -- <Necromancer Trainer>, <Tinker Trainer>, <Sun Cleric Trainer>, etc.
+    ["Barbarian"] = "Bárbaros",
+    ["Bloodmage"] = "Magos Sangrentos",
+    ["Blood Mage"] = "Magos Sangrentos",
+    ["Chronomancer"] = "Cronomantes",
+    ["Cultist"] = "Cultistas",
+    ["Felsworn"] = "Juramentados Vis",
+    ["Guardian"] = "Guardiões",
+    ["Knight of Xoroth"] = "Cavaleiros de Xoroth",
+    ["Necromancer"] = "Necromantes",
+    ["Primalist"] = "Primalistas",
+    ["Pyromancer"] = "Piromantes",
+    ["Ranger"] = "Patrulheiros",
+    ["Reaper"] = "Ceifadores",
+    ["Runemaster"] = "Mestres das Runas",
+    ["Starcaller"] = "Invocadores Estelares",
+    ["Stormbringer"] = "Portadores da Tempestade",
+    ["Sun Cleric"] = "Clérigos Solares",
+    ["SunCleric"] = "Clérigos Solares",
+    ["Templar"] = "Templários",
+    ["Tinker"] = "Inventores",
+    ["Venomancer"] = "Venomantes",
+    ["Witch Doctor"] = "Médicos Bruxos",
+    ["Witch Hunter"] = "Caçadores de Bruxas",
+    ["WitchHunter"] = "Caçadores de Bruxas",
     ["Weapons"] = "Armas",
     ["Weapon"] = "Armas",
     ["Armor"] = "Armaduras",
@@ -321,6 +410,46 @@ local NPC_NAME_PREFIX = {
     ["Stable Master "] = "Mestre de Estábulos ",
 }
 
+-- Nomes custom confirmados no AscensionDB que não fazem parte da base 3.3.5.
+-- Nomes próprios permanecem intactos; apenas nomes genéricos/descritores são localizados.
+local ASCENSION_NPC_NAME_EXACT = {
+    ["Fashionable Necromancer"] = "Necromante Elegante",
+    ["Necromancer Adept"] = "Adepto Necromante",
+    ["Frostmane Reaper"] = "Ceifador Jubafria",
+    ["Blighthollow Necromancer"] = "Necromante de Blighthollow",
+    ["Scourge Necromancer"] = "Necromante da Praga",
+    ["Thuzadin Necromancer"] = "Necromante Thuzadin",
+}
+
+local ASCENSION_DIFFICULTY_SUFFIX = {
+    ["Mythic"] = "Mítico",
+    ["Ascended"] = "Ascendido",
+    ["Heroic"] = "Heroico",
+}
+
+local function TranslateAscensionNpcName(name)
+    if type(name) ~= "string" or name == "" then return nil end
+
+    local exact = ASCENSION_NPC_NAME_EXACT[name]
+    if exact and exact ~= name then return exact end
+
+    -- O AscensionDB possui milhares de cópias de criaturas com sufixos de modo,
+    -- por exemplo "Nefarian - Mythic" e "Vem - Ascended". Traduzimos o sufixo
+    -- sem exigir um cadastro manual de cada ID e reaproveitamos o nome ptBR base.
+    local base, mode = name:match("^(.-)%s*%-%s*([%a%+]+)%s*$")
+    local modePT = mode and ASCENSION_DIFFICULTY_SUFFIX[mode]
+    if base and modePT then
+        base = Trim(base) or base
+        local basePT = ASCENSION_NPC_NAME_EXACT[base]
+            or (AES.UnitNameEN2ES and AES.UnitNameEN2ES[base])
+            or (AES.UnitNamePreferredEN2PT and AES.UnitNamePreferredEN2PT[base])
+            or base
+        return basePT .. " - " .. modePT
+    end
+end
+
+AES.TranslateAscensionNpcName = TranslateAscensionNpcName
+
 local function TranslateNpcNamePattern(name)
     if type(name) ~= "string" or name == "" then return nil end
     for prefix, ptPrefix in pairs(NPC_NAME_PREFIX) do
@@ -366,6 +495,10 @@ local function ResolveName(unit, shownText)
     if not ptName and type(shownText) == "string" and shownText ~= "" and shownText ~= enName then
         local known = AES.UnitNameEN2ES and AES.UnitNameEN2ES[enName]
         if known == shownText then ptName = shownText end
+    end
+
+    if not ptName then
+        ptName = TranslateAscensionNpcName(enName)
     end
 
     if not ptName then
@@ -459,7 +592,7 @@ local function ResolveSubtitle(unit)
     local cacheKey = guid or (npcID and ("id:" .. npcID)) or unit
     local tries = roleScanAttempts[cacheKey] or 0
     if tries >= 4 then return nil end
-    roleScanAttempts[cacheKey] = tries + 1
+    RememberRoleScanAttempt(cacheKey, tries + 1)
 
     local raw = ScanSubtitle(unit)
     if not raw then return nil end
@@ -472,8 +605,8 @@ local function ResolveSubtitle(unit)
     end
 
     if translated and translated ~= "" and translated ~= raw then
-        if npcID then roleCacheByID[npcID] = translated end
-        if guid then roleCacheByGUID[guid] = translated end
+        if npcID then CacheRoleByID(npcID, translated) end
+        if guid then CacheRoleByGUID(guid, translated) end
         return translated, raw
     end
 end
@@ -490,8 +623,8 @@ function AES.LearnWorldNpcRole(unit, rawText, translatedText)
 
     local guid = UnitGUID and UnitGUID(unit)
     local npcID = NpcIDFromGUID(guid)
-    if npcID then roleCacheByID[npcID] = translated end
-    if guid then roleCacheByGUID[guid] = translated end
+    if npcID then CacheRoleByID(npcID, translated) end
+    if guid then CacheRoleByGUID(guid, translated) end
     return true
 end
 
@@ -1187,6 +1320,9 @@ events:SetScript("OnEvent", function(_, event, arg1)
         RestoreGlobalFriendlyOptions()
         ClearPlateBindingOverrides()
     elseif event == "PLAYER_ENTERING_WORLD" then
+        -- GUIDs mudam entre zonas/instâncias e não precisam sobreviver à transição.
+        -- Limpar aqui impede crescimento contínuo em sessões longas sem perder o cache por NPC ID.
+        ResetTransientRoleCaches()
         CleanupOldNameplateOverrides()
         EnsureSocialPlates()
         if AES.Runtime then

@@ -276,12 +276,135 @@ A.OfficialStatGlobals = {
     ["SPELL_HASTE_TOOLTIP"] = "Aumenta a velocidade de lançamento de feitiços em %.2f%%.",
 }
 
+-- 1.5.7: GlobalStrings oficiais adicionais usados pela ficha do personagem.
+-- Só são aplicados se a chave existir no cliente 3.3.5/Ascension.
+local OfficialCharacterStatExtras = {
+    ["STRENGTH_COLON"] = "Força:",
+    ["AGILITY_COLON"] = "Agilidade:",
+    ["STAMINA_COLON"] = "Vigor:",
+    ["INTELLECT_COLON"] = "Intelecto:",
+    ["SPIRIT_COLON"] = "Espírito:",
+    ["STRENGTH_TOOLTIP"] = "Aumenta o poder de ataque e o dano por segundo. Força\nnão afeta a chance de acerto crítico em hipótese alguma.\nForça não aumenta a sua chance de bloqueio, mas sim a quantidade\nde dano bloqueada. Esse valor é determinado em parte\npela Força e em parte pelo seu escudo.",
+    ["AGILITY_TOOLTIP"] = "Aumenta a chance de acerto crítico de todos os personagens. O |nvalor do bônus por ponto é maior para Ladinos do que|noutras classes. Agilidade influencia na esquiva.|nLadinos ganham mais Esquiva por ponto de Agilidade do que|noutras classes. Agilidade afeta diretamente a Armadura.",
+    ["STAMINA_TOOLTIP"] = "Aumenta os pontos de vida",
+    ["INTELLECT_TOOLTIP"] = "Aumenta os pontos de mana assim como a\nchance de acerto crítico com feitiços. Intelecto também\naumenta a chance de aprimorar períciais corpo a\ncorpo. (Não influencia profisões.)",
+    ["SPIRIT_TOOLTIP"] = "Aumenta as taxas de regeneração de Mana e de Vida. O espírito afeta as\ntaxas de regeneração de Mana e Pontos de Vida de todos os personagens em e\nfora de combate.",
+    ["ATTACK_POWER"] = "Poder",
+    ["ATTACK_SPEED"] = "Velocidade de ataque",
+    ["ATTACK_SPEED_SECONDS"] = "Velocidade de ataque (segundos)",
+    ["ATTACK_SPEED_TOOLTIP1"] = "Segundos por ataque",
+    ["DAMAGE_TOOLTIP"] = "Dano da arma",
+    ["CHANCE_TO_BLOCK"] = "Chance de bloquear: %.2f%%",
+    ["CHANCE_TO_DODGE"] = "%.2f%% de chance de esquivar",
+    ["CHANCE_TO_PARRY"] = "%.2f%% de chance de aparar",
+    ["CR_BLOCK_TOOLTIP"] = "Você bloqueia %d%% do dano recebido.",
+    ["CR_CRIT_MELEE_TOOLTIP"] = "Chance de causar dano adicional com ataques.\nAcerto crítico %s (+%.2f%% de chance de acerto crítico)",
+    ["CR_CRIT_RANGED_TOOLTIP"] = "Chance de causar dano adicional com ataques.\nAcerto crítico %s (+%.2f%% de chance de acerto crítico)",
+    ["CR_CRIT_SPELL_TOOLTIP"] = "Chance de causar dano adicional com feitiços.\nAcerto crítico %s (+%.2f%% de chance de acerto crítico)",
+    ["CR_CRIT_TOOLTIP"] = "Chance de aumentar a eficácia de ataques e curas\n\nAcerto Crítico: %s [+%.2f%%]",
+    ["CR_DODGE_TOOLTIP"] = "Esquiva de %d acrescenta %.2f%% à chance de Esquiva\n|cff888888(Antes do decréscimo de eficiência)|r",
+    ["CR_EXPERTISE_TOOLTIP"] = "Reduz em %s a chance de seus golpes serem esquivados ou aparados\nÍndice de aptidão %s (+%.2F%% de aptidão)",
+    ["CR_HASTE_RATING_TOOLTIP"] = "Aceleração %d (%.2f%% de aceleração)",
+    ["CR_HIT_MELEE_TOOLTIP"] = "Aumenta a chance de acerto de ataques corpo a corpo contra alvos de nível %d em %.2f%%.",
+    ["CR_HIT_RANGED_TOOLTIP"] = "Aumenta a chance de acertar um ataque de longo alcance em um alvo de nível %d em %.2f%%.",
+    ["CR_HIT_SPELL_TOOLTIP"] = "Aumenta a chance de acerto com feitiço em um alvo de nível %d em %.2f%%.",
+    ["CR_PARRY_TOOLTIP"] = "Aparo de %d acrescenta %.2f%% à chance de aparo\n|cff888888(Antes do decréscimo de eficiência)|r",
+    ["MANA_REGEN"] = "Regen. de Mana",
+    ["MANA_REGEN_ABBR"] = "Regeneração",
+    ["MANA_REGEN_COMBAT"] = "Mana em combate",
+    ["MANA_REGEN_TOOLTIP"] = "Quantidade de mana regenerado a cada 5 segundos.\n\nFora de combate, a regeneração de mana é aumentada para %s a cada 5 segundos.",
+    ["RESILIENCE"] = "Resiliência JxJ",
+    ["RESILIENCE_TOOLTIP"] = "Oferece redução de dano contra todo dano causado por jogadores e seus ajudantes ou lacaios.",
+    ["STAT_ARMOR"] = "Armadura",
+    ["STAT_ARMOR_BASE_TOOLTIP"] = "Redução Básica de Dano Físico da Armadura: %0.2f%%",
+    ["STAT_ARMOR_TOTAL_TOOLTIP"] = "Redução Total de Dano Físico da Armadura: %0.2f%%",
+    ["STAT_ATTACK_POWER"] = "Poder de ataque",
+    ["STAT_ATTACK_SPEED"] = "Velocidade de ataque",
+    ["STAT_ATTACK_SPEED_BASE_TOOLTIP"] = "Velocidade de ataque aumentada em +%s%%",
+    ["STAT_AVERAGE_ITEM_LEVEL"] = "Nível de Item",
+    ["STAT_AVERAGE_ITEM_LEVEL_EQUIPPED"] = "(Equipado %d)",
+    ["STAT_AVERAGE_ITEM_LEVEL_TOOLTIP"] = "O nível de item médio do seu equipamento.",
+    ["STAT_AVOIDANCE"] = "Evasiva",
+    ["STAT_BLOCK"] = "Bloqueio",
+    ["STAT_BLOCK_TOOLTIP"] = "Aumenta o valor de bloqueio em %d.",
+    ["STAT_BONUS_ARMOR"] = "Bônus de Armadura",
+    ["STAT_CATEGORY_ATTACK"] = "Ataque",
+    ["STAT_CATEGORY_ATTRIBUTES"] = "Atributos",
+    ["STAT_CATEGORY_DEFENSE"] = "Defesa",
+    ["STAT_CATEGORY_ENHANCEMENTS"] = "Aperfeiçoamentos",
+    ["STAT_CATEGORY_GENERAL"] = "Geral",
+    ["STAT_CATEGORY_MELEE"] = "Corpo a corpo",
+    ["STAT_CATEGORY_PVP"] = "JxJ",
+    ["STAT_CATEGORY_RANGED"] = "Longo alcance",
+    ["STAT_CATEGORY_RESISTANCE"] = "Resistência",
+    ["STAT_CATEGORY_SPELL"] = "Feitiço",
+    ["STAT_CRITICAL_STRIKE"] = "Acerto Crítico",
+    ["STAT_DODGE"] = "Esquiva",
+    ["STAT_DPS_SHORT"] = "DPS",
+    ["STAT_EXPERTISE"] = "Aptidão",
+    ["STAT_HASTE"] = "Aceleração",
+    ["STAT_HASTE_MELEE_TOOLTIP"] = "Aumenta a velocidade de ataque.",
+    ["STAT_HASTE_RANGED_TOOLTIP"] = "Aumenta a velocidade de ataque.",
+    ["STAT_HASTE_SPELL_TOOLTIP"] = "Aumenta a velocidade de lançamento de feitiços.",
+    ["STAT_HASTE_TOOLTIP"] = "Aumenta as velocidades de ataque e de lançamento de feitiços.",
+    ["STAT_HEALTH_TOOLTIP"] = "Total de pontos de vida. Caso seus pontos de vida cheguem a zero, você morre.",
+    ["STAT_HIT_CHANCE"] = "Chance de acerto",
+    ["STAT_HIT_MELEE_TOOLTIP"] = "Acerto %s (%.2f%% de chance de acerto)",
+    ["STAT_HIT_RANGED_TOOLTIP"] = "Acerto %s (%.2f%% de chance de acerto)",
+    ["STAT_HIT_SPELL_TOOLTIP"] = "Acerto %s (%.2f%% de chance de acerto)",
+    ["STAT_MASTERY"] = "Maestria",
+    ["STAT_MASTERY_TOOLTIP"] = "Maestria: %d [+%.2f%%]",
+    ["STAT_MOVEMENT_SPEED"] = "Velocidade de Movimento",
+    ["STAT_PARRY"] = "Aparo",
+    ["STAT_PVP_POWER"] = "Poder JxJ",
+    ["STAT_RESILIENCE"] = "Resiliência JxJ",
+    ["STAT_RESILIENCE_BASE_TOOLTIP"] = "\nResiliência %s (+%.2f%% de Resiliência)",
+    ["STAT_SPEED"] = "Velocidade",
+    ["STAT_SPELLDAMAGE"] = "Dano mágico",
+    ["STAT_SPELLDAMAGE_TOOLTIP"] = "Aumenta o poder dos feitiços que causam dano.",
+    ["STAT_SPELLHEALING"] = "Cura por feitiço",
+    ["STAT_SPELLHEALING_TOOLTIP"] = "Aumenta o poder dos feitiços de cura.",
+    ["STAT_SPELLPOWER"] = "Poder mágico",
+    ["STAT_SPELLPOWER_TOOLTIP"] = "Aumenta o dano e a cura de feitiços.",
+    ["STAT_TARGET_LEVEL"] = "Nível do alvo",
+    ["STAT_TOOLTIP_BONUS_AP"] = "Aumenta em %s o Poder de Ataque",
+    ["STAT_TOOLTIP_BONUS_AP_SP"] = "Aumenta em %s o Poder de Ataque e o Poder Mágico",
+}
+for key, value in pairs(OfficialCharacterStatExtras) do
+    if A.OfficialStatGlobals[key] == nil then A.OfficialStatGlobals[key] = value end
+end
+
+-- 1.5.7: captura a string enUS REAL do cliente antes de sobrescrever os
+-- GlobalStrings. Isso nos dá um dicionário inglês -> pt-BR oficial sem depender
+-- de scanner, locale externo ou consulta durante o jogo. Só strings literais
+-- entram aqui; formatos com %d/%s continuam sendo tratados pelos parsers.
+A.OfficialDisplayExact = A.OfficialDisplayExact or {}
+local function CaptureOfficialEnglish(source)
+    for key, pt in pairs(source or {}) do
+        local en = rawget(_G, key)
+        if type(en) == "string" and type(pt) == "string" and en ~= "" and pt ~= ""
+            and en ~= pt and not en:find("%%", 1, true) then
+            A.OfficialDisplayExact[en] = pt
+        end
+    end
+end
+CaptureOfficialEnglish(A.OfficialItemGlobals)
+CaptureOfficialEnglish(A.OfficialStatGlobals)
+
 local function ApplyGlobalTable(source)
     local applied = 0
     for key, value in pairs(source or {}) do
         if type(value) == "string" and type(rawget(_G, key)) == "string" then
-            rawset(_G, key, value)
-            applied = applied + 1
+            -- O Ascension altera assinaturas de alguns GlobalStrings formatados.
+            -- Core.lua compara o contrato real antes de tocar no global; isso evita
+            -- crash no FrameXML quando um %.2f do WotLK virou %s no cliente custom.
+            local ok
+            if A.SafeSetGlobalString then
+                ok = A.SafeSetGlobalString(key, value)
+            else
+                ok = false
+            end
+            if ok then applied = applied + 1 end
         end
     end
     return applied

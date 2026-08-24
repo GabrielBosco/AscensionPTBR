@@ -22,7 +22,7 @@ AES.SpellClassLate = AES.SpellClassLate or {}
 AES.FeatureDefaults = AES.FeatureDefaults or {
     -- Tradução
     spells = true, items = true, auctionSearchPTBR = true, flavor = true, units = true, worldNpcNames = true,
-    quests = true, gossip = true, achievements = true, patterns = true, ui = true, maps = true,
+    quests = true, gossip = true, achievements = true, patterns = true, ui = true, maps = true, endgameUI = true,
     chat = true, errores = true, voice = true, raidTranslation = true,
 
     -- Telas / integrações
@@ -83,6 +83,10 @@ do
     if revision < 7 then
         if db.auctionSearchPTBR == nil then db.auctionSearchPTBR = true end
         db.__aptbrUiRevision = 7
+    end
+    if revision < 8 then
+        if db.endgameUI == nil then db.endgameUI = true end
+        db.__aptbrUiRevision = 8
     end
 end
 

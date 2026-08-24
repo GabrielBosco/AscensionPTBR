@@ -45,14 +45,14 @@ local DEPENDENCY_PARENTS = {
 
 local TRANSLATION_KEYS = {
     "spells", "items", "auctionSearchPTBR", "flavor", "units", "worldNpcNames", "gossip", "achievements",
-    "patterns", "ui", "maps", "chat", "errores", "quests", "dailyQuests", "raidTranslation",
+    "patterns", "ui", "maps", "endgameUI", "chat", "errores", "quests", "dailyQuests", "raidTranslation",
     "characterUI", "dynamicUI",
 }
 
 local PRESETS = {
     completo = {
         spells=true, items=true, auctionSearchPTBR=true, flavor=true, units=true, worldNpcNames=true, gossip=true, achievements=true,
-        patterns=true, ui=true, maps=true, chat=true, errores=true, quests=true, dailyQuests=true,
+        patterns=true, ui=true, maps=true, endgameUI=true, chat=true, errores=true, quests=true, dailyQuests=true,
         raidTranslation=true, characterUI=true, dynamicUI=true, voice=true, durabilityWidget=true,
         unitFrameNumbers=true, lootOverlay=true, dragonUICompat=true, detailsCompat=true,
         durabilityHudHideAtFull=false, durabilityWarningEnabled=true, durabilityWarningSound=true,
@@ -60,7 +60,7 @@ local PRESETS = {
     },
     equilibrado = {
         spells=true, items=true, auctionSearchPTBR=true, flavor=true, units=true, worldNpcNames=true, gossip=true, achievements=true,
-        patterns=true, ui=true, maps=true, chat=true, errores=true, quests=true, dailyQuests=true,
+        patterns=true, ui=true, maps=true, endgameUI=true, chat=true, errores=true, quests=true, dailyQuests=true,
         raidTranslation=true, characterUI=true, dynamicUI=true, voice=true, durabilityWidget=true,
         unitFrameNumbers=true, lootOverlay=true, dragonUICompat=true, detailsCompat=true,
         durabilityHudHideAtFull=true, durabilityWarningEnabled=true, durabilityWarningSound=true,
@@ -68,7 +68,7 @@ local PRESETS = {
     },
     desempenho = {
         spells=true, items=true, auctionSearchPTBR=true, flavor=true, units=true, worldNpcNames=false, gossip=true, achievements=true,
-        patterns=false, ui=true, maps=true, chat=true, errores=true, quests=true, dailyQuests=false,
+        patterns=false, ui=true, maps=true, endgameUI=true, chat=true, errores=true, quests=true, dailyQuests=false,
         raidTranslation=true, characterUI=true, dynamicUI=false, voice=false, durabilityWidget=false,
         unitFrameNumbers=false, lootOverlay=false, dragonUICompat=false, detailsCompat=true,
         durabilityHudHideAtFull=true, durabilityWarningEnabled=true, durabilityWarningSound=false,
@@ -231,6 +231,10 @@ local function ApplyRuntime(changed)
         if AnyChanged(changed, INTEGRATION_KEYS) and A.RefreshIntegrationUI then pcall(A.RefreshIntegrationUI) end
     end
 
+    if changed.endgameUI and A.RefreshEndgameUI then
+        pcall(A.RefreshEndgameUI, "settings")
+    end
+
     if AnyChanged(changed, DURABILITY_KEYS) and A.RefreshDurabilityWidget then
         pcall(A.RefreshDurabilityWidget)
     end
@@ -310,6 +314,7 @@ local PAGE_DEFS = {
             { "check", "achievements", "Conquistas", "Títulos, descrições e recompensas." },
             { "check", "patterns", "Valores dinâmicos", "Traduz linhas que mudam com dano, custo, alcance, duração e outros valores do personagem." },
             { "check", "ui", "Menus e interface (ESC)", "Traduz o menu ESC, botões e textos gerais da interface." },
+            { "check", "endgameUI", "Conteúdo endgame", "Traduz HUDs custom de Mítico+, afixos, progressões, recompensas e outras telas de nível máximo do Ascension." },
             { "check", "maps", "Mapas e nomes de áreas", "Usa o mesmo nome em ptBR no mapa, minimapa e no texto que aparece ao entrar em uma área." },
             { "check", "chat", "Mensagens do chat", "Saque, experiência e mensagens de sistema suportadas." },
             { "check", "errores", "Mensagens de erro", "Avisos e erros exibidos no centro da tela." },
@@ -621,7 +626,7 @@ local function BuildWindow()
 
     local version = header:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
     version:SetPoint("RIGHT", header, "RIGHT", -46, 3)
-    version:SetText("v" .. tostring((GetAddOnMetadata and GetAddOnMetadata(ADDON_NAME or "AscensionPTBR", "Version")) or "1.5.0"))
+    version:SetText("v" .. tostring((GetAddOnMetadata and GetAddOnMetadata(ADDON_NAME or "AscensionPTBR", "Version")) or "1.5.1"))
 
     local close = CreateFrame("Button", nil, header, "UIPanelCloseButton")
     close:SetPoint("TOPRIGHT", 2, 2)

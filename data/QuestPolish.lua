@@ -1029,6 +1029,205 @@ QuestFix(255158, {
     c="Isso será de enorme ajuda. Com este material, a barricada deve aguentar por mais algum tempo.\n\nSe a Luz nos favorecer, talvez tempo suficiente para que logo nem precisemos mais dela. Obrigado."
 })
 
+
+-- Restos de portunhol encontrados na auditoria geral da 1.5.1.
+QuestFix(1345, {
+    d="Minha mãe pediu que eu voltasse para casa, não foi? Queria poder tranquilizá-la, mas não posso abandonar Juliette. Ela mudou, mas não deixou de existir para mim.\n\nAntes que o Flagelo a levasse, ela adorava os campos na primavera. Caminhávamos por horas pela Praia Ocidental, colhendo flores silvestres de Tarrenbell até o sol desaparecer atrás das colinas.\n\nSe alguma parte da mulher que ela era ainda existe, talvez essas flores despertem algo. Traga algumas para mim, <name>. Por favor.",
+    o="Colete 8 Flores Tarrenbell para Romeno Livingston, perto da Praia Ocidental.",
+    p="Conseguiu encontrar as flores Tarrenbell que Juliette tanto amava?",
+    c="Obrigado, $n. São exatamente as flores que ela amava, embora eu tema que nem a própria primavera consiga despertar o que o Flagelo tirou dela.\n\nAinda assim, preciso tentar. Se restar em Juliette alguma lembrança da Praia Ocidental, das nossas caminhadas sob o sol poente ou das flores que ela costumava usar no cabelo, talvez estas consigam alcançá-la."
+})
+QuestFix(2951, {
+    c="Você coloca o Objeto Encardido e três moedas de prata na Brastematic 5200. A máquina ganha vida numa tentativa frenética de remover toda a sujeira do objeto. Ruídos altos e violentos ecoam de seu interior enquanto a estrutura metálica range e balança de um lado para o outro..."
+})
+
+
+-- Big update de quests: revisão manual de resíduos clássicos/endgame encontrados na varredura 1.5.1.
+QuestFix(331, {
+    c="Dói saber que foi Merle quem nos traiu. Ele sempre foi um soldado corajoso, e eu acreditava que seu coração era leal. Ainda assim, é um alívio termos descoberto a verdade. Com um espião como ele entre nós, não duraríamos muito contra o Coronel Kurzen."
+})
+QuestFix(1525, {
+    d="Mas você não veio aqui para uma aula de história, veio? Veio em busca da Chama Eterna e do Totem do Fogo.\n\nO primeiro passo é criar uma sapta e vinculá-lo à chama.\n\nPosso preparar a Sapta do Fogo se você me trouxer dois itens. O primeiro é Piche Ígneo, que os conjuradores Crinavalha dos Sertões Orientais costumam carregar.\n\nO segundo é mais perigoso: um Bornal de Reagentes de um dos sectários da Lâmina Ardente. Você os encontrará em uma caverna acima das ravinas, a nordeste do Monte Navalha.",
+    c="Isto servirá, $n.\n\nO fogo é mais do que caos e destruição. Lembre-se disso. Ele também representa vida e criação. Todas as coisas estão ligadas. As forças se opõem, mas, ao mesmo tempo, uma não pode existir sem a outra. Podem extinguir umas às outras, mas também dão significado umas às outras. Nunca se esqueça disso.\n\nUsar diferentes tipos de magia em conjunto demonstra não apenas grande habilidade, mas também grande sabedoria."
+})
+QuestFix(1684, {
+    c="Saudações, $n. Seu nome já ecoa por Darnassus, pois você demonstra grande potencial. Mas logo veremos se possui a força de vontade necessária para seguir o caminho de $c."
+})
+QuestFix(1686, {
+    p="Você derrotou o Vulto de Elura, $n? E conseguiu recuperar o minério de elunita perdido?",
+    c="Muito bem, $n.\n\nVocê concedeu ao Vulto de Elura a paz que ele merecia, e usaremos a elunita recuperada para criar uma arma digna de você."
+})
+QuestFix(1795, {
+    o="Use o Tomo do Conluio para evocar e subjugar um caçador vil. Depois, devolva o tomo a Strahad Farsan, em Vila Catraca.",
+    c="Devo admitir que estou impressionado, $n. Quando enfrentei meu primeiro caçador vil, escapei com vida por muito pouco. Sinto que você tem potencial para se tornar um dos bruxos mais poderosos desta era."
+})
+QuestFix(1806, {
+    c="Aqui está, $n. Uma arma digna de um campeão da Luz como você. Dei a ela o nome de um grande paladino anão que foi meu amigo: Verigan... Bosch Verigan.\n\nPor favor, aceite-a em meu nome e no de minha esposa. Temos uma grande dívida com você, e o mundo será um lugar mais seguro com alguém de sua habilidade viajando por estas terras."
+})
+QuestFix(1955, {
+    p="Você terá que matar esse demônio para remover a corrupção que ele deixou no orbe, $n."
+})
+QuestFix(2203, {
+    p="Conseguiu usar os recipientes para obter o sangue dos dragões guardiões calcinados de que preciso? Sei que é uma tarefa perigosa, mas a receita da minha bebida restauradora depende do seu sucesso. Risco e recompensa, meu amigo... risco e recompensa...",
+    c="De um alquimista para outro, eu o saúdo. Pegue esta receita e aprenda-a. Que ela lhe traga o mesmo sucesso e as mesmas recompensas que me trouxe ao longo dos anos."
+})
+QuestFix(2206, {
+    p="Sua chance de sobreviver diminui a cada instante que você desperdiça perambulando pelo quartel, $c.",
+    c="Estou impressionado... impressionado por Keryn finalmente ter encontrado um recruta com potencial para se tornar um verdadeiro $c. Pegue esta lâmina, $n. Chegará o dia em que você será chamado novamente para servir ao AVIN:7. Aperfeiçoe suas habilidades, mantenha os olhos abertos e a lâmina afiada.\n\nVocê não nos verá chegar, mas sentirá quando chegarmos..."
+})
+QuestFix(2280, {
+    c="O que temos aqui?\n\nImpressionante, jovem! Sinto nestes discos segredos que a própria terra guardou por muitos e muitos anos. Foi muito sábio trazê-los até mim."
+})
+QuestFix(2298, {
+    o="Viaje até Ventobravo e procure Renzik, \"O Bicudo\".",
+    c="É sempre bom ter mais um dos ladinos de Hulfdan entre nossas fileiras!"
+})
+QuestFix(2761, {
+    p="Depois de tanta mineração, seus músculos saltam e seu corpo inteiro dói!",
+    c="Sua dedicação ao trabalho é impecável, $n! Você está começando a compreender os caminhos da mineralogia de Galvan. Pegue isto e aprenda tudo o que puder!"
+})
+QuestFix(2762, {
+    p="Depois de tanta mineração, seus músculos saltam e seu corpo inteiro dói!",
+    c="Ela é uma amante cruel, não é, $n? Falo da veraprata, naturalmente. Sim, Galvan passou mais de uma década nas Montanhas de Alterac aprendendo essa lição. Pegue isto e aprenda tudo o que puder!"
+})
+QuestFix(2763, {
+    p="Depois de tanta mineração, seus músculos saltam e seu corpo inteiro dói!"
+})
+QuestFix(13370, {
+    d="Seu campeão, Bolvar, morreu defendendo nosso mundo. A Horda lamenta a perda de um grande herói, mas não foi responsável pelo ataque covarde de Putress no Portão da Ira. Também perdemos grandes campeões por causa dessa traição.\n\nDiga ao seu rei que faremos tudo ao nosso alcance para levar os responsáveis por esse ato à justiça. Faremos o possível para evitar um conflito com a Aliança, mas não hesitaremos em nos defender caso sejamos provocados.",
+    o="Use o portal no Forte Grommash para retornar à Bastilha de Ventobravo e entregue a mensagem de Thrall ao Rei Varian Wrynn.",
+    c="Eles perderam a Cidade Baixa? Então a hora de atacar é agora. Nós mesmos cuidaremos de Putress e retomaremos as Ruínas de Lordaeron para a Aliança!"
+})
+QuestFix(13371, {
+    d="Enviei Broll e Valeera para a Cidade Baixa antes de você partir para Orgrimmar. Na verdade, eles já estão posicionados do lado de fora da entrada dos esgotos, aguardando ordens.\n\nJaina Proudmore abrirá um portal para nossas forças nos arredores da Cidade Baixa. Vá até lá e apresente-se a Broll. Jaina e eu estaremos logo atrás.",
+    o="Use o portal para a Cidade Baixa dentro da Bastilha de Ventobravo. Ao chegar, apresente-se a Broll Mantursino.",
+    c="Quem é você? Varian disse que enviaria heróis."
+})
+QuestFix(77872, {
+    d="Os inimigos mais perigosos de Azeroth voltaram a ameaçar o mundo. Mostre que está à altura do desafio e derrote essas lendas antes que seja tarde demais.",
+    o="Derrote Azuregos e o Senhor da Perdição Kazzak.",
+    p="O desafio ainda aguarda você. Volte quando tiver triunfado sobre esses inimigos lendários.",
+    c="Incrível! Você derrotou duas das criaturas mais perigosas de Azeroth. Sua lenda continua crescendo, campeão."
+})
+QuestFix(77873, {
+    d="Os grandes dragões de Azeroth voltaram a se agitar. Enfrente o desafio sazonal e prove que consegue resistir à fúria das grandes serpes.",
+    o="Conclua os objetivos do desafio sazonal Mundo dos Dragões.",
+    p="O desafio ainda aguarda você. Volte quando tiver triunfado sobre esses inimigos lendários.",
+    c="A fúria das grandes serpes foi contida. Azeroth está mais segura graças ao seu heroísmo. Celebre esta vitória, campeão!"
+})
+
+
+-- Cadeia da Cidade Baixa/Coroa de Gelo e encomenda especial que fugiam dos padrões em massa.
+QuestFix(13257, {
+    o="Apresente-se a Thrall no Forte Grommash, em Orgrimmar."
+})
+QuestFix(13266, {
+    c="Vou colocá-lo a par da situação, $n.\n\nA Cidade Baixa é uma zona de guerra. Os boticários de Putress e os demônios de Varimathras assumiram o controle. Eles se entrincheiraram lá dentro e estão usando aquela maldita praga contra nossas tropas."
+})
+QuestFix(13315, {
+    p="Você já fez o reconhecimento do Portão da Desolação, $c?"
+})
+QuestFix(13347, {
+    d="Nosso destino é gravado em nossas almas desde o nascimento. A queda de Bolvar, embora trágica, era inevitável.\n\nTudo o que você pode fazer agora é honrar seu herói, $n. Recupere o escudo de Bolvar no campo de batalha e devolva-o ao seu rei. Ao entregar o escudo a Varian, diga a ele: \"Nem tudo está perdido. Das cinzas dos caídos surgirá uma força que unirá nações e expurgará o mal deste mundo.\"\n\nEle não pode perder a fé. Vá, $n. Seu povo precisa de um herói. Precisa de você.",
+    o="Recupere o Escudo de Fordragon no campo de batalha em Angrathar, o Portão da Ira, e leve-o ao Rei Varian Wrynn na Bastilha de Ventobravo.",
+    p="<O Rei Wrynn enxuga uma lágrima.>\n\n<O Rei Wrynn faz um gesto afirmativo.>\n\nA culpa é minha."
+})
+QuestFix(13351, {
+    p="Você já fez o reconhecimento do Portão da Desolação, $c?"
+})
+QuestFix(28385, {
+    d="Já que está na cidade, posso convencê-lo a ajudar o pessoal de Loch Modan? Marek Ironheart, no Alojamento dos Andarilhos, anda precisando de um pouco de sorte na caça, e você pode aproveitar para praticar Encantamento.\n\nLeve este Machado do Caçador até ele e considere encantá-lo com Encantamento de Arma: Golpe Menor. Talvez assim ele finalmente consiga caçar alguma coisa!\n\nNão se preocupe, $n: Marek só precisa receber o machado. Você pode praticar o encantamento em outra arma se preferir, mas não se esqueça de entregar o machado a ele.",
+    o="Encante uma arma com Encantamento de Arma: Golpe Menor e entregue o Machado do Caçador a Marek Ironheart, no Alojamento dos Andarilhos, em Loch Modan. Você pode encantar o machado fornecido ou outra arma à sua escolha."
+})
+
+
+-- Auditoria do leveling 1-30 (1.5.1): correcoes manuais de textos antigos
+-- que ainda carregavam espanhol/portunhol ou frases quebradas na base classica.
+-- Mantido no QuestPolish para preservar a estrutura da addon e garantir prioridade.
+QuestFix(58, {
+    p="Preciso da sua ajuda, $n. Vá até o cemitério a noroeste e elimine 20 Vetores da Peste no mausoléu leste.\n\nVolte a falar comigo quando concluir a tarefa."
+})
+QuestFix(116, {
+    d="A coisa está feia para o meu lado, $n. As garrafas estão quase secando, e a entrega do próximo carregamento já está muito atrasada. A invasão órquica foi um inferno.\n\nSerá que você pode me ajudar?\n\nPreciso de um barril de Cervaforte, um tonel de Merlot, uma garrafa de Pinga e um odre de Rum Doce. Traga tudo para mim e eu cuidarei para que seja recompensado."
+})
+QuestFix(120, {
+    d="Estes são tempos difíceis, $c. A cidade está sob cerco constante. Sem reforços, certamente seremos derrotados. A mensagem que confio a você é da maior importância. Leve este relatório ao General Marcus Jonas, em Ventobravo, imediatamente. Depois de fazer a entrega, volte com qualquer notícia, seja ela boa ou ruim.\n\nAgora, apresse-se!",
+    o="Leve o relatório do Magistrado Salomão ao General Marcus Jonas, em Ventobravo, e depois retorne ao Magistrado Salomão.",
+    c="À vontade, $c.\n\nO Magistrado Salomão é um líder nobre, e suas palavras têm muito peso para mim. Consultarei o rei e deixarei a situação bem clara. Assegure ao magistrado que ele conta com o apoio do Exército de Ventobravo. Os reforços partirão assim que Sua Majestade der a ordem."
+})
+QuestFix(198, {
+    p="Sim? O que você quer? Ah, suprimentos dos goblins. É estranho ver um $r fazendo a entrega; normalmente eles mesmos cuidam disso. Não importa... você não mexeu em nada, mexeu? Ótimo. Não queremos que nada aconteça com nossas minas."
+})
+QuestFix(254, {
+    c="Você escava a terra revolvida sobre a sepultura... e encontra os restos de um caixão.\n\nLá dentro, é possível ouvir unhas arranhando a madeira e o ranger de dentes apodrecidos...\n\nVocê abrirá o caixão para recuperar o coração do Embalsamador?"
+})
+QuestFix(309, {
+    c="Graças à Luz, a pólvora finalmente chegou! Mas a notícia de que os Ferro Negro têm simpatizantes capazes de conseguir esse tipo de material é preocupante.\n\nIsso é problema para outra hora. Agora preciso colocar esta pólvora em bom uso."
+})
+QuestFix(378, {
+    c="Então Kam Fundafúria finalmente sentiu o gosto da própria morte? Ótimo. Aquela escória covarde dos Ferro Negro recebeu o que merecia. Você fez um bom trabalho, $c.\n\nAs famílias das vítimas do ataque ao Vão Thandol agora podem ter algum conforto sabendo que Fundafúria recebeu sua punição. A morte do irmão de Barbafunda foi vingada."
+})
+QuestFix(487, {
+    c="Você serviu muito bem ao povo de Dolanaar e Darnassus, bravo $c. Como integrante das Sentinelas de Teldrassil, saúdo seus esforços."
+})
+QuestFix(654, {
+    c="Muito bem. Vou levar apenas um instante para remover a fonte de energia. Depois disso, você poderá fazer o que quiser com o kit sem se preocupar em perder os dados armazenados."
+})
+QuestFix(818, {
+    d="Embora meus olhos já não sejam os mesmos, ainda enxergo o bastante. Cada vez mais preciso recorrer à alquimia para me auxiliar em magias que antes eram fáceis. Mesmo assim, recuso-me a aceitar um aprendiz: nenhum troll ou orc digno se apresentou até hoje.\n\nVocê é digno? Claro que é... ou pelo menos acha que é.\n\nPreciso de algumas coisas. Traga-me Olhos de Makrura Intactos e frascos de Muco de Rastejante. Você encontrará ambos nas criaturas da costa de Durotar. Depois conversaremos novamente."
+})
+QuestFix(853, {
+    c="Ah, os esporos dos Sertões que Helbrim estava coletando. Ele conseguiu sua ajuda para fazer a entrega? Ótimo.\n\nA emulsão ainda está potente, então você não perdeu tempo no caminho. Muito bem, $c."
+})
+QuestFix(908, {
+    c="É exatamente disso que eu precisava! Um Núcleo das Profundezas é uma fonte extraordinária de informações. Seja lá o que o Martelo do Crepúsculo esteja tramando lá dentro — e pode acreditar que não é coisa boa — meus companheiros e eu agora teremos como descobrir.\n\nVocê fez um excelente trabalho hoje. A Harmonia Telúrica reconhece sua ajuda, e a Horda como um todo também foi beneficiada. Orgulhe-se disso."
+})
+QuestFix(1012, {
+    p="A angústia dos druidas de Dor'danil ainda assombra meus sonhos, $n. Você precisa derrotar os líderes deles!"
+})
+QuestFix(1086, {
+    d="A toxina está pronta. Só falta entregá-la, e essa tarefa é sua, $n.\n\nA Empreendimentos S.A. deve ter algum meio de transportar mensagens e cargas leves entre seu quartel-general e as operações nas Torres de Pedra. Provavelmente existe um pequeno aeródromo, pequeno demais para um zepelim, mas perfeito para máquinas voadoras. Procure nas áreas controladas pela empresa. Se encontrar o local, deixe a toxina lá.\n\nDepois, saia de perto.",
+})
+QuestFix(1097, {
+    d="Há um armeiro anão em Ventobravo chamado Grimand Elmore. Ele mandou avisar que precisa de ajuda com uma entrega para sua terra natal, ao norte.\n\nSe estiver disposto a esticar as pernas, fale com Grimand. Sua ajuda é valiosa por aqui, mas também precisamos manter fortes nossos laços com os anões.\n\nVocê encontrará Grimand Elmore na loja de armas do Distrito dos Anões, na parte nordeste de Ventobravo.",
+    c="Você veio ajudar com a entrega? Muito bem!"
+})
+QuestFix(1252, {
+    c="Nunca é boa notícia quando um distintivo da guarda chega às minhas mãos.\n\nÀs vezes pertence a alguém que caiu em batalha, e cabe a mim levar a notícia à família. Outras vezes, jamais descobrimos o que aconteceu. E há casos ainda piores."
+})
+QuestFix(1484, {
+    c="Eu vi o que aconteceu entre Maurin e o senhor demoníaco. Mesmo como aparição, aquela criatura parece ter mais poder que meu companheiro bruxo. Será que ele consegue derrotá-la?\n\nTalvez fosse melhor eu mesmo ir, mas abandonar minhas responsabilidades para enfrentar esse mal por honra pessoal envergonharia meu clã e serviria mal ao Chefe Guerreiro."
+})
+QuestFix(1681, {
+    p="Você entrou no Complexo do Bandaferro? Encontrou o Minério Umbrático?",
+    c="Você encontrou! Muito bem!\n\nEspero que tenha derrubado muitos anões Ferro Negro durante a busca. Temo que o Complexo do Bandaferro não seja o último lugar onde veremos essa gente.\n\nObrigado pelo minério, $n. Estou ansioso para trabalhar com ele e descobrir suas propriedades."
+})
+QuestFix(1703, {
+    c="Isto é interessante, muito interessante mesmo. Meu colega anão Furen fez uma grande descoberta!\n\nObrigado, $n. Será uma honra aplicar as novas técnicas dele às minhas próprias criações."
+})
+QuestFix(1783, {
+    c="Não sei como agradecer, $girmão:irmã;.\n\nSe você carrega o Símbolo da Vida, só posso concluir que Tiza e Muiredon enviaram você para me ajudar.\n\nEu caí lutando contra os Ferro Negro enquanto tentava recuperar um dos textos. Consegui resistir tempo suficiente para Muiredon escapar, mas a Luz quase tinha me acolhido por completo quando você chegou. O fato de ter poder suficiente para usar o Símbolo significa muito para o seu futuro, mas falaremos disso depois."
+})
+QuestFix(1843, {
+    c="Obrigado, $n. Estas manoplas são meu melhor trabalho. Fique com elas. Ao usá-las, você honra a mim e aos meus ancestrais."
+})
+
+
+-- Zonas iniciais de Burning Crusade que entram naturalmente no 1-30.
+QuestFix(8326, {
+    c="A torre e seus arredores estão relativamente seguros, pelo menos por enquanto. Você nos ajudou a ganhar algum tempo, mas precisaremos retomar o controle de toda a ilha se quisermos sobreviver aqui a longo prazo. Isso significa enfrentar ameaças muito maiores do que linces e serpes de mana desgarrados.\n\nPegue isto, $n. Tenho certeza de que será útil nas tarefas que virão."
+})
+QuestFix(8350, {
+    title="Concluindo a entrega"
+})
+QuestFix(9148, {
+    title="Entrega para Tranquillien"
+})
+QuestFix(9453, {
+    d="Você fez um trabalho excelente, $n. Sua generosidade conquistou a gratidão do nosso povo. Dito isso, poderia levar estes pargos para Acteon, no Entreposto Lazúli?\n\nEle não deve ser difícil de encontrar, pois já está esperando pela pesca.",
+    p="O que achou da minha armadura? Eu mesmo a confeccionei! É um pouco diferente do que costumamos usar, mas é extremamente confortável."
+})
+
 local Q = AscensionPTBR.QuestData
 local T = AscensionPTBR.QuestTitle
 
@@ -1049,3 +1248,358 @@ end
 -- O arquivo principal já tem cobertura PT-BR para todos os campos existentes.
 -- Mantemos o contador por compatibilidade com o diagnóstico antigo.
 AscensionPTBR.QuestMissingFieldFallbacks = 0
+
+
+-- ============================================================================
+-- Revisao de leveling 1-30 integrada ao QuestPolish.lua.
+-- Mantida aqui para preservar a estrutura original da addon sem novos modulos.
+-- ============================================================================
+-- Revisao dedicada ao leveling inicial (1-30).
+-- Carrega por ultimo entre os bancos de quests para garantir que textos antigos
+-- nao voltem a sobrescrever a versao revisada em PT-BR.
+AscensionPTBR = AscensionPTBR or {}
+
+local T = AscensionPTBR.QuestTitle
+local E = AscensionPTBR.QuestTitleEN
+local Q = AscensionPTBR.QuestData
+if not (T and Q) then return end
+
+local function Patch(id, patch)
+    if not id or not patch then return end
+    if patch.t ~= nil then T[id] = patch.t end
+    local q = Q[id]
+    if not q then return end
+    if patch.d ~= nil then q.d = patch.d end
+    if patch.o ~= nil then q.o = patch.o end
+    if patch.p ~= nil then q.p = patch.p end
+    if patch.c ~= nil then q.c = patch.c end
+end
+
+local pathProgress = [[Você ainda tem trabalho a fazer no Caminho da Ascensão. Volte quando tiver concluído a tarefa.]]
+local pathComplete = [[Muito bem, herói! Você está avançando no Caminho da Ascensão. Continue em frente.]]
+
+Patch(80999, {
+    p=[[Escolha seu caminho, herói. Cada decisão molda seu destino.]],
+    c=[[Seu caminho foi escolhido. Que ele conduza você à glória, herói.]],
+})
+
+Patch(100466, {
+    d=[[Saudações, herói.
+
+Bem-vindo a Ventobravo, capital da Aliança. Imagino que tenha vindo descansar e reabastecer seus suprimentos. Aqui você encontrará tudo de que precisa para continuar sua aventura: banco, Casa de Leilões, ferreiros, encantadores e, é claro, outros heróis.
+
+Explore a cidade à vontade. Quando estiver pronto para retomar sua jornada, fale com o Mestre de Voo Dungar Tragolongo. Há problemas surgindo em Cerro Oeste e sua ajuda será necessária.]],
+    o=[[Explore Ventobravo à vontade. Depois, fale com o Mestre de Voo Dungar Tragolongo e voe até Cerro Oeste para continuar sua aventura.]],
+    c=[[Bem-vindo ao Morro da Sentinela. Você chegou bem na hora — há problemas à solta por aqui...]],
+})
+
+Patch(100467, {
+    o=[[Explore Orgrimmar à vontade. Depois, fale com Doras, o Mestre de Voo, para continuar sua aventura.]],
+    c=[[Bem-vindo à Encruzilhada. Estamos precisando de ajuda, $r.]],
+})
+
+-- Caminho da Ascensao - Curinga. Essas quests aparecem ainda no leveling
+-- inicial e eram um dos maiores blocos restantes de espanhol/portunhol.
+Patch(580195, {
+    t=[[Caminho da Ascensão — Curinga: Sortear Feitiços Novamente]],
+    o=[[- Fale com Silas Negraluna em sua capital para obter Pergaminhos da Fortuna.
+- Abra o Avanço do Personagem pressionando N ou pela barra de menu.
+- Selecione uma habilidade que deseja sortear novamente e clique em Desaprender.]],
+})
+Patch(580196, {
+    t=[[Caminho da Ascensão — Curinga: Sortear Talentos Novamente]],
+    d=[[Os talentos aprendidos no modo Curinga podem ser sorteados novamente usando Pergaminhos da Fortuna: Talentos e Pergaminhos da Fortuna.
+
+Silas Negraluna concede Pergaminhos da Fortuna gratuitamente a cada 10 níveis e oferece mais pergaminhos no nível máximo em troca de Marcas da Ascensão.
+
+Priorize talentos que pouco contribuem para sua composição. Ao substituir os talentos menos úteis, você aumenta suas chances de montar uma combinação realmente poderosa.]],
+    o=[[- Fale com Silas Negraluna em sua capital para obter Pergaminhos da Fortuna.
+- Abra o Avanço do Personagem pressionando N ou pela barra de menu.
+- Selecione um talento que deseja sortear novamente e clique em Desaprender.]],
+    c=[[Talentos aprendidos no modo Curinga podem ser sorteados novamente com Pergaminhos da Fortuna. Use-os para substituir escolhas pouco úteis e fortalecer sua composição conforme avança.]],
+})
+Patch(580197, {
+    t=[[Caminho da Ascensão — Curinga: Bloqueio de Feitiços e Talentos]],
+    d=[[Você pode bloquear feitiços e talentos que não deseja desaprender ou sortear novamente por engano. Eles podem ser desbloqueados a qualquer momento.
+
+Feitiços e talentos bloqueados também são organizados no início da lista, facilitando encontrar o que você deseja manter e o que ainda pretende substituir.
+
+Use o bloqueio para proteger as partes essenciais da sua composição enquanto continua ajustando o restante.]],
+    o=[[- Abra o Avanço do Personagem.
+- Selecione o ícone de cadeado em uma habilidade ou talento que deseja bloquear.]],
+    c=[[O bloqueio protege feitiços e talentos importantes contra alterações acidentais e ajuda a organizar sua composição durante os novos sorteios.]],
+})
+Patch(580198, {
+    t=[[Caminho da Ascensão — Curinga: Pacotes de Cartas de Habilidade]],
+    d=[[Pacotes Selados de Cartas contêm Cartas de Habilidade de talentos de nível máximo.
+
+Abra esses pacotes para ampliar sua coleção e ter mais controle sobre composições futuras ou garantir talentos importantes na composição atual.
+
+As cartas reveladas são adicionadas automaticamente à sua Coleção de Cartas de Habilidade, compartilhada entre os personagens da conta.]],
+    o=[[- Visite Silas Negraluna em uma capital.
+- Complete as missões de Pergaminhos da Fortuna de nível máximo para receber Pacotes Selados de Cartas.
+- Use um Pacote Selado de Cartas para abri-lo.]],
+    c=[[Pacotes Selados contêm Cartas de Habilidade. Continue obtendo e abrindo pacotes para ampliar sua coleção e ter mais controle sobre suas composições.]],
+})
+Patch(580199, {
+    t=[[Caminho da Ascensão — Curinga: Cartas de Habilidade Douradas]],
+    d=[[Pacotes Selados Dourados contêm Cartas de Habilidade Douradas.
+
+As cartas douradas funcionam como as cartas comuns, mas ocupam espaços próprios e concedem ainda mais controle sobre sua composição.
+
+Você também pode obter progresso para novos Pacotes Dourados ao abrir pacotes comuns e receber cartas duplicadas.]],
+    o=[[- Visite Silas Negraluna em uma capital.
+- Abra o menu de Cartas de Habilidade Douradas e compre um Pacote Dourado.
+- Use o Pacote Selado Dourado para abri-lo.]],
+    c=[[Cartas de Habilidade Douradas oferecem ainda mais controle sobre sua composição. Continue abrindo pacotes e transformando duplicatas em progresso para novos pacotes.]],
+})
+Patch(580200, {
+    t=[[Caminho da Ascensão — Curinga: Bilhetes de Negraluna]],
+    d=[[Você recebe Bilhetes de Negraluna ao abrir Pacotes Selados.
+
+Esses bilhetes podem ser trocados com Silas Negraluna por Cartas de Habilidade comuns, incomuns, raras e épicas. Guarde seus bilhetes para adquirir cartas importantes para sua composição.
+
+Bilhetes de Negraluna também podem ser usados em recompensas cosméticas. Bolsas de Bilhetes de Negraluna permitem transferir bilhetes entre personagens da sua conta.]],
+    o=[[- Visite Silas Negraluna em uma capital.
+- Abra o menu de Prêmios de Negraluna.
+- Compre uma Bolsa de Bilhetes de Negraluna (25).]],
+    c=[[Bilhetes de Negraluna podem ser trocados por Cartas de Habilidade e recompensas cosméticas. Use as bolsas para transferi-los entre personagens da sua conta.]],
+})
+Patch(580201, {
+    t=[[Caminho da Ascensão — Curinga: Ative uma Carta de Habilidade]],
+    d=[[Ativar uma Carta de Habilidade garante que você receberá aquele feitiço ou talento.
+
+Cartas de Habilidade podem ser adicionadas à coleção a qualquer momento, e a coleção é compartilhada entre todos os personagens da conta. Personagens novos e personagens em Prestígio podem aproveitar as cartas que você já reuniu.
+
+Durante os níveis iniciais, ative as cartas que deseja garantir antes de preencher os espaços disponíveis da especialização.]],
+    o=[[- Abra o Avanço do Personagem.
+- Clique na aba Cartas de Habilidade.
+- Ative uma Carta de Habilidade enquanto ainda houver um espaço disponível.]],
+    c=[[Cartas de Habilidade garantem feitiços e talentos importantes para sua composição. Cartas usadas durante o leveling concedem o feitiço ou talento assim que ele estiver disponível.]],
+})
+
+Patch(580305, {
+    d=[[Encaixe uma Carta de Habilidade em um dos espaços disponíveis no Avanço do Personagem.]],
+    o=[[Encaixe uma Carta de Habilidade em um dos espaços disponíveis.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580306, {
+    t=[[Caminho da Ascensão — Curinga: Noções Básicas]],
+    d=[[Receba feitiços e talentos aleatórios conforme sobe de nível. Heróis Curinga recebem um novo feitiço a cada 2 níveis e um novo talento a cada nível.]],
+    o=[[- Comece a receber feitiços e talentos aleatórios a partir do nível 10.
+- Receba um novo feitiço a cada 2 níveis e um novo talento a cada nível.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580307, {
+    t=[[Caminho da Ascensão — Curinga: Pergaminhos da Fortuna]],
+    d=[[Use Pergaminhos da Fortuna para sortear novamente feitiços e talentos. Silas Negraluna concede mais Pergaminhos da Fortuna conforme você sobe de nível.]],
+    o=[[- Visite Silas Negraluna em sua capital a cada 10 níveis para receber Pergaminhos da Fortuna.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580308, {
+    t=[[Caminho da Ascensão — Curinga: Recompra de Pergaminhos]],
+    d=[[Compre novamente Pergaminhos da Fortuna que você já conquistou, mas não utilizou. Esta opção fica disponível sempre que você inicia um novo Prestígio.]],
+    o=[[- Ao atingir o nível máximo, visite Silas Negraluna para recomprar Pergaminhos da Fortuna não utilizados.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580309, {
+    t=[[Caminho da Ascensão — Curinga: Prestígio]],
+    o=[[- Fale com Crona para iniciar um Prestígio e retornar ao nível 1.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580310, {
+    t=[[Caminho da Ascensão — Curinga: Ressorteio Rápido]],
+    d=[[Use o Ressorteio Rápido para percorrer seus Pergaminhos da Fortuna com mais agilidade e encontrar os feitiços e talentos que combinam melhor com sua composição.]],
+    o=[[- No nível máximo, abra o Avanço do Personagem para habilitar o modo Ressorteio Rápido.]],
+    p=pathProgress, c=pathComplete,
+})
+Patch(580311, {
+    t=[[Caminho da Ascensão — Curinga: Configurações em Destaque]],
+    d=[[Use o Arquiteto de Herói para importar Configurações em Destaque para o modo Ressorteio Rápido. Essas configurações são otimizadas para acelerar a progressão.]],
+    o=[[- Abra o Arquiteto de Herói e selecione uma Configuração em Destaque para usar no Ressorteio Rápido.]],
+    p=pathProgress, c=pathComplete,
+})
+
+Patch(1903511, {
+    o=[[- Abra o Avanço do Personagem pela tecla N ou pela barra de menu.
+- Selecione um Atributo Primário na seção superior direita.
+- Você pode trocar seu Atributo Primário gratuitamente quando quiser!]],
+    p=[[Pressione N e clique em FOR, AGI, INT ou ESP para selecionar seu Atributo Primário. Passe o cursor sobre os atributos para ver seus efeitos.
+
+O Atributo Primário pode ser trocado gratuitamente a qualquer momento, desde que você não esteja em combate.]],
+    c=[[Você pode trocar seu Atributo Primário gratuitamente a qualquer momento, desde que não esteja em combate. Passe o cursor sobre o ícone e leia a descrição para saber mais sobre cada atributo.
+
+Força e Agilidade são boas opções para tanques e causadores de dano corpo a corpo ou à distância.
+
+Intelecto é uma boa opção para conjuradores.
+
+Espírito é uma boa opção para curadores e conjuradores que procuram maior sustentação de mana.]],
+})
+Patch(1903512, {
+    c=[[As Coleções são seu cofre pessoal para armazenar e recuperar itens vinculados à conta e melhorias poderosas de personagem. Para abri-las, pressione N para abrir o Avanço do Personagem e clique em Coleções.
+
+Itens, montarias, cosméticos e brinquedos ficam na aba de Itens Cosméticos. É ali que está seu Pergaminho de Retirada. Use o menu suspenso no canto superior direito e filtre por Conhecidos, ou digite Pergaminho de Retirada na barra de pesquisa. Ao encontrá-lo, selecione o item e clique em Entregar no painel esquerdo.
+
+Se perder ou destruir o item, você poderá entregá-lo novamente pela coleção quantas vezes quiser.
+
+O item será adicionado automaticamente às suas bolsas ou à aba Ascension do Grimório.]],
+})
+Patch(1903514, {
+    t=[[Caminho da Ascensão: Proteja seu Equipamento com Comutação Vil]],
+    o=[[Proteja seus itens em áreas de Alto Risco usando a Comutação Vil.]],
+})
+Patch(1903520, {
+    o=[[Fale com o Livro da Ascensão para Iniciantes mais próximo para aprender novos graus de feitiços. Use a Lupa do Mapa no minimapa e selecione Treinador de Classe para localizá-lo.]],
+})
+Patch(1903521, {
+    d=[[Orgrimmar é a capital dos orcs e o principal centro da Horda.
+
+Heróis viajam dos cantos mais distantes de Azeroth em busca de segurança e companhia atrás das imponentes muralhas da cidade. Chegou a sua vez, herói. Viaje até Orgrimmar e apresente-se ao Lorde Supremo Saurfang.
+
+Orgrimmar oferece vários serviços que ajudarão em sua jornada. O banco guarda seus itens com segurança, a Casa de Leilões permite vender tesouros e comprar equipamentos, treinadores ensinam graus mais avançados de feitiços e artesãos podem ensinar profissões.
+
+A cidade é grande, mas os guardas que patrulham as ruas podem indicar o caminho sempre que precisar.]],
+})
+Patch(1903522, {
+    d=[[Ventobravo é a capital dos humanos e o principal centro da Aliança.
+
+Heróis viajam dos cantos mais distantes de Azeroth em busca de segurança e companhia atrás das imponentes muralhas da cidade. Chegou a sua vez, herói. Viaje até Ventobravo e apresente-se a Justine Demalier.
+
+Ventobravo oferece vários serviços que ajudarão em sua jornada. O banco guarda seus itens com segurança, a Casa de Leilões permite vender tesouros e comprar equipamentos, treinadores ensinam graus mais avançados de feitiços e artesãos podem ensinar profissões.
+
+A cidade é grande, mas os guardas que patrulham as ruas podem indicar o caminho sempre que precisar.]],
+})
+
+local apprenticeRidingComplete = [[Agora você é Aprendiz de Montaria e pode aproveitar montarias terrestres mais rápidas. Aprenda uma montaria e use-a ao ar livre para viajar por Azeroth com muito mais velocidade.]]
+Patch(1903554, {
+    d=[[Aprender Aprendiz de Montaria aumenta a velocidade das suas montarias terrestres de 40% para 60%.
+
+Você pode aprender essa perícia com qualquer Instrutor de Montaria itinerante ou com Kildar, no Vale da Honra, em Orgrimmar.
+
+Vale a pena conferir a Casa de Leilões: às vezes o Tomo de Montaria: Aprendiz aparece por um preço menor que o treinamento do instrutor.]],
+    o=[[Visite um Instrutor de Montaria e aprenda Aprendiz de Montaria.]],
+    p=[[Vá até o Vale da Honra, em Orgrimmar, e fale com Kildar, o Instrutor de Montaria.
+
+Peça treinamento e aprenda Aprendiz de Montaria. Se a perícia não aparecer na lista, verifique se a opção Disponível está marcada no filtro do treinador.]],
+    c=apprenticeRidingComplete,
+})
+Patch(1903555, {
+    d=[[Aprender Aprendiz de Montaria aumenta a velocidade das suas montarias terrestres de 40% para 60%.
+
+Você pode aprender essa perícia com qualquer Instrutor de Montaria itinerante ou com Randal Caçador, no Acampamento Madeireiro de Vale do Leste, na Floresta de Elwynn.
+
+Vale a pena conferir a Casa de Leilões: às vezes o Tomo de Montaria: Aprendiz aparece por um preço menor que o treinamento do instrutor.]],
+    o=[[Visite um Instrutor de Montaria e aprenda Aprendiz de Montaria.]],
+    p=[[Vá até o Acampamento Madeireiro de Vale do Leste, na Floresta de Elwynn, e fale com Randal Caçador, o Instrutor de Montaria.
+
+Peça treinamento e aprenda Aprendiz de Montaria. Se a perícia não aparecer na lista, verifique se a opção Disponível está marcada no filtro do treinador.]],
+    c=apprenticeRidingComplete,
+})
+
+local mountDescription = [[Você recebeu sua primeira montaria. Está na hora de aprender a usá-la!
+
+- Sua montaria fica na seção Montarias.
+- Abra o painel do personagem com C e acesse a aba Mascotes, depois Montarias.
+- Arraste o ícone da montaria para uma barra de ações para ter acesso rápido.
+- Use sua montaria quando estiver ao ar livre para viajar mais depressa.]]
+local mountComplete = [[Sua nova montaria está na seção Montarias da aba Mascotes. Arraste o ícone dela para uma barra de ações para montar rapidamente sempre que precisar viajar.]]
+Patch(1903556, {
+    d=mountDescription,
+    o=[[Aprenda sua primeira montaria e monte nela.]],
+    p=[[Fale com Garion Hunter e adquira uma montaria. Depois, clique com o botão direito no item da montaria em sua bolsa para aprendê-la.
+
+Abra o painel do personagem com C, acesse a aba Mascotes e depois Montarias. Arraste a nova montaria para uma barra de ações.]],
+    c=mountComplete,
+})
+Patch(1903557, {
+    d=mountDescription,
+    o=[[Aprenda sua primeira montaria e monte nela.]],
+    p=[[Fale com Ogunaro Correlobos e adquira uma montaria. Depois, clique com o botão direito no item da montaria em sua bolsa para aprendê-la.
+
+Abra o painel do personagem com C, acesse a aba Mascotes e depois Montarias. Arraste a nova montaria para uma barra de ações.]],
+    c=mountComplete,
+})
+
+-- Variantes raciais da quest de primeira montaria.
+local noviceRiderDescription = [[Saudações, recruta!
+
+Alguns instrutores ainda seguem os métodos antigos e mandam aventureiros novatos atravessar o mundo inteiro a pé. Aqui isso não será necessário. Por uma pequena taxa, você aprenderá Aprendiz de Montaria, receberá sua primeira montaria e poderá viajar com muito mais rapidez.
+
+Há muito para fazer durante sua jornada: descobrir tesouros, aperfeiçoar suas habilidades e provar seu valor. Não faz sentido atrasar você enquanto Azeroth inteira espera.
+
+Quando tiver mais experiência e moedas, procure um Instrutor de Montaria para aprimorar sua perícia e aumentar ainda mais a velocidade das suas montarias.]]
+local noviceRiderProgress = [[Posso ensinar Aprendiz de Montaria a você, recruta. Fale comigo novamente e peça treinamento para aprender a montar.]]
+local noviceRiderComplete = [[Muito bem, recruta. Sua primeira montaria agora é sua.
+
+Clique com o botão direito no item da montaria em sua bolsa para aprendê-la. Depois, abra o painel do personagem com C, acesse Mascotes e então Montarias. Arraste o ícone da montaria para uma barra de ações para poder usá-la rapidamente.
+
+Quando estiver pronto para viajar ainda mais depressa, procure um Instrutor de Montaria e aprimore sua perícia.]]
+for id = 4420430, 4420439 do
+    Patch(id, {
+        t=[[Caminho da Ascensão: Aprendiz de Montaria]],
+        d=noviceRiderDescription,
+        o=[[Aprenda Aprendiz de Montaria e receba sua primeira montaria.]],
+        p=noviceRiderProgress,
+        c=noviceRiderComplete,
+    })
+end
+
+-- Recompensas de nivel 10/20/30. Os textos-base ja estavam traduzidos,
+-- mas os titulos tinham formatos inconsistentes e alguns restos de espanhol.
+if E then
+    for id, english in pairs(E) do
+        if type(english) == "string" then
+            local spec, level = english:match("^Specialization (%d+): Hand of Fate Level (%d+)$")
+            if spec and level and tonumber(level) and tonumber(level) <= 40 then
+                T[id] = "Especialização " .. spec .. ": Mão do Destino — Nível " .. level
+            end
+
+            spec, level = english:match("^Specialization (%d+): Scroll of Fortune Level (%d+)$")
+            if spec and level and tonumber(level) and tonumber(level) <= 40 then
+                T[id] = "Especialização " .. spec .. ": Pergaminho da Fortuna — Nível " .. level
+            end
+
+            local roman, growthLevel = english:match("^Demonic Growth: Hand of Fate ([IVX]+) Level (%d+)$")
+            if roman and growthLevel and tonumber(growthLevel) and tonumber(growthLevel) <= 40 then
+                T[id] = "Crescimento Demoníaco: Mão do Destino " .. roman .. " — Nível " .. growthLevel
+            end
+
+            local empowerRoman, amount = english:match("^Demonic Empowerment: Hand of Fate ([IVX]+)(.*)$")
+            if empowerRoman then
+                T[id] = "Empoderamento Demoníaco: Mão do Destino " .. empowerRoman .. (amount or "")
+            end
+        end
+    end
+end
+
+-- O Empoderamento Demoníaco e uma cadeia do nivel 20. As variantes usam o
+-- mesmo texto, entao corrigimos todas de uma vez sem duplicar centenas de linhas.
+local demonEmpowerDescription = [[Nem mesmo a morte consegue libertar sua alma das garras da Legião. Quando você cair a serviço dela, parte do poder acumulado será consumida pelas energias vis que prendem sua alma à Espiral Etérea e trazem você de volta.
+
+Complete Contratos Demoníacos para obter Poder Vil. Prove seu valor e Silas transformará esse poder em Mãos do Destino, permitindo aprimorar sua alma permanentemente.
+
+No nível 20, use suas Mãos do Destino para sortear novamente os feitiços e preparar uma composição melhor para sua próxima vida.
+
+ESTA MISSÃO SÓ PODE SER CONCLUÍDA NO NÍVEL 20. Os feitiços escolhidos no nível 20 persistem após a morte. Ajuste sua composição com cuidado e torne-se mais poderoso a cada retorno, desde que tenha conquistado o Poder Vil necessário.]]
+for id = 970000, 970029 do
+    if Q[id] then Q[id].d = demonEmpowerDescription end
+end
+for _, id in ipairs({971010,971011,971020,971021,971030,971031}) do
+    if Q[id] then Q[id].d = demonEmpowerDescription end
+end
+
+for id, quest in pairs(Q) do
+    local englishTitle = E and E[id]
+    if type(englishTitle) == "string" and englishTitle:find("^Demonic Empowerment: Hand of Fate ") then
+        local amount = quest.oEN and quest.oEN:match("^Return with (%d+) Fel Power%.$")
+        if amount then
+            quest.o = "Retorne com " .. amount .. " de Poder Vil."
+        end
+    end
+end
+
+AscensionPTBR.LevelingQuestPass = {
+    minLevel = 1,
+    maxLevel = 40,
+    revision = "1.5.1-leveling-1-40",
+}

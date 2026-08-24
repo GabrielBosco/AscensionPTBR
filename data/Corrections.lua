@@ -492,3 +492,471 @@ do
         if D[53307] then D[53307][2] = "Causar dano ao longo do tempo com Mutilar, Ancinho, Rasgar ou Bote tem {{1}} de chance de potencializar uma das suas habilidades, fazendo com que ela cause {{2}}% a mais de dano e custe {{3}}% mais Energia a cada ativação subsequente.\n\nFrenesi Felino possui 18 segundos de recarga interna." end
     end
 end
+
+-- AscensionPTBR 1.5.1 - auditoria geral
+-- Correções tardias para conteúdo custom que ainda carregava espanhol/portunhol.
+do
+    local Q = A.QuestData
+    local T = A.QuestTitle
+    if Q then
+        local function setQuest(id, title, d, o, p, c)
+            if T and title then T[id] = title end
+            local q = Q[id]
+            if not q then return end
+            if d ~= nil then q.d = d end
+            if o ~= nil then q.o = o end
+            if p ~= nil then q.p = p end
+            if c ~= nil then q.c = c end
+        end
+
+        setQuest(175136, "Emissário Especial de Altaforja",
+            "Tenho uma missão para você e, junto dela, um novo título. Considere isto uma promoção.\n\nQuero que fale com o Thane desta cidade, Azaghal Stonesong, na qualidade de Emissário Especial de Altaforja. Coloque-se a serviço dele e ajude o governo de Dun Kazad como um gesto de boa vontade do Rei Magni Barbabronze.\n\nEnquanto isso, meu primo e eu investigaremos a conspiração até encontrarmos quem ordenou o ataque. Com um pouco de sorte, até lá você terá conquistado a amizade do Thane...\n\nE a confiança dele.",
+            "Apresente-se ao Thane Azaghal Stonesong, na Praça da Audiência de Dun Kazad.", nil,
+            "Imagino que tenha vindo com a delegação.\n\n<O Thane de Dun Kazad observa você sob as sobrancelhas espessas. Seu olhar exala uma autoridade fria, distante dos problemas mundanos.>\n\nPoupe-me dessas acusações veladas. A emboscada sofrida pelo Senador Thargas foi uma coincidência trágica. Nenhum anão de honra desta cidade, de todos os lugares possíveis, conspiraria para matar outro anão.")
+
+        setQuest(175139, "Vidraça Externa do Metrô Correfundo",
+            "Alertas e mais alertas! A vidraça submersa do Metrô Correfundo está em estado crítico!\n\nA linha que liga Altaforja a Ventobravo passa exatamente sob nossos pés. O pessoal da cidade acha que ela atravessa por baixo do mar... rá! Nada disso! Ela passa sob um lago congelado — sim, este mesmo lago! É o lar dos Caranguejos Gélidos, e são eles os responsáveis por todos os riscos e arranhões no vidro.\n\nNão posso abandonar o Posto Metantenna com todos esses alarmes disparando; o lugar inteiro pode ir pelos ares! Você assume daqui. Vista o traje de mergulho, pegue a fita adesiva reforçada e remende a parte externa da vidraça.\n\nE, já que estará lá... faça-me um favor e reduza um pouco a população de Caranguejos Gélidos.",
+            "Vista o traje de mergulho, repare a parte externa da vidraça do Metrô Correfundo e mate os Caranguejos Gélidos.",
+            "Alertas, alertas e mais alertas! O que está acontecendo lá fora?",
+            "Os alarmes finalmente se calaram! Rá!\n\nDeixe-me calcular...\n\n<Ele murmura, marcando cada palavra com um clique no console mecânico.>\n\nA fita tem uma durabilidade de 7 sobre 3... a população foi reduzida em 15... a temperatura oscila entre 6 e 7 graus... e o fluxo do Metrô aumentou em '2E'...\n\n<Ele aperta uma tecla com força e o resultado aparece imediatamente. Então grita, empolgado:>\n\nCento e trinta e sete por cento!")
+
+        setQuest(175227, "Apaziguando a Morte", nil,
+            "Apresente-se a Jabul, Sumo Sacerdote de Tzotec, em Thundrakar.", nil,
+            "<O Sumo Sacerdote do Loa da Morte observa você com uma expressão altiva.>\n\nA princesa me envia um estranho.\n\nCurioso. Mas não totalmente inesperado; já me acostumei às excentricidades dela.\n\nSe Mexitla acredita que você pode ajudar a restaurar nosso vínculo com Tzotec, que assim seja.")
+
+        setQuest(175256, "O Ídolo de Ossos de Kezajin", nil,
+            "Apresente-se a Hezari e ofereça a ela o tributo preparado por Kezajin.", nil,
+            "Minha mãe... ela nos despreza... Sente repulsa da nossa fraqueza... repulsa da própria filha. Seus seguidores... seus fiéis...\n\nEla viu o que a devoção fez aos Filhos da Luz Enferma e decidiu que não quer adoração troll alguma.\n\nÉ da natureza dela mudar de ideia. Ela é o vento; eu sou a brisa. Eu tentaria convencê-la, mas estou morrendo, mortal. E ninguém pode curar esta doença...\n\nNinguém pode curar a radiação...\n\nExceto... talvez... as Três Bruxas.")
+
+        setQuest(175257, "Pelos Olhos da Ruína", nil,
+            "Obtenha uma Joia do Olho Intacta das cabeças entalhadas do Palácio Hierático e ofereça-a no altar.",
+            "<Quase não passa de um fiapo de sombra junto ao altar; poderia ser qualquer coisa.>",
+            "<O ar se dobra sobre o altar. O espírito encara você sem demonstrar emoção.>\n\nUma Joia do Olho intacta. Um olhar mutilado. O tributo de quem deseja enxergar o Outro Lado.\n\n<Patlazar inclina a cabeça.>\n\nFale, forasteiro. Que dívida trouxe sua sombra até este palácio?")
+
+        setQuest(1205283, "Contrato da Legião: Acabando com os Patavil",
+            "Os Patavil vêm atacando mercadores nas estradas de ida e volta de Hibérnia. Está na hora de colocá-los em seu devido lugar.\n\nVolte quando tiver abatido trinta pelursos da região.",
+            "Mate 30 habitantes da Aldeia Patavil, na Selva Maleva.",
+            "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+
+        setQuest(1660019, "O Caminho Está Fechado",
+            "Perto daqui, encontramos uma caverna onde o véu entre os mundos é tênue. É um lugar de poder, assombrado por espíritos que assumem a forma de feras.\n\nA Bruxa enviou sua aprendiz para reunir o necessário para o ritual: a essência espiritual de uma serpente, de um morcego e de uma aranha. Mas ela nunca voltou. Talvez já esteja morta.\n\n<Swa'li coloca em sua mão um pequeno ídolo troll entalhado em osso e adornado com uma gema vermelho-sangue.>\n\nUm poderoso feitiço protege a entrada da caverna. Você precisará disto para atravessar a barreira e chegar ao outro lado. Se Anjali estiver morta... podemos contar com você para terminar o que ela começou?",
+            "Use o amuleto dado por Swa'li para romper a barreira mágica que protege a entrada do Covil Sinistro.",
+            "<A troll jaz destroçada, com a vida por um fio que mal suporta tamanho peso.>",
+            "Mandaram você... pra ter certeza de que eu morri. Ha...\n\n<A troll jaz caída no chão, e cada respiração sai como um gemido áspero.>\n\nO amuleto... num funcionou. Não por completo... A magia desta caverna me despedaçou, por dentro e por fora. Era uma armadilha. A Bruxa deve ter percebido minhas ambições...\n\nMas eles num contavam que eu ia me agarrar à vida feito sanguessuga. Eu não vou morrer aqui!\n\nChegue mais perto... <a voz dela cai para um sussurro>. Eu conto tudo pra você.")
+
+        local artisan = {
+            [1005688] = {"Verdadeiro Artesão: Manto Cambiante", "1 Manto Cambiante"},
+            [1005689] = {"Verdadeiro Artesão: Um Punhado de Barras", "20 Barras de Ferrovil e 20 Barras de Adamantita"},
+            [1005690] = {"Verdadeiro Artesão: Uma Pilha de Carne", "40 Pedaços de Basilisco e 40 Carnes de Talbuque"},
+            [1005691] = {"Verdadeiro Artesão: Muitos Materiais", "40 Pó Arcano, 40 Essências Planares Inferiores e 5 Cristais do Vazio"},
+            [1005692] = {"Verdadeiro Artesão: Uma Carga de Couro", "40 Couros Nodosos e 40 Escamas de Dragão Etéreo"},
+            [1005693] = {"Verdadeiro Artesão: Um Estoque de Estilhaços", "15 Estilhaços Prismáticos Grandes e 15 Estilhaços Prismáticos Pequenos"},
+            [1005694] = {"Verdadeiro Artesão: Um Conjunto de Componentes", "10 Barras de Kório e 4 Barras de Adamantita Endurecida"},
+            [1005695] = {"Verdadeiro Artesão: Uma Coleção de Tecidos", "5 Lunatramas Primevas"}
+        }
+        for id, info in pairs(artisan) do
+            setQuest(id, info[1],
+                "Um verdadeiro artesão é capaz de criar maravilhas dignas de lenda.\n\nPrecisamos da sua ajuda. Só alguém com a sua habilidade pode nos tirar desta situação.\n\nColete " .. info[2] .. " e entregue os materiais em qualquer Quadro de Chamados para receber sua recompensa.",
+                "Colete " .. info[2] .. ".",
+                "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+        end
+
+        local outlandThreads = {
+            [1007390] = {"Peça de Etertrama Imbuída", 4},
+            [1007391] = {"Peça de Almatrama", 2},
+            [1007392] = {"Tecido de Etertrama", 30}
+        }
+        for id, info in pairs(outlandThreads) do
+            local item, amount = info[1], info[2]
+            setQuest(id, "Fios de Terralém: " .. item,
+                "As forças da Legião continuam atacando nossas linhas de suprimentos dos dois lados do Portal Negro. Temo que nossa campanha pare se não conseguirmos recursos localmente.\n\nManter o exército abastecido é a primeira batalha que precisamos vencer para derrotar a Legião. É essencial fornecer materiais aos curandeiros e conjuradores de apoio para manter nossos guerreiros em combate.\n\nColete " .. amount .. "x " .. item .. " e entregue em qualquer Quadro de Chamados.",
+                "Colete " .. amount .. "x " .. item .. ".",
+                "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+        end
+
+        local food = {
+            [1007394] = "Enguia Elétrica",
+            [1007395] = "Carne de Marisco Jaggal",
+            [1007396] = "Truta de Guelras Farpadas",
+            [1007397] = "Cauda-de-feltro-malhada",
+            [1007398] = "Peixe-esporo Zangariano",
+            [1007399] = "Peixe-lama de Figluster",
+            [1007400] = "Peixe-azul Guelra-de-gelo",
+            [1007401] = "Dardejante Dourado",
+            [1007402] = "Lagostim Furioso",
+            [1007405] = "Carne de Abutre",
+            [1007406] = "Carne de Assolador",
+            [1007407] = "Pedaço de Basilisco",
+            [1007408] = "Carne de Fenoceronte",
+            [1007409] = "Carne Distorcida",
+            [1007410] = "Carne de Talbuque",
+            [1007411] = "Costelinhas de Raptor",
+            [1007412] = "Carne de Serpente"
+        }
+        for id, item in pairs(food) do
+            setQuest(id, "Período de Adaptação: " .. item,
+                "Parece que nossos caçadores ainda não se adaptaram completamente a Terralém...\n\nPrecisamos da sua ajuda, herói. Pode ser um trabalho simples, mas os caçadores ainda estão se acostumando ao novo ambiente e nossos cozinheiros estão ficando sem ingredientes.\n\nColete 12x " .. item .. ". Você será muito bem recompensado pela ajuda.",
+                "Colete 12x " .. item .. ".",
+                "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+        end
+
+        local enchanting = {
+            [1007415] = {"Pó Arcano", 12},
+            [1007416] = {"Essência Planar Maior", 5},
+            [1007417] = {"Essência Planar Inferior", 10},
+            [1007418] = {"Estilhaço Prismático Pequeno", 8},
+            [1007419] = {"Estilhaço Prismático Grande", 4},
+            [1007420] = {"Cristal do Vazio", 2},
+            [1007422] = {"Óleo de Mana Superior", 4}
+        }
+        for id, info in pairs(enchanting) do
+            local item, amount = info[1], info[2]
+            setQuest(id, "Uma Situação Estranha: " .. item,
+                "Nosso Grande Encantador está... ocupado. Precisamos da sua ajuda para manter o estoque de materiais em ordem.\n\nColete " .. amount .. "x " .. item .. ". Você será muito bem recompensado pela ajuda.",
+                "Colete " .. amount .. "x " .. item .. ".",
+                "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+        end
+
+        local leather = {
+            [1007425] = {"Couro Nodoso", 10},
+            [1007426] = {"Couro Nodoso Pesado", 3},
+            [1007428] = {"Couro Imbuído de Cristal", 4},
+            [1007429] = {"Pelego Vil", 2},
+            [1007430] = {"Couro Grosso de Fenoceronte", 3},
+            [1007431] = {"Escama de Vento", 2},
+            [1007432] = {"Escama de Dragão Etéreo", 2}
+        }
+        for id, info in pairs(leather) do
+            local item, amount = info[1], info[2]
+            setQuest(id, "Uma Grande Tarefa de Ética Questionável: " .. item,
+                "Direitos dos animais pra cá, direitos dos animais pra lá...\n\nPrecisamos da sua ajuda, herói. Nossos caçadores estão encontrando certa resistência de terceiros e o trabalho está atrasando.\n\nColete " .. amount .. "x " .. item .. ". Você será muito bem recompensado pela ajuda.",
+                "Colete " .. amount .. "x " .. item .. ".",
+                "Sua tarefa ainda não está concluída. Volte ao quadro quando tiver cumprido o contrato.")
+        end
+    end
+end
+
+
+
+-- 1.5.1: cobertura extra de nomes Mystic/Skill Card/CoA (AscensionDB sweep)
+do
+    local S = A.SpellNameEN2ES
+    if S then
+        S["'Frost Storm'"] = "'Tempestade de Gelo'"
+        S["Absolute Quality"] = "Qualidade Absoluta"
+        S["Ancestral Ninja"] = "Ninja Ancestral"
+        S["Banshee's Lament - WIP"] = "Lamento da Banshee — Em desenvolvimento"
+        S["Battle Glaive"] = "Glaive de Batalha"
+        S["Beastmastery Mastery"] = "Maestria em Domínio das Feras"
+        S["Blink and you'll miss it!"] = "Piscou, Perdeu!"
+        S["Blood"] = "Sangue"
+        S["Blood Tracker: Carving Strikes"] = "Rastreador de Sangue: Golpes Retalhadores"
+        S["Bound for Glory"] = "Rumo à Glória"
+        S["Burning Jewels"] = "Joias Ardentes"
+        S["Bursting Soul"] = "Alma Explosiva"
+        S["Coldshot"] = "Tiro Gélido"
+        S["Corrupted Druid"] = "Druida Corrompido"
+        S["Dancing Demon Blades"] = "Lâminas Demoníacas Dançantes"
+        S["Danse Macabre"] = "Dança Macabra"
+        S["Disciple of the Sea Witch"] = "Discípulo da Bruxa do Mar"
+        S["Dreadful Presence"] = "Presença Aterradora"
+        S["Dual Wielding"] = "Ambidestria"
+        S["Dusk, Dawn and Twilight"] = "Anoitecer, Alvorada e Crepúsculo"
+        S["Ebon Dawn"] = "Alvorada de Ébano"
+        S["Eldritch Wisdom"] = "Sabedoria Oculta"
+        S["Elemental Exposure"] = "Exposição Elemental"
+        S["Eskimo"] = "Esquimó"
+        S["Fizzle"] = "Falha"
+        S["Flourishing Nourish"] = "Nutrir Florescente"
+        S["Focused Prayer"] = "Prece Focada"
+        S["Forceful Nature"] = "Natureza Impetuosa"
+        S["Furious Presence"] = "Presença Furiosa"
+        S["Hasty Divine Protection"] = "Proteção Divina Acelerada"
+        S["Hex: Skeletal Hatchling"] = "Malefício: Filhote Esquelético"
+        S["High Roller"] = "Grande Apostador"
+        S["Holy Templar: Light of Dawn"] = "Templário Sagrado: Luz da Aurora"
+        S["Hydra's Sting"] = "Picada da Hidra"
+        S["Icecrown Double-Tap"] = "Tiro Duplo da Coroa de Gelo"
+        S["Leap of the Old Gods"] = "Salto dos Deuses Antigos"
+        S["Lengthy Abolish Curse"] = "Abolir Maldição (Duração Aumentada)"
+        S["Loa's Assault"] = "Investida do Loa"
+        S["Madness of the Old Gods"] = "Loucura dos Deuses Antigos"
+        S["Mana Reave"] = "Dilacerar Mana"
+        S["Mighty Presence"] = "Presença Poderosa"
+        S["Mystic Companion"] = "Companheiro Místico"
+        S["Nimble Mind"] = "Mente Ágil"
+        S["Overheated Strikes"] = "Golpes Superaquecidos"
+        S["Overloaded Mind"] = "Mente Sobrecarregada"
+        S["Phalanx Thrust"] = "Investida da Falange"
+        S["Poison Mastery"] = "Maestria em Venenos"
+        S["Ritualistic Presence"] = "Presença Ritualística"
+        S["Saber Fangs"] = "Presas de Sabre"
+        S["Salem Inquisitor"] = "Inquisidor de Salem"
+        S["Scholar's Presence"] = "Presença do Erudito"
+        S["Scryer Paladin"] = "Paladino Áugure"
+        S["Seal Twister"] = "Manipulador de Selos"
+        S["Second Chances"] = "Segundas Chances"
+        S["Second Sunrise"] = "Segundo Nascer do Sol"
+        S["Servant of the Old Gods"] = "Servo dos Deuses Antigos"
+        S["Shadowed Mind Assault"] = "Investida da Mente Sombria"
+        S["Sniper"] = "Franco-atirador"
+        S["Spot Weakness"] = "Detectar Fraqueza"
+        S["Storm Trooper"] = "Soldado da Tempestade"
+        S["Swift Presence"] = "Presença Veloz"
+        S["the Elune's Doctrine"] = "Doutrina de Eluna"
+        S["Thundarian's Fury"] = "Fúria de Thundarian"
+        S["TIMBERRR"] = "MADEIRAAA!"
+        S["Trick Shots"] = "Tiros Ardilosos"
+        S["Truestrike Presence"] = "Presença do Golpe Certeiro"
+        S["Twisted Mind"] = "Mente Distorcida"
+        S["Twisted Pact"] = "Pacto Distorcido"
+        S["Untold Secrets"] = "Segredos Não Contados"
+        S["Vigilance"] = "Vigilância"
+        S["Viper Trap"] = "Armadilha de Víbora"
+        S["Void Herald: Madness of the Old Gods"] = "Arauto do Vazio: Loucura dos Deuses Antigos"
+        S["Void Herald: Madness of the Old Godss"] = "Arauto do Vazio: Loucura dos Deuses Antigos"
+        S["Void Herald: Whispers of the Old Gods"] = "Arauto do Vazio: Sussurros dos Deuses Antigos"
+        S["Warden's Glaive"] = "Glaive da Guardiã"
+        S["Withering Fire - WIP"] = "Fogo Devastador — Em desenvolvimento"
+        S["Zealots Might"] = "Poder do Zelote"
+    end
+end
+-- 1.5.1: padronização profunda Mystic/CoA/WotLK pt-BR (gerado offline)
+do
+    local S = A.SpellNameEN2ES
+    if S then
+        S["Afterkindling"] = "Rescaldo"
+        S["Aftermath"] = "Consequências"
+        S["Aggression"] = "Agressão"
+        S["Amplify Curse"] = "Amplificar Maldição"
+        S["Ancestral Healing"] = "Cura Ancestral"
+        S["Annihilation"] = "Aniquilação"
+        S["Anticipation"] = "Antecipação"
+        S["Arcane Fortitude"] = "Fortitude Arcana"
+        S["Arcane Shielding"] = "Proteção Arcana"
+        S["Arcane Subtlety"] = "Sutileza Arcana"
+        S["Arctic Reach"] = "Alcance Ártico"
+        S["Aspect Mastery"] = "Maestria em Aspectos"
+        S["Bane"] = "Ruína"
+        S["Blade Barrier"] = "Barreira de Lâminas"
+        S["Bladed Armor"] = "Armadura Laminada"
+        S["Blessed Hands"] = "Mãos Abençoadas"
+        S["Blessed Vengeance"] = "Vingança Abençoada"
+        S["Blood Craze"] = "Mania de Sangue"
+        S["Blood Pact"] = "Pacto de Sangue"
+        S["Blood Spatter"] = "Respingos de Sangue"
+        S["Brambles"] = "Sarças"
+        S["Call of Flame"] = "Chamado das Chamas"
+        S["Careful Aim"] = "Mira Cuidadosa"
+        S["Chaos Bolt"] = "Seta do Caos"
+        S["Chill of the Grave"] = "Calafrio da Tumba"
+        S["Close Quarters Combat"] = "Combate a Curta Distância"
+        S["Commanding Presence"] = "Presença de Comando"
+        S["Convection"] = "Convecção"
+        S["Death Rune Mastery"] = "Maestria em Runas da Morte"
+        S["Deflection"] = "Deflexão"
+        S["Demonic Aegis"] = "Égide Demoníaca"
+        S["Demonic Embrace"] = "Abraço Demoníaco"
+        S["Destructive Reach"] = "Alcance Destrutivo"
+        S["Divine Intellect"] = "Intelecto Divino"
+        S["Dual Wield Specialization"] = "Especialização em Duas Armas"
+        S["Earth's Grasp"] = "Agarrão da Terra"
+        S["Efficiency"] = "Eficiência"
+        S["Elemental Warding"] = "Proteção Elemental"
+        S["Elusiveness"] = "Elusividade"
+        S["Empowered Corruption"] = "Corrupção Potencializada"
+        S["Endless Winter"] = "Inverno sem Fim"
+        S["Endurance"] = "Resistência"
+        S["Enhancing Totems"] = "Totens Fortalecedores"
+        S["Enrage"] = "Enfurecer"
+        S["Entrapment"] = "Enredamento"
+        S["Fel Synergy"] = "Sinergia Vil"
+        S["Feral Charge"] = "Investida Feral"
+        S["Feral Swiftness"] = "Rapidez Feral"
+        S["Firebolt"] = "Seta de Fogo"
+        S["Flame Throwing"] = "Lançar Chamas"
+        S["Flurry"] = "Rajada"
+        S["Focused Aim"] = "Mira Focada"
+        S["Focused Fire"] = "Fogo Focado"
+        S["Frost Channeling"] = "Canalização de Gelo"
+        S["Frost Warding"] = "Proteção contra Gelo"
+        S["Frostbite"] = "Mordedura de Gelo"
+        S["Go for the Throat"] = "Na Jugular"
+        S["Grim Reach"] = "Alcance Sinistro"
+        S["Guardian Totems"] = "Totens Guardiões"
+        S["Haunt"] = "Assombração"
+        S["Hawk Eye"] = "Olho de Falcão"
+        S["Healing Grace"] = "Graça de Cura"
+        S["Healing Light"] = "Luz Curativa"
+        S["Health Funnel"] = "Canalizar Vida"
+        S["Holy Fire"] = "Fogo Sagrado"
+        S["Holy Nova"] = "Nova Sagrada"
+        S["Holy Reach"] = "Alcance Sagrado"
+        S["Holy Specialization"] = "Especialização Sagrada"
+        S["Ice Floes"] = "Fluxos de Gelo"
+        S["Icy Reach"] = "Alcance Glacial"
+        S["Improved Ambush"] = "Emboscada Aprimorada"
+        S["Improved Arcane Shot"] = "Tiro Arcano Aprimorado"
+        S["Improved Aspect of the Hawk"] = "Aspecto do Falcão Aprimorado"
+        S["Improved Aspect of the Monkey"] = "Aspecto do Macaco Aprimorado"
+        S["Improved Blessing of Might"] = "Bênção do Poder Aprimorada"
+        S["Improved Blessing of Wisdom"] = "Bênção da Sabedoria Aprimorada"
+        S["Improved Blizzard"] = "Nevasca Aprimorada"
+        S["Improved Bloodrage"] = "Raiva Sanguinária Aprimorada"
+        S["Improved Charge"] = "Investida Aprimorada"
+        S["Improved Cleave"] = "Cutilada Aprimorada"
+        S["Improved Concentration Aura"] = "Aura de Concentração Aprimorada"
+        S["Improved Concussive Shot"] = "Tiro de Concussão Aprimorado"
+        S["Improved Corruption"] = "Corrupção Aprimorada"
+        S["Improved Counterspell"] = "Contrafeitiço Aprimorado"
+        S["Improved Curse of Agony"] = "Maldição da Agonia Aprimorada"
+        S["Improved Curse of Weakness"] = "Maldição da Fraqueza Aprimorada"
+        S["Improved Demoralizing Shout"] = "Grito Desmoralizador Aprimorado"
+        S["Improved Devotion Aura"] = "Aura de Devoção Aprimorada"
+        S["Improved Disarm"] = "Desarmar Aprimorado"
+        S["Improved Drain Soul"] = "Drenar Alma Aprimorado"
+        S["Improved Eviscerate"] = "Eviscerar Aprimorado"
+        S["Improved Execute"] = "Executar Aprimorado"
+        S["Improved Expose Armor"] = "Expor Armadura Aprimorado"
+        S["Improved Fear"] = "Medo Aprimorado"
+        S["Improved Fire Blast"] = "Impacto de Fogo Aprimorado"
+        S["Improved Fire Nova"] = "Nova de Fogo Aprimorada"
+        S["Improved Fireball"] = "Bola de Fogo Aprimorada"
+        S["Improved Frostbolt"] = "Seta de Gelo Aprimorada"
+        S["Improved Ghost Wolf"] = "Lobo Fantasma Aprimorado"
+        S["Improved Gouge"] = "Goivar Aprimorado"
+        S["Improved Hammer of Justice"] = "Martelo da Justiça Aprimorado"
+        S["Improved Healing"] = "Cura Aprimorada"
+        S["Improved Healing Wave"] = "Onda de Cura Aprimorada"
+        S["Improved Health Funnel"] = "Canalizar Vida Aprimorado"
+        S["Improved Healthstone"] = "Pedra de Vida Aprimorada"
+        S["Improved Heroic Strike"] = "Golpe Heroico Aprimorado"
+        S["Improved Hunter's Mark"] = "Marca do Caçador Aprimorada"
+        S["Improved Imp"] = "Diabrete Aprimorado"
+        S["Improved Inner Fire"] = "Fogo Interior Aprimorado"
+        S["Improved Judgements"] = "Julgamentos Aprimorados"
+        S["Improved Kick"] = "Chute Aprimorado"
+        S["Improved Lay on Hands"] = "Imposição das Mãos Aprimorada"
+        S["Improved Life Tap"] = "Transfusão de Vida Aprimorada"
+        S["Improved Mana Burn"] = "Queimar Mana Aprimorado"
+        S["Improved Mark of the Wild"] = "Marca do Indomado Aprimorada"
+        S["Improved Mend Pet"] = "Curar Mascote Aprimorado"
+        S["Improved Mind Blast"] = "Impacto Mental Aprimorado"
+        S["Improved Moonfire"] = "Fogo Lunar Aprimorado"
+        S["Improved Overpower"] = "Subjugar Aprimorado"
+        S["Improved Poisons"] = "Venenos Aprimorados"
+        S["Improved Power Word: Fortitude"] = "Palavra de Poder: Fortitude Aprimorada"
+        S["Improved Power Word: Shield"] = "Palavra de Poder: Escudo Aprimorada"
+        S["Improved Psychic Scream"] = "Grito Psíquico Aprimorado"
+        S["Improved Reincarnation"] = "Reencarnação Aprimorada"
+        S["Improved Rejuvenation"] = "Rejuvenescimento Aprimorado"
+        S["Improved Rend"] = "Desgarrar Aprimorado"
+        S["Improved Renew"] = "Renovar Aprimorado"
+        S["Improved Revenge"] = "Revanche Aprimorada"
+        S["Improved Revive Pet"] = "Reviver Mascote Aprimorado"
+        S["Improved Righteous Fury"] = "Fúria Íntegra Aprimorada"
+        S["Improved Rune Tap"] = "Transfusão Rúnica Aprimorada"
+        S["Improved Scorch"] = "Calcinar Aprimorado"
+        S["Improved Searing Pain"] = "Dor Calcinante Aprimorada"
+        S["Improved Shadow Bolt"] = "Seta Sombria Aprimorada"
+        S["Improved Shadow Word: Pain"] = "Palavra Sombria: Dor Aprimorada"
+        S["Improved Shields"] = "Escudos Aprimorados"
+        S["Improved Sinister Strike"] = "Golpe Sinistro Aprimorado"
+        S["Improved Slice and Dice"] = "Fatiar e Picar Aprimorado"
+        S["Improved Spell Reflection"] = "Reflexão de Feitiço Aprimorada"
+        S["Improved Spirit Tap"] = "Transfusão de Espírito Aprimorada"
+        S["Improved Sprint"] = "Disparada Aprimorada"
+        S["Improved Stings"] = "Ferroadas Aprimoradas"
+        S["Improved Succubus"] = "Súcubo Aprimorado"
+        S["Improved Thunder Clap"] = "Trovoada Aprimorada"
+        S["Improved Tracking"] = "Rastreamento Aprimorado"
+        S["Improved Water Shield"] = "Escudo de Água Aprimorado"
+        S["Incineration"] = "Incineração"
+        S["Incite"] = "Incitar"
+        S["Iron Will"] = "Vontade de Ferro"
+        S["Lethal Shots"] = "Disparos Letais"
+        S["Lightning Reflexes"] = "Reflexos Relâmpago"
+        S["Lock and Load"] = "Travar e Carregar"
+        S["Magic Absorption"] = "Absorção Mágica"
+        S["Magic Attunement"] = "Sintonia Mágica"
+        S["Master Shapeshifter"] = "Mestre Metamorfo"
+        S["Mind Flay"] = "Açoite Mental"
+        S["Molten Shields"] = "Escudos Derretidos"
+        S["Molten Skin"] = "Pele Derretida"
+        S["Moonglow"] = "Brilho Lunar"
+        S["Morbidity"] = "Morbidez"
+        S["Multi-Shot"] = "Tiro Múltiplo"
+        S["Natural Shapeshifter"] = "Metamorfo Natural"
+        S["Nature's Majesty"] = "Majestade da Natureza"
+        S["Night of the Dead"] = "Noite dos Mortos"
+        S["Nightfall"] = "Ocaso"
+        S["Omen of Clarity"] = "Presságio de Clareza"
+        S["On a Pale Horse"] = "Num Cavalo Pálido"
+        S["Pathfinding"] = "Desbravamento"
+        S["Permafrost"] = "Permafrost"
+        S["Piercing Howl"] = "Uivo Perfurante"
+        S["Piercing Ice"] = "Gelo Perfurante"
+        S["Primal Fury"] = "Fúria Primeva"
+        S["Primal Precision"] = "Precisão Primeva"
+        S["Puncture"] = "Perfuração"
+        S["Puncturing Wounds"] = "Feridas Perfurantes"
+        S["Pursuit of Justice"] = "Busca pela Justiça"
+        S["Rapid Fire"] = "Tiro Rápido"
+        S["Rapid Killing"] = "Matança Rápida"
+        S["Ravenous Dead"] = "Mortos Vorazes"
+        S["Relentless Strikes"] = "Golpes Implacáveis"
+        S["Remorseless Attacks"] = "Ataques Impiedosos"
+        S["Restorative Totems"] = "Totens Restauradores"
+        S["Runic Power Mastery"] = "Maestria em Poder Rúnico"
+        S["Sanctity of Battle"] = "Santidade da Batalha"
+        S["Savage Fury"] = "Fúria Selvagem"
+        S["Savage Strikes"] = "Golpes Selvagens"
+        S["Scent of Blood"] = "Aroma de Sangue"
+        S["Seals of the Pure"] = "Selos dos Puros"
+        S["Searing Light"] = "Luz Calcinante"
+        S["Serrated Blades"] = "Lâminas Serrilhadas"
+        S["Setup"] = "Preparação"
+        S["Shadow Affinity"] = "Afinidade Sombria"
+        S["Shadow Bolt"] = "Seta Sombria"
+        S["Shadow Focus"] = "Foco Sombrio"
+        S["Shadow Reach"] = "Alcance Sombrio"
+        S["Shadow Weaving"] = "Trama Sombria"
+        S["Shamanistic Focus"] = "Foco Xamânico"
+        S["Shatter"] = "Estilhaçar"
+        S["Shield Mastery"] = "Maestria com Escudo"
+        S["Shield Specialization"] = "Especialização em Escudo"
+        S["Shredding Attacks"] = "Ataques Trituradores"
+        S["Sleight of Hand"] = "Prestidigitação"
+        S["Smite"] = "Punição"
+        S["Soul Siphon"] = "Sifão de Alma"
+        S["Spell Deflection"] = "Deflexão de Feitiços"
+        S["Spell Warding"] = "Proteção contra Feitiços"
+        S["Spirit Tap"] = "Transfusão de Espírito"
+        S["Starlight Wrath"] = "Ira da Luz Estelar"
+        S["Stoicism"] = "Estoicismo"
+        S["Student of the Mind"] = "Estudante da Mente"
+        S["Subtlety"] = "Sutileza"
+        S["Surefooted"] = "Passo Firme"
+        S["Survival Instincts"] = "Instintos de Sobrevivência"
+        S["Survivalist"] = "Sobrevivencialista"
+        S["Taste for Blood"] = "Gosto por Sangue"
+        S["Thick Hide"] = "Pelego Grosso"
+        S["Thundering Strikes"] = "Golpes Trovejantes"
+        S["Tidal Focus"] = "Foco das Marés"
+        S["Tidal Mastery"] = "Maestria das Marés"
+        S["Torment the Weak"] = "Atormentar os Fracos"
+        S["Totemic Focus"] = "Foco Totêmico"
+        S["Toughness"] = "Tenacidade"
+        S["Tranquil Spirit"] = "Espírito Tranquilo"
+        S["Trap Mastery"] = "Maestria em Armadilhas"
+        S["Twin Disciplines"] = "Disciplinas Gêmeas"
+        S["Unbridled Wrath"] = "Ira Desenfreada"
+        S["Unholy Command"] = "Comando Profano"
+        S["Unholy Power"] = "Poder Profano"
+        S["Unleashed Fury"] = "Fúria Liberta"
+        S["Unstable Affliction"] = "Agonia Instável"
+        S["Unyielding Faith"] = "Fé Inabalável"
+        S["Vicious Strikes"] = "Golpes Cruéis"
+        S["Vile Poisons"] = "Venenos Vis"
+    end
+end

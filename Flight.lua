@@ -5,6 +5,8 @@ local AES = AscensionPTBR or {}
 AscensionPTBR = AES
 
 local cache = {}
+local cacheCount = 0
+local CACHE_LIMIT = 768
 local hookedButtons = setmetatable({}, { __mode = "k" })
 local hookedRoots = setmetatable({}, { __mode = "k" })
 local inTextHook = false
@@ -55,6 +57,17 @@ local function TranslatePart(text)
     return nil
 end
 
+local function CacheTaxiText(text, value)
+    if cache[text] == nil then
+        cacheCount = cacheCount + 1
+        if cacheCount > CACHE_LIMIT then
+            cache = {}
+            cacheCount = 1
+        end
+    end
+    cache[text] = value
+end
+
 local function TranslateTaxiText(text)
     if type(text) ~= "string" or text == "" then return nil end
 
@@ -63,13 +76,13 @@ local function TranslateTaxiText(text)
 
     local translated = AES.TranslateAreaText and AES.TranslateAreaText(text)
     if translated and translated ~= text then
-        cache[text] = translated
+        CacheTaxiText(text, translated)
         return translated
     end
 
     translated = TranslatePart(text)
     if translated and translated ~= text then
-        cache[text] = translated
+        CacheTaxiText(text, translated)
         return translated
     end
 
@@ -89,12 +102,12 @@ local function TranslateTaxiText(text)
         local rightPT = TranslatePart(rightRaw) or rightRaw
         if leftPT ~= leftRaw or rightPT ~= rightRaw then
             translated = leftPT .. sep .. rightPT
-            cache[text] = translated
+            CacheTaxiText(text, translated)
             return translated
         end
     end
 
-    cache[text] = false
+    CacheTaxiText(text, false)
     return nil
 end
 AES.TranslateTaxiText = TranslateTaxiText

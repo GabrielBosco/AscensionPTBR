@@ -1,11 +1,15 @@
 -- Perfil do personagem e abas do C.
--- Este modulo trabalha somente nas raizes conhecidas da interface. Ele nunca
--- enumera a UI inteira e nunca entra no WorldFrame/nameplates.
+-- Este modulo prioriza as raizes conhecidas da interface e nunca entra em
+-- WorldFrame/nameplates. Em 1.5.7 há uma descoberta GLOBAL temporária e fatiada
+-- somente ao abrir o C: ela encontra widgets custom do Ascension fora da árvore
+-- normal, traduz apenas FontStrings reconhecidos e encerra imediatamente.
 
 local A = AscensionPTBR or {}
 AscensionPTBR = A
 
 local hookedFS = setmetatable({}, { __mode = "k" })
+local discoveryHookedFS = setmetatable({}, { __mode = "k" })
+local discoveryGuard = setmetatable({}, { __mode = "k" })
 local textGuard = setmetatable({}, { __mode = "k" })
 local lastTarget = setmetatable({}, { __mode = "k" })
 local hookedRoots = setmetatable({}, { __mode = "k" })
@@ -126,11 +130,13 @@ end
 local function ApplyCharacterGlobals()
     if not Enabled() then return end
     for key, pt in pairs(CHARACTER_GLOBALS) do
-        if type(_G[key]) == "string" then _G[key] = pt end
+        if type(_G[key]) == "string" then
+            if A.SafeSetGlobalString then A.SafeSetGlobalString(key, pt) end
+        end
     end
 end
 
-local function TranslateDirect(text)
+local function TranslateDirectCore(text)
     if type(text) ~= "string" or text == "" then return nil end
 
     if A.TranslateCharacterPanelLine then
@@ -141,6 +147,23 @@ local function TranslateDirect(text)
     if A.TranslateCharacterStatLine then
         local ok, value = pcall(A.TranslateCharacterStatLine, text)
         if ok and type(value) == "string" and value ~= "" and value ~= text then return value end
+    end
+end
+
+local function TranslateDirect(text)
+    if type(text) ~= "string" or text == "" then return nil end
+    local direct = TranslateDirectCore(text)
+    if direct then return direct end
+
+    local lead, core, trail = text:match("^(%s*)(.-)(%s*)$")
+    core = core or text
+    local color, inner, reset = core:match("^(|c%x%x%x%x%x%x%x%x)(.-)(|r)$")
+    local raw = inner or core
+    if raw ~= text then
+        local pt = TranslateDirectCore(raw)
+        if pt then
+            return (lead or "") .. (color or "") .. pt .. (reset or "") .. (trail or "")
+        end
     end
 end
 
@@ -231,13 +254,13 @@ local function ApplyFontString(fs)
 end
 
 local function HookFontString(fs)
-    if not (fs and fs.GetText and fs.SetText) or not FrameSafe(fs) then return end
+    if not (fs and fs.GetText and fs.SetText) or not FrameSafe(fs) then return false end
 
     -- Nao instale hook em todo FontString do C. Primeiro tenta traduzir;
     -- so textos que realmente precisaram de traducao ganham hook persistente.
     -- Isso corta centenas de hooksecurefunc na primeira abertura do painel.
     local changed = ApplyFontString(fs)
-    if not changed or hookedFS[fs] or not hooksecurefunc then return end
+    if not changed or hookedFS[fs] or not hooksecurefunc then return changed end
 
     hookedFS[fs] = true
     pcall(hooksecurefunc, fs, "SetText", function(self)
@@ -248,6 +271,39 @@ local function HookFontString(fs)
             ApplyFontString(self)
         end)
     end
+    return changed
+end
+
+-- O discovery global usa SOMENTE o tradutor do C. Não passa por nomes de item,
+-- spell, quest ou chat, então não corre o risco de prender FontStrings aleatórios
+-- da interface inteira.
+local function ApplyDiscoveredCharacterFS(fs)
+    if not Enabled() or not FrameSafe(fs) or discoveryGuard[fs]
+        or not (fs.GetText and fs.SetText) then return false end
+    local ok, text = pcall(fs.GetText, fs)
+    if not ok or type(text) ~= "string" or text == "" then return false end
+    local pt = TranslateDirect(text)
+    if not pt or pt == text then return false end
+    discoveryGuard[fs] = true
+    local written = pcall(fs.SetText, fs, pt)
+    discoveryGuard[fs] = nil
+    return written
+end
+
+local function HookDiscoveredCharacterFS(fs)
+    if not (fs and fs.GetText and fs.SetText) or not FrameSafe(fs) then return false end
+    local changed = ApplyDiscoveredCharacterFS(fs)
+    if not changed or discoveryHookedFS[fs] or not hooksecurefunc then return changed end
+    discoveryHookedFS[fs] = true
+    pcall(hooksecurefunc, fs, "SetText", function(self)
+        ApplyDiscoveredCharacterFS(self)
+    end)
+    if fs.SetFormattedText then
+        pcall(hooksecurefunc, fs, "SetFormattedText", function(self)
+            ApplyDiscoveredCharacterFS(self)
+        end)
+    end
+    return changed
 end
 
 local After
@@ -256,11 +312,23 @@ local After
 -- do OnShow causa hitch mesmo sem EnumerateFrames. Processamos em fatias curtas
 -- nos ticks seguintes: o custo total e parecido, mas nao bloqueia um frame inteiro.
 local walkJobs = setmetatable({}, { __mode = "k" })
-local WALK_NODE_LIMIT = 2600
+local WALK_NODE_LIMIT = 5200
 local WALK_SLICE_NODES = 72
 local WALK_SLICE_MS = 1.20
 
+-- Painéis custom do Ascension podem ser irmãos do CharacterFrame em UIParent.
+-- Uma varredura única por sessão, em fatias de ~1 ms, resolve isso sem OnUpdate.
+local DISCOVERY_SLICE_FRAMES = 110
+local DISCOVERY_SLICE_MS = 1.00
+local DISCOVERY_MAX_FRAMES = 9000
+local discoveryDone = false
+local discoveryRunning = false
+local discoveryCursor = nil
+local discoverySeen = 0
+local discoveryHits = 0
+
 local ProcessWalkJob
+local ProcessScopedDiscovery
 
 local function ScheduleWalkJob(job, delay)
     if not job or not job.root then return end
@@ -354,6 +422,74 @@ local function QueueWalk(root, maxNodes)
     return true
 end
 
+local function ScheduleScopedDiscovery(delay)
+    if discoveryDone or discoveryRunning == false then return end
+    After("aptbr-character-discovery", delay or 0.01, function()
+        if discoveryRunning then ProcessScopedDiscovery() end
+    end)
+end
+
+ProcessScopedDiscovery = function()
+    if discoveryDone or not discoveryRunning or not Enabled() or not EnumerateFrames then
+        discoveryRunning = false
+        return
+    end
+
+    local processed = 0
+    local started = debugprofilestop and debugprofilestop() or nil
+    while processed < DISCOVERY_SLICE_FRAMES and discoverySeen < DISCOVERY_MAX_FRAMES do
+        local frame = EnumerateFrames(discoveryCursor)
+        discoveryCursor = frame
+        if not frame then
+            discoveryDone = true
+            discoveryRunning = false
+            return
+        end
+        processed = processed + 1
+        discoverySeen = discoverySeen + 1
+
+        if FrameSafe(frame) and IsVisible(frame) and frame.GetRegions then
+            local ok, regions = pcall(function() return { frame:GetRegions() } end)
+            if ok and regions then
+                for i = 1, #regions do
+                    local region = regions[i]
+                    if region and region.IsObjectType then
+                        local okFS, isFS = pcall(region.IsObjectType, region, "FontString")
+                        if okFS and isFS and FrameSafe(region) then
+                            -- HookFontString NÃO instala hook se a tradução não casar.
+                            -- Portanto o scan vê a UI toda, mas só prende os textos do C
+                            -- (ou outro texto conhecido que esteja visível naquele instante).
+                            if HookDiscoveredCharacterFS(region) then
+                                discoveryHits = discoveryHits + 1
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        if started and debugprofilestop and (debugprofilestop() - started) >= DISCOVERY_SLICE_MS then
+            break
+        end
+    end
+
+    if discoverySeen >= DISCOVERY_MAX_FRAMES then
+        discoveryDone = true
+        discoveryRunning = false
+        return
+    end
+    ScheduleScopedDiscovery(0.01)
+end
+
+local function StartScopedDiscovery()
+    if discoveryDone or discoveryRunning or not EnumerateFrames or not Enabled() then return end
+    discoveryRunning = true
+    discoveryCursor = nil
+    discoverySeen = 0
+    discoveryHits = 0
+    ScheduleScopedDiscovery(0)
+end
+
 local function HasVisibleKnownAncestor(root)
     local current = ParentOf(root)
     for _ = 1, 16 do
@@ -410,8 +546,12 @@ local refreshForcePending = false
 
 local function QueueRefresh(force)
     if not Enabled() then return end
-    if not force and not CharacterVisible() then return end
-    if force then refreshForcePending = true end
+    local characterVisible = CharacterVisible()
+    if not force and not characterVisible then return end
+    if force then
+        refreshForcePending = true
+        if characterVisible then StartScopedDiscovery() end
+    end
 
     -- Varios callbacks do CharacterFrame disparam na mesma abertura. Mesmo se o
     -- Runtime do cliente nao agrupar timers por chave, garantimos apenas 1 fast.
@@ -477,8 +617,16 @@ local function InstallHooks()
     ApplyCharacterGlobals()
     DiscoverKnownRoots()
 
+    -- Os toggles de personagem são o gatilho seguro para a descoberta fatiada,
+    -- inclusive se o Ascension usar uma raiz anônima/desconhecida para o painel.
+    for _, name in ipairs({ "ToggleCharacter", "ToggleCharacterFrame", "CharacterFrame_Toggle" }) do
+        HookGlobal(name, function()
+            QueueRefresh(true)
+            After("aptbr-character-open-discovery", 0.03, StartScopedDiscovery)
+        end)
+    end
+
     for _, name in ipairs({
-        "ToggleCharacter", "ToggleCharacterFrame", "CharacterFrame_Toggle",
         "CharacterFrame_OnShow", "CharacterFrame_ShowSubFrame", "CharacterFrameTab_OnClick",
         "PanelTemplates_SetTab", "PanelTemplates_SelectTab", "PetPaperDollFrame_SetTab",
     }) do
@@ -566,8 +714,9 @@ SlashCmdList["APTBRC"] = function()
     local roots = RefreshVisibleRoots()
     if DEFAULT_CHAT_FRAME then
         DEFAULT_CHAT_FRAME:AddMessage(string.format(
-            "|cff33ff99AscensionPTBR|r: C roots=%d nodes=%d textos=%d pendentes=%d; scanGlobal=NÃO; OnUpdate=NÃO; slices=SIM.",
-            tonumber(roots) or 0, tonumber(lastStats.nodes) or 0, tonumber(lastStats.texts) or 0, tonumber(lastStats.pending) or 0
+            "|cff33ff99AscensionPTBR|r: C roots=%d nodes=%d textos=%d pendentes=%d; descoberta=%s frames=%d acertos=%d; OnUpdate=NÃO.",
+            tonumber(roots) or 0, tonumber(lastStats.nodes) or 0, tonumber(lastStats.texts) or 0, tonumber(lastStats.pending) or 0,
+            discoveryDone and "OK" or (discoveryRunning and "RODANDO" or "PENDENTE"), tonumber(discoverySeen) or 0, tonumber(discoveryHits) or 0
         ))
     end
 end

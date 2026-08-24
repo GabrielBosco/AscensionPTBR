@@ -77,12 +77,98 @@ local defaults = { spells = true, items = true, units = true, worldNpcNames = tr
                    voice = true, updateCheck = true, unitFrameNumbers = true,
                    dragonUICompat = true, detailsCompat = true, lootOverlay = true, dynamicUI = true,
                    raidTranslation = true, durabilityWidget = true, durabilityHudLocked = true,
-                   durabilityHudShowWorst = true, durabilityHudHideAtFull = false,
-                   durabilityWarningEnabled = true, durabilityWarningSound = true, durabilityWarningChat = true,
-                   durabilityWarningThreshold = 50, durabilityUpdateInterval = 1,
-                   durabilityHudScale = 100, durabilityHudOpacity = 92,
+                   durabilityHudShowWorst = true, durabilityHudScale = 100, durabilityHudOpacity = 92,
                    authorMessage = true }
 
+
+-- GlobalStrings com placeholders fazem parte da API interna do FrameXML. O Ascension
+-- altera algumas assinaturas em relação ao WotLK 3.3.5 original (por exemplo, o C
+-- passa uma string já formatada como segundo argumento de CR_HIT_MELEE_TOOLTIP).
+-- Trocar um formato %s por %.2f -- ou remover argumentos -- quebra string.format dentro
+-- do próprio cliente. Antes de substituir qualquer global formatado, validamos o contrato
+-- de argumentos do texto que o cliente realmente carregou.
+AES.FormatArgumentContract = function(text)
+    if type(text) ~= "string" then return nil end
+    local args, implicit, i, maxIndex = {}, 1, 1, 0
+    while i <= #text do
+        local p = text:find("%", i, true)
+        if not p then break end
+        if text:sub(p + 1, p + 1) == "%" then
+            i = p + 2
+        else
+            local j = p + 1
+            local positional
+
+            -- %2$s / %3$02d
+            local digitStart = j
+            while text:sub(j, j):match("%d") do j = j + 1 end
+            if j > digitStart and text:sub(j, j) == "$" then
+                positional = tonumber(text:sub(digitStart, j - 1))
+                j = j + 1
+            else
+                j = p + 1
+            end
+
+            while text:sub(j, j):find("[-+ #0]", 1) do j = j + 1 end
+            if text:sub(j, j) == "*" then return nil, "dynamic-width" end
+            while text:sub(j, j):match("%d") do j = j + 1 end
+            if text:sub(j, j) == "." then
+                j = j + 1
+                if text:sub(j, j) == "*" then return nil, "dynamic-precision" end
+                while text:sub(j, j):match("%d") do j = j + 1 end
+            end
+            local length = text:sub(j, j)
+            if length == "h" or length == "l" or length == "L" then j = j + 1 end
+
+            local conversion = text:sub(j, j)
+            if not conversion:find("[cdiouxXeEfgGqs]", 1) then
+                -- Percentual literal em texto normal; não faz parte do contrato de format().
+                i = p + 1
+            else
+                local index = positional or implicit
+                if not positional then implicit = implicit + 1 end
+                if index > maxIndex then maxIndex = index end
+                local kind = (conversion == "s" or conversion == "q") and "s" or "n"
+                if args[index] and args[index] ~= kind then return nil, "mixed-argument" end
+                args[index] = kind
+                i = j + 1
+            end
+        end
+    end
+
+    local out = {}
+    for index = 1, maxIndex do out[index] = args[index] or "-" end
+    return table.concat(out, ",")
+end
+
+AES.Perf.globalStringFormatSkips = AES.Perf.globalStringFormatSkips or 0
+AES.Perf.globalStringFormatSkipKeys = AES.Perf.globalStringFormatSkipKeys or {}
+
+AES.SafeSetGlobalString = function(key, value)
+    if type(key) ~= "string" or type(value) ~= "string" then return false, "invalid" end
+    local current = rawget(_G, key)
+    if type(current) ~= "string" then return false, "missing" end
+    if current == value then return true, "same" end
+
+    local sourceContract, sourceErr = AES.FormatArgumentContract(current)
+    local targetContract, targetErr = AES.FormatArgumentContract(value)
+    if sourceContract == nil or targetContract == nil or sourceContract ~= targetContract then
+        AES.Perf.globalStringFormatSkips = (AES.Perf.globalStringFormatSkips or 0) + 1
+        local skipped = AES.Perf.globalStringFormatSkipKeys
+        if skipped and skipped[key] == nil then
+            local count = 0
+            for _ in pairs(skipped) do count = count + 1 end
+            if count < 64 then
+                skipped[key] = (sourceContract or sourceErr or "?") .. " -> "
+                    .. (targetContract or targetErr or "?")
+            end
+        end
+        return false, "format-mismatch"
+    end
+
+    rawset(_G, key, value)
+    return true, "applied"
+end
 
 -- Não preenche global inexistente. No Ascension isso evita atropelar objetos criados depois
 -- pelo SharedXML (cores, mixins, templates etc.) com uma string de tradução.
@@ -90,10 +176,8 @@ AES.ApplySafeGlobalStrings = function()
     if not (db and db.ui) then return 0 end
     local applied = 0
     for key, value in pairs(AES.GlobalStrings or {}) do
-        if type(value) == "string" and type(rawget(_G, key)) == "string" then
-            rawset(_G, key, value)
-            applied = applied + 1
-        end
+        local ok = AES.SafeSetGlobalString and AES.SafeSetGlobalString(key, value)
+        if ok then applied = applied + 1 end
     end
     return applied
 end
@@ -197,9 +281,11 @@ local function TranslateItemNameText(text, link, explicitID)
     if type(text) ~= "string" or text == "" then return nil end
 
     local textOnlyLookup = not link and explicitID == nil
+    -- Cache por texto vale tambem para tooltips com link: itens custom resolvidos
+    -- por padrao nao repetem regex ao passar o mouse de novo.
+    local cached = itemTextCache[text]
+    if cached then return cached end
     if textOnlyLookup then
-        local cached = itemTextCache[text]
-        if cached then return cached end
         local now = GetTime and GetTime() or nil
     -- Item pode não estar no cache do cliente ainda. Segura a falha por 2s e tenta depois.
         local missedAt = itemTextMissCache[text]
@@ -211,11 +297,15 @@ local function TranslateItemNameText(text, link, explicitID)
     local ptBase = itemID and AES.ItemName and AES.ItemName[itemID]
     if ptBase then
         local enBase = AES.ItemNameEN and AES.ItemNameEN[itemID]
-        if not enBase or text == enBase or text == ptBase then
+        -- A base histórica do Ascension contém milhares de nomes ainda em inglês.
+        -- Se ItemName[id] for idêntico ao texto EN, NÃO tratamos isso como tradução:
+        -- deixamos o fallback estrutural (Skill Card/Mystic Scroll/forged etc.) continuar.
+        local isRealTranslation = (ptBase ~= text) and (not enBase or ptBase ~= enBase)
+        if isRealTranslation and (not enBase or text == enBase or text == ptBase) then
             return ptBase
         end
 
-        if text:sub(1, #enBase) == enBase then
+        if isRealTranslation and enBase and text:sub(1, #enBase) == enBase then
             local suffix = text:sub(#enBase + 1):match("^%s+(.-)%s*$")
             if suffix and suffix ~= "" then
                 local suffixPT = RandomAffixPT(link)
@@ -224,6 +314,24 @@ local function TranslateItemNameText(text, link, explicitID)
                     return ptBase .. " " .. suffixPT
                 end
             end
+        end
+    end
+
+    if AES.TranslateCustomItemName then
+        -- IDs custom do Ascension podem ser reutilizados entre realms/temporadas.
+        -- Se o nome EN esperado pelo snapshot local nao bater com o nome que o
+        -- cliente esta mostrando agora, o texto atual vira a fonte da traducao.
+        -- E uma comparacao O(1) por tooltip e evita aplicar nome antigo no item novo.
+        local expectedEN = itemID and AES.ItemNameEN and AES.ItemNameEN[itemID]
+        local sourceName = text
+        if expectedEN and (text == expectedEN or text:sub(1, #expectedEN) == expectedEN) then
+            sourceName = expectedEN
+        end
+        local okCustom, customPT = pcall(AES.TranslateCustomItemName, sourceName, itemID, text)
+        if okCustom and type(customPT) == "string" and customPT ~= "" and customPT ~= sourceName then
+            -- Cache por texto visivel: itens custom/padroes custam regex apenas no primeiro hover.
+            CacheItemText(text, customPT)
+            return customPT
         end
     end
 
@@ -628,6 +736,10 @@ AES._TooltipMatch = AES._TooltipMatch or {
     normalizedPatternCache = {},
     colorlessPatternCache = {},
 }
+AES._TooltipMatch.normalizedPatternCacheCount = AES._TooltipMatch.normalizedPatternCacheCount or 0
+AES._TooltipMatch.colorlessPatternCacheCount = AES._TooltipMatch.colorlessPatternCacheCount or 0
+AES._TooltipMatch.PATTERN_CACHE_LIMIT = AES._TooltipMatch.PATTERN_CACHE_LIMIT or 4096
+AES._TooltipMatch.subPatternCacheCount = AES._TooltipMatch.subPatternCacheCount or 0
 
 function AES._TooltipMatch.NormalizeTooltipEscapes(text)
     if type(text) ~= "string" then return text end
@@ -643,7 +755,13 @@ function AES._TooltipMatch.NormalizedPairPattern(pattern)
     local cached = cache[pattern]
     if cached then return cached end
     cached = AES._TooltipMatch.NormalizeTooltipEscapes(pattern)
+    if AES._TooltipMatch.normalizedPatternCacheCount >= AES._TooltipMatch.PATTERN_CACHE_LIMIT then
+        cache = {}
+        AES._TooltipMatch.normalizedPatternCache = cache
+        AES._TooltipMatch.normalizedPatternCacheCount = 0
+    end
     cache[pattern] = cached
+    AES._TooltipMatch.normalizedPatternCacheCount = AES._TooltipMatch.normalizedPatternCacheCount + 1
     return cached
 end
 
@@ -657,7 +775,13 @@ function AES._TooltipMatch.ColorlessPairPattern(pattern)
     local cached = cache[pattern]
     if cached then return cached end
     cached = AES._TooltipMatch.StripTooltipColors(pattern)
+    if AES._TooltipMatch.colorlessPatternCacheCount >= AES._TooltipMatch.PATTERN_CACHE_LIMIT then
+        cache = {}
+        AES._TooltipMatch.colorlessPatternCache = cache
+        AES._TooltipMatch.colorlessPatternCacheCount = 0
+    end
     cache[pattern] = cached
+    AES._TooltipMatch.colorlessPatternCacheCount = AES._TooltipMatch.colorlessPatternCacheCount + 1
     return cached
 end
 
@@ -676,7 +800,12 @@ local function SegmentPattern(anchored)
         sub = anchored
         if sub:sub(1, 1) == "^" then sub = sub:sub(2) end
         if sub:sub(-4) == "%s*$" then sub = sub:sub(1, -5) end
+        if AES._TooltipMatch.subPatternCacheCount >= AES._TooltipMatch.PATTERN_CACHE_LIMIT then
+            subPatternCache = {}
+            AES._TooltipMatch.subPatternCacheCount = 0
+        end
         subPatternCache[anchored] = sub
+        AES._TooltipMatch.subPatternCacheCount = AES._TooltipMatch.subPatternCacheCount + 1
     end
     return sub
 end
@@ -1140,18 +1269,47 @@ do
         { "^Speak to%s+(.+)$", "Fale com " },
         { "^Talk to%s+(.+)$", "Fale com " },
         { "^Meet with%s+(.+)$", "Encontre-se com " },
+        { "^Report to%s+(.+)$", "Apresente-se a " },
         { "^Scout through%s+(.+)$", "Explore " },
         { "^Scout%s+(.+)$", "Explore " },
         { "^Travel to%s+(.+)$", "Vá até " },
         { "^Go to%s+(.+)$", "Vá até " },
         { "^Return to%s+(.+)$", "Retorne a " },
         { "^Find%s+(.+)$", "Encontre " },
+        { "^Kill%s+(.+)$", "Mate " },
+        { "^Slay%s+(.+)$", "Mate " },
+        { "^Defeat%s+(.+)$", "Derrote " },
+        { "^Destroy%s+(.+)$", "Destrua " },
+        { "^Collect%s+(.+)$", "Colete " },
+        { "^Gather%s+(.+)$", "Colete " },
+        { "^Obtain%s+(.+)$", "Obtenha " },
+        { "^Recover%s+(.+)$", "Recupere " },
+        { "^Retrieve%s+(.+)$", "Recupere " },
+        { "^Bring%s+(.+)$", "Leve " },
+        { "^Deliver%s+(.+)$", "Entregue " },
+        { "^Use%s+(.+)$", "Use " },
+        { "^Rescue%s+(.+)$", "Resgate " },
+        { "^Free%s+(.+)$", "Liberte " },
+        { "^Release%s+(.+)$", "Liberte " },
+        { "^Escort%s+(.+)$", "Escolte " },
+        { "^Discover%s+(.+)$", "Descubra " },
+        { "^Explore%s+(.+)$", "Explore " },
+        { "^Investigate%s+(.+)$", "Investigue " },
+        { "^Reach%s+(.+)$", "Chegue a " },
+        { "^Enter%s+(.+)$", "Entre em " },
+        { "^Complete%s+(.+)$", "Conclua " },
+        { "^Learn%s+(.+)$", "Aprenda " },
+        { "^Capture%s+(.+)$", "Capture " },
     }
 
     local function QuestDynamicTargetPT(target)
         if type(target) ~= "string" or target == "" then return nil end
         local trimmed = target:gsub("^%s+", ""):gsub("%s+$", "")
-        local noArticle = trimmed:match("^[Tt]he%s+(.+)$") or trimmed
+        -- Objetivos dinâmicos costumam chegar como "10 Foo", enquanto os índices guardam apenas "Foo".
+        -- Separamos a quantidade para reaproveitar os mapas de NPC/item/área sem criar milhares de aliases.
+        local count, countedTarget = trimmed:match("^(%d+)%s+(.+)$")
+        local lookupTarget = countedTarget or trimmed
+        local noArticle = lookupTarget:match("^[Tt]he%s+(.+)$") or lookupTarget
         local function lookup(v)
             if not v or v == "" then return nil end
             return (AES.UnitNameEN2ES and AES.UnitNameEN2ES[v])
@@ -1160,9 +1318,10 @@ do
                 or (AES.SpellNameEN2ES and AES.SpellNameEN2ES[v])
                 or (AES.TranslateItemNameText and AES.TranslateItemNameText(v))
         end
-        local pt = lookup(trimmed)
-        if not pt and noArticle ~= trimmed then pt = lookup(noArticle) end
-        if pt == false then return nil end
+        local pt = lookup(lookupTarget)
+        if not pt and noArticle ~= lookupTarget then pt = lookup(noArticle) end
+        if pt == false or not pt then return nil end
+        if count then return count .. " " .. pt end
         return pt
     end
 
@@ -1486,7 +1645,12 @@ local function TranslateTooltipLines(tip)
                         effectPrefixPT = "Chance ao acertar: "
                     end
                     if effectBody then
-                        local translated = (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(effectBody))
+                        -- Primeiro tenta o parser de atributos de item. Ele cobre os formatos
+                        -- atuais da AscensionDB (PvE/PvP Power, ratings, MP5, resistências etc.)
+                        -- sem varrer tabelas: é lookup/pattern sob demanda e possui cache próprio.
+                        local translated = (AES.TranslateItemEffectCore and AES.TranslateItemEffectCore(effectBody))
+                            or (AES.TranslateItemStatCore and AES.TranslateItemStatCore(effectBody))
+                            or (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(effectBody))
                             or TranslateStaticText(effectBody) or MatchLinePatterns(effectBody)
                         if translated and translated ~= effectBody then
                             pcall(fs.SetText, fs, effectPrefixPT .. translated)
@@ -1547,7 +1711,8 @@ local function TranslateTooltipLines(tip)
             if not changed and db.patterns then
                 text = fs:GetText()
 
-                local new = text
+                local new = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(text))
+                    or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(text)) or text
                 for _, p in ipairs(AES.AnywherePlain or {}) do
                     local s = new:find(p[1], 1, true)
                     if s then
@@ -1680,7 +1845,8 @@ local function TranslateTooltipLines(tip)
             local fs = _G[tipName .. "TextRight" .. i]
             local text = fs and fs:GetText()
             if text and text ~= "" then
-                local rep = MatchLinePatterns(text)
+                local rep = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(text))
+                    or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(text)) or MatchLinePatterns(text)
                 if rep then
                     fs:SetText(rep)
                 elseif AES.TranslateSystemTextStrict and not text:find("\n") then
@@ -1814,7 +1980,10 @@ local function OnItemTooltip(tip)
     local itemID = link and tonumber(link:match("item:(%d+)"))
     local name = tip:GetName()
 
-    if itemID and AES.ItemName[itemID] then
+    if itemID then
+        -- Sempre deixa o tradutor olhar o NOME do item exibido. O caminho comum
+        -- continua sendo lookup O(1) por ID; se for um item custom novo/reutilizado,
+        -- o fallback por padrao roda somente neste tooltip (nunca por frame).
         local L1 = _G[name .. "TextLeft1"]
         local text = L1 and L1:GetText()
         local translated = text and AES.TranslateItemNameText
@@ -2110,6 +2279,7 @@ end
 
 function TranslateStaticText(t)
     local es = (AES.TalentUIExact and AES.TalentUIExact[t])
+        or (AES.OfficialDisplayExact and AES.OfficialDisplayExact[t])
         or (AES.CharacterStatExact and AES.CharacterStatExact[t])
         or (AES.CharacterPanelExact and AES.CharacterPanelExact[t])
         or (AES.CustomUI and AES.CustomUI[t])
@@ -2174,6 +2344,7 @@ function TranslateStaticText(t)
     local base, tail = t:match("^(.-)%s*(:?)%s*$")
     if base and base ~= t and base ~= "" then
         es = (AES.TalentUIExact and AES.TalentUIExact[base])
+            or (AES.OfficialDisplayExact and AES.OfficialDisplayExact[base])
             or (AES.CharacterStatExact and AES.CharacterStatExact[base])
             or (AES.CharacterPanelExact and AES.CharacterPanelExact[base])
             or (AES.CustomUI and AES.CustomUI[base])
@@ -2978,7 +3149,12 @@ local function HookTrainerUI()
         end)
     end
     if ClassTrainerFrame and ClassTrainerFrame.HookScript and ClassTrainerFrame:HasScript("OnShow") then
-        ClassTrainerFrame:HookScript("OnShow", RetranslateStaticUI)
+        ClassTrainerFrame:HookScript("OnShow", function()
+            if not db or not db.spells then return end
+            TranslateTrainerList()
+            TranslateTrainerDetail()
+            if db.ui then PrimeStaticSubtree(ClassTrainerFrame) end
+        end)
     end
 end
 
@@ -3171,6 +3347,12 @@ end
 local function TranslateCharacterStatText(text)
     if type(text) ~= "string" or text == "" then return nil end
 
+    -- Tooltips do C reutilizam várias frases de atributo dos itens. Reaproveita
+    -- exatamente o mesmo parser para manter nomenclatura e não duplicar trabalho.
+    local itemStat = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(text))
+        or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(text))
+    if itemStat and itemStat ~= text then return itemStat end
+
     local statLine = AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(text)
     if statLine and statLine ~= text then return statLine end
 
@@ -3195,7 +3377,9 @@ local function TranslateCharacterStatText(text)
             line = text:sub(pos)
         end
 
-        local translated = (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(line))
+        local translated = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(line))
+            or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(line))
+            or (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(line))
             or MatchLinePatterns(line) or TranslateStaticText(line)
         if translated and translated ~= line then
             line = translated
@@ -3242,15 +3426,22 @@ local function IsCharPanelTooltip(tip)
 end
 
 local function LooksLikeCharacterStatTooltip(tip)
-    if not (charStatsActive and tip and tip.GetName and tip.NumLines) then return false end
+    -- Tooltips de atributos do painel custom podem ter owner anônimo e o painel
+    -- pode viver fora da árvore do CharacterFrame. Para não confundir tooltip de
+    -- ITEM com tooltip do C, a detecção olha só as duas primeiras linhas e exige
+    -- que o parser específico de atributos reconheça o título (Strength 34 etc.).
+    if not (tip and tip.GetName and tip.NumLines) then return false end
     local name = tip:GetName()
     if not name then return false end
-    local maxLines = math.min(tonumber(tip:NumLines()) or 0, 4)
+    local maxLines = math.min(tonumber(tip:NumLines()) or 0, 2)
     for i = 1, maxLines do
         for _, side in ipairs({ "TextLeft", "TextRight" }) do
             local fs = _G[name .. side .. i]
             local text = fs and fs.GetText and fs:GetText()
-            if text and TranslateCharacterStatText(text) then return true end
+            if text and AES.TranslateCharacterStatLine then
+                local ok, translated = pcall(AES.TranslateCharacterStatLine, text)
+                if ok and translated and translated ~= text then return true end
+            end
         end
     end
     return false
@@ -3281,7 +3472,7 @@ local function HookCharacterStatFS(fs)
     for _, method in ipairs({ "SetText", "SetFormattedText" }) do
         if fs[method] then
             pcall(hooksecurefunc, fs, method, function(self)
-                if inCharStatFSHook or not charStatsActive or not AES.CharacterUIEnabled() then return end
+                if inCharStatFSHook or not AES.CharacterUIEnabled() then return end
                 if self.IsVisible and not self:IsVisible() then return end
                 if not IsCharacterStatFontString(self) then return end
 
@@ -3737,7 +3928,9 @@ end
 local function ApplyQuestGlobalStrings()
     for globalName, translated in pairs(AES.QuestUIGlobals or {}) do
         if type(rawget(_G, globalName)) == "string" then
-            rawset(_G, globalName, translated)
+            if AES.SafeSetGlobalString then
+                AES.SafeSetGlobalString(globalName, translated)
+            end
         end
     end
 end
@@ -4057,24 +4250,8 @@ local function DelayedQuestPass()
     AES.Runtime.After("quest-pass", 0.08, RunQuestLatePass)
 end
 
-local function CaptureGiverSex()
-    if not (db and UnitSex) then return end
-    local id
-    if GetQuestID then id = tonumber(GetQuestID()) end
-    if (not id or id == 0) and _G["QuestInfoTitleHeader"] then
-        local t = _G["QuestInfoTitleHeader"].GetText and _G["QuestInfoTitleHeader"]:GetText()
-        id = t and ((AES.QuestTitleES2ID and AES.QuestTitleES2ID[t])
-            or (AES.QuestTitleEN2ID and AES.QuestTitleEN2ID[t])) or nil
-        if id == false then id = nil end
-        if not id then id = ResolveQuestIDByPanels(t) end
-    end
-    if not id or id == 0 then return end
-    local sex = UnitExists and UnitExists("npc") and UnitSex("npc") or 0
-    db.qsex = db.qsex or {}
-    if db.qsex[id] == nil then
-        db.qsex[id] = sex
-    end
-end
+-- A captura persistente de sexo do entregador foi removida: qsex nunca era lido
+-- pela addon e crescia no SavedVariables a cada quest visitada.
 
 local questFrame = CreateFrame("Frame")
 questFrame:RegisterEvent("QUEST_DETAIL")
@@ -4092,6 +4269,16 @@ questFrame:SetScript("OnEvent", function(self, event)
     if not (db and db.quests) then return end
 
     if event == "QUEST_LOG_UPDATE" or event == "QUEST_WATCH_UPDATE" then
+        -- O tracker do Ascension recicla FontStrings depois da atualizacao do log.
+        -- Refazemos apenas a arvore conhecida de quests, com debounce, em vez de
+        -- deixar um scanner permanente rodando em OnUpdate.
+        if AES.Runtime then
+            AES.Runtime.After("quest-watch-refresh", 0.06, function()
+                if db and db.quests then pcall(TranslateQuestChrome) end
+            end)
+        else
+            pcall(TranslateQuestChrome)
+        end
         return
     end
 
@@ -4109,13 +4296,6 @@ questFrame:SetScript("OnEvent", function(self, event)
     end
 
     TranslateQuestChrome()
-    if event == "QUEST_DETAIL" or event == "QUEST_COMPLETE" then
-        if AES.Runtime then
-            AES.Runtime.After("quest-giver-sex", 0.4, CaptureGiverSex)
-        else
-            pcall(CaptureGiverSex)
-        end
-    end
     if event == "QUEST_PROGRESS" then
         TranslateQuestProgress()
         DelayedQuestPass()
@@ -4144,6 +4324,20 @@ AES.TranslateQuestProgress = TranslateQuestProgress
 
 local gossipIdx
 local gossipApplied = {}
+do
+    local count, limit = 0, 2048
+    AES.RememberGossipApplied = function(text)
+        if type(text) ~= "string" or text == "" then return end
+        if gossipApplied[text] == nil then
+            count = count + 1
+            if count > limit then
+                gossipApplied = {}
+                count = 1
+            end
+        end
+        gossipApplied[text] = true
+    end
+end
 
 local function GossipRenderEN(t)
     local male = not (UnitSex and UnitSex("player") == 3)
@@ -4170,6 +4364,15 @@ local function GossipLookup(shown)
     if es == nil and AES.GossipExtraNormalized then
         local normalized = key:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
         es = AES.GossipExtraNormalized[normalized]
+    end
+
+    -- Alguns NPCs custom entregam variáveis como classe/jogador já resolvidas no texto.
+    -- O complemento de Gossip pode reconhecer esses formatos sem manter uma entrada por classe.
+    if es == nil and AES.GossipPatternFallback then
+        local okPattern, translated = pcall(AES.GossipPatternFallback, key)
+        if okPattern and type(translated) == "string" and translated ~= "" and translated ~= key then
+            es = translated
+        end
     end
 
     -- Muitos NPCs custom do CoA reutilizam textos que já existem na base de
@@ -4214,7 +4417,7 @@ local function GossipLookup(shown)
     end
     if es then
         es = QuestRenderES(es)
-        gossipApplied[es] = true
+        AES.RememberGossipApplied(es)
         return es
     end
     return nil
@@ -4396,11 +4599,9 @@ local function WrapQuestGetter(name, field)
         end
 
         if db and id and qd and es then
-            db.qdrift = db.qdrift or {}
-            db.qdrift[id] = db.qdrift[id] or {}
-            if db.qdrift[id][field] == nil then
-                db.qdrift[id][field] = en
-            end
+            -- Divergência de texto é telemetria de desenvolvimento, não SavedVariable.
+            -- Guardar o texto inteiro por quest/field fazia o arquivo salvo crescer para sempre.
+            AES.Perf.questDriftCount = (AES.Perf.questDriftCount or 0) + 1
         end
         return en
     end
@@ -5737,7 +5938,7 @@ frame:SetScript("OnEvent", function(self, event, arg1)
     -- Lixo de opção antiga. Se vier de versão velha, limpa no carregamento.
     for _, key in ipairs({ "capture", "captured", "uicaptured", "qcaptured",
                             "gcaptured", "scaptured", "globalscaptured",
-                            "sonda", "marcos" }) do
+                            "sonda", "marcos", "qdrift", "qsex" }) do
         db[key] = nil
     end
 
@@ -5950,8 +6151,10 @@ end)
 end)()
 
 
-SLASH_ASCENSIONPTBR1 = "/aptbr"
-SLASH_ASCENSIONPTBR2 = "/ascensionptbr"
+-- /aptbr pertence ao painel de opções (Config.lua). Mantemos os comandos técnicos
+-- em aliases próprios para não registrar o mesmo slash duas vezes.
+SLASH_ASCENSIONPTBR1 = "/ascensionptbr"
+SLASH_ASCENSIONPTBR2 = "/aptbrcmd"
 SlashCmdList["ASCENSIONPTBR"] = function(msg)
     msg = (msg or ""):lower():gsub("^%s+", ""):gsub("%s+$", "")
     local function status(v) return v and "|cff33ff99SIM|r" or "|cffff3333NÃO|r" end
@@ -6020,4 +6223,18 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.5.0/AscensionES-1.5.9/2026-08-17"
+SLASH_APTBRDIAG1 = "/aptbrdiag"
+SlashCmdList["APTBRDIAG"] = function()
+    local memoryKB = collectgarbage and collectgarbage("count") or 0
+    local taskCount = 0
+    if AES.Runtime and AES.Runtime.tasks then
+        for _ in pairs(AES.Runtime.tasks) do taskCount = taskCount + 1 end
+    end
+    local skipped = AES.Perf and tonumber(AES.Perf.globalStringFormatSkips) or 0
+    local drift = AES.Perf and tonumber(AES.Perf.questDriftCount) or 0
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "|cff33ff99AscensionPTBR|r diagnóstico: memória Lua %.1f MB | tarefas=%d | formatos protegidos=%d | divergências de quest=%d",
+        (tonumber(memoryKB) or 0) / 1024, taskCount, skipped or 0, drift or 0))
+end
+
+AscensionPTBR.__firma = "AscensionPTBR/1.5.1/AscensionES-1.5.9/2026-08-24"
