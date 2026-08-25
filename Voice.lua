@@ -126,8 +126,11 @@ local function ApplyVoiceCVar(enabled, recapture)
         end
         SetCVar("Sound_EnableErrorSpeech", 0)
     else
-        -- Desligou o modo ptBR? Devolve a voz padrão do cliente.
-        SetCVar("Sound_EnableErrorSpeech", 1)
+        -- Restaura exatamente a preferência que o jogador usava antes do modo ptBR.
+        -- Se o addon ainda não alterou a CVar nesta sessão, não mexe nela.
+        if originalErrorSpeech ~= nil then
+            SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
+        end
         originalErrorSpeech = nil
     end
 end
@@ -252,8 +255,8 @@ frame:SetScript("OnEvent", function(self, event, arg1, arg2)
         end
     -- Não deixa CVar preso quando sair do jogo.
     elseif event == "PLAYER_LOGOUT" then
-        if SetCVar then
-            SetCVar("Sound_EnableErrorSpeech", 1)
+        if SetCVar and originalErrorSpeech ~= nil then
+            SetCVar("Sound_EnableErrorSpeech", originalErrorSpeech)
             originalErrorSpeech = nil
         end
     elseif event == "UI_ERROR_MESSAGE" then

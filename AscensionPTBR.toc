@@ -3,7 +3,7 @@
 ## Notes: Tradução pt-BR do Project Ascension, revisada para o cliente enUS.
 ## Author: HideXs; adaptação ptBR por GabrielBosco
 ## X-Upstream: HideXs/AscensionES
-## Version: 1.5.1
+## Version: 1.5.2
 ## X-GitHub-Repo: GabrielBosco/AscensionPTBR
 ## X-GitHub-Releases: https://github.com/GabrielBosco/AscensionPTBR/releases/latest
 ## OptionalDeps: DragonUI
@@ -30,7 +30,6 @@ data\ItemNamesExtra.lua
 data\ItemDescs.lua
 data\UnitNames.lua
 data\Quests.lua
-data\QuestBulk.lua
 data\spells\shared\DescByID_01.lua
 data\spells\shared\DescByID_02.lua
 data\spells\shared\DescByID_03.lua

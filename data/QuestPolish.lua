@@ -2,6 +2,20 @@ AscensionPTBR = AscensionPTBR or {}
 
 -- Acertos pontuais das quests que ainda apareciam tortas no jogo.
 local P = {
+    -- Durotar: textos e objetivos que aparecem no diário e no rastreador inicial.
+    [786]={o="Larri Presador, nos arredores da Aldeia Sen'jin, quer que você destrua os três conjuntos de Planos de Ataque no Penedo de Kolkar.",p="Os centauros têm sido uma ameaça constante para a Horda. Não podemos tolerar a intenção deles de sitiar nossa terra."},
+    [808]={d="Ouço a voz do meu irmão Minshina, <name>. Zalazane mantém o espírito dele preso nas Ilhas do Eco. Leve o crânio de Minshina ao círculo de poder para libertá-lo e depois traga-o até mim.",o="Recupere o Crânio de Minshina no círculo de poder das Ilhas do Eco e leve-o ao Mestre Gadrin, na Aldeia Sen'jin.",p="Você trouxe o crânio do meu irmão, <name>? Ele finalmente está livre?",c="Obrigado, <name>. Você libertou Minshina e salvou o espírito do meu irmão da escravidão!"},
+    [817]={o="Colete 4 Peles de Tigre de Durotar e leve-as a Vel'rin Fang, na Aldeia Sen'jin.",p="Ainda estou esperando as peles, <name>. Meus agradecimentos serão sinceros quando você retornar com elas."},
+    [818]={d="Embora minha visão esteja falhando, ainda consigo preparar uma poção que aguçará seus sentidos. Para isso, preciso de olhos intactos dos makruras e do muco dos rastejantes que vivem na costa.",o="Leve 4 Olhos de Makrura Intactos e 8 ampolas de Muco de Rastejante ao Mestre Vornal, na Aldeia Sen'jin.",p="O tempo é o verdadeiro teste de um caçador. Volte quando tiver reunido todos os ingredientes.",c="Muito bem, jovem. Muito bem mesmo. Estes ingredientes servirão perfeitamente."},
+    [823]={d="Orgil está reunindo os guerreiros da Aldeia Sen'jin. Apresente-se a ele e descubra como pode ajudar nosso povo.",o="Fale com Orgil Chaga'alma, na Aldeia Sen'jin.",c="Então Mestre Gadrin enviou você. Ótimo. Temos muito trabalho pela frente."},
+    [826]={d="Zalazane traiu nosso povo e escravizou muitos dos nossos nas Ilhas do Eco. Derrote seus seguidores e traga-me a cabeça dele como prova de que seu domínio chegou ao fim.",o="Derrote Zalazane, mate 8 Trolls Vodu e 8 Trolls Enfeitiçados e leve a Cabeça de Zalazane ao Mestre Gadrin.",p="Zalazane ainda vive, <name>. Nosso povo não estará livre enquanto ele mantiver o controle das ilhas.",c="Zalazane caiu. Hoje, os espíritos dos nossos ancestrais finalmente podem descansar."},
+    [254010]={o="Procure no acampamento dos centauros pistas sobre as propriedades da flor.",p="Só posso esperar que mantenham algum tipo de registro.",c="Um desenho rudimentar parece representar a flor mencionada por Sakari ao lado de uma elfa alada. Outros desenhos mostram a elfa carregando minérios e gemas. Talvez essa figura saiba mais sobre a flor e valorize esses materiais."},
+    [1903540]={d="As estalagens são lugares seguros para descansar enquanto você viaja. Fale com um Estalajadeiro e escolha esta estalagem como seu lar para aprender a usar sua Pedra de Regresso.",o="Visite um Estalajadeiro e selecione \"Faça desta estalagem o seu lar\".",p="Fale com um Estalajadeiro e escolha esta estalagem como seu lar."},
+    [175136]={d="Tenho uma missão para você e também um título; considere isto uma promoção.\n\nQuero que fale com o Thane desta cidade, Azaghal Stonesong, na condição de Enviado Especial de Altaforja. Coloque-se a serviço dele e ajude o governo de Dun Kazad como demonstração da boa vontade do Rei Magni Barbabronze.\n\nEnquanto isso, meu primo e eu investigaremos a conspiração até encontrarmos quem ordenou o ataque. Com sorte, até lá você terá conquistado a amizade do Thane...\n\nE a confiança dele.",o="Apresente-se ao Thane Azaghal Stonesong na Praça da Audiência, em Dun Kazad.",c="Suponho que tenha vindo com a delegação.\n\n<O olhar que o Thane de Dun Kazad lança sob as sobrancelhas grossas e imponentes transmite uma autoridade fria, alheia aos problemas mundanos.>\n\nPoupe-me de suas acusações veladas. A emboscada sofrida pelo Senador Thargas foi uma coincidência trágica; nenhum anão honrado desta cidade conspiraria para matar outro anão."},
+    [175139]={o="Vista o traje de mergulho, conserte a parte externa do vidro do Metrô Correfundo e mate os Caranguejos Gélidos.",c="Os alarmes finalmente silenciaram! Ha!\n\nDeixe-me calcular...\n\n<Ele murmura, pontuando cada palavra com um estalo no console mecânico.>\n\nA fita tem durabilidade de 7 sobre 3... a população foi reduzida em 15... a temperatura oscila entre 6 e 7 graus... e o fluxo do Metrô aumentou em '2E'...\n\n<Ele golpeia uma tecla e o resultado aparece imediatamente. Então grita, entusiasmado:>\n\nCento e trinta e sete por cento!"},
+    [175227]={o="Apresente-se a Jabul, Sumo Sacerdote de Tzotec, em Thundrakar.",c="<O Sumo Sacerdote do Loa da Morte observa você com expressão altiva.>\n\nA princesa me enviou um estranho.\n\nCurioso. Mas não totalmente inesperado; já me acostumei às excentricidades dela.\n\nSe Mexitla acredita que você pode ajudar a restaurar nosso vínculo com Tzotec, então que assim seja."},
+    [175256]={d="Hezari se esconde em uma caverna próxima. Acredito que esteja ferida, assim como eu.\n\n<Kezajin entrega o ídolo de ossos a você.>\n\nOfereça-lhe este tributo. Não a ameace nem demonstre pena; para ela, isso seria quase pior. Baixe a cabeça e escute. Quando terminar de falar, explique o que levou você até ela.\n\nPergunte como podemos recuperar o favor de sua mãe.",o="Apresente-se a Hezari e ofereça o tributo preparado por Kezajin."},
+    [175257]={o="Obtenha uma Joia do Olho Intacta no tesouro das cabeças esculpidas do Palácio Hierático e ofereça-a no altar.",c="<O ar se dobra sobre o altar. O espírito fixa em você um olhar inexpressivo.>\n\nUma Joia do Olho intacta. Um olhar mutilado. Um tributo de quem deseja enxergar o Outro Lado.\n\n<Patlazar inclina a cabeça.>\n\nFale, forasteiro. Que dívida traz sua sombra a este palácio?"},
     [28667]={d="Ei, você! Estou vendo essa picareta que carrega. Estou recrutando você para uma tarefa em nome da Horda.\n\nEstá vendo aquela forja ali? Nós a montamos, mas os ogros ainda não pegaram o jeito porque não têm materiais armazenados. É aí que você entra. Traga-me 20 Minérios de Ferro para mostrarmos a esses ogros como funciona a fundição.",o="Nazeer Bloodpike quer que você use sua perícia em Mineração para coletar 20 Minérios de Ferro e leve a encomenda até ele, na Aldeia Muralha Verde, no Pântano Vadeoso.",c="Ah! Ferro de verdade, não sucata recolhida por aí. Com isto eu consigo trabalhar. Está liberado, <name>. Pode cuidar dos seus assuntos."},
     [28672]={o="Fizit quer que você use sua perícia em Mineração para obter 20 Barras de Tório e leve a encomenda até ele, em Valormok, Azshara.",p="Ainda vai levar algum tempo até conseguirmos oferecer todos os serviços de criação em Valormok, mas isto nos deixa um passo mais perto.",c="Viva! Um pequeno milagre realizado. Agora, se eu tivesse um treco autoajustável e autocalibrável... não se preocupe, não vou pedir que encontre um desses."},
     [28673]={d="O Tenente Rainer vem patrulhando a Guarnição do Arroio do Oeste com uma camisa que mais parece um trapo desde uma emboscada de gnolls na semana passada. Ele se recusa a parar para consertá-la — diz que isso fortalece o caráter.\n\nSe você tiver habilidade, poderia confeccionar duas Camisas Azuis de Linho e levá-las até ele? Talvez não admita, mas sei que apreciaria o gesto. Só não deixe que ele convença você a costurar o guarda-roupa inteiro.",o="Sara Timberlain quer que você use sua perícia em Alfaiataria para confeccionar 2 Camisas Azuis de Linho e leve a encomenda ao Tenente Rainer, na Guarnição do Arroio do Oeste, na Floresta de Elwynn.",p="Malditos gnolls! Estou começando a congelar aqui fora.",c="Ora, veja só! As costuras estão firmes, a cor está certa... você se superou. Sara pensou em tudo — menos no quanto eu odeio ficar devendo favores. Então pegue estes suprimentos e ficamos quites."},
@@ -179,6 +193,7 @@ QuestFix(1438, {title="A busca de Vahlarriel"})
 QuestFix(1439, {title="Em busca de Tyranis"})
 QuestFix(1442, {title="Em busca da Gema Kor"})
 QuestFix(1448, {title="Em busca do templo"})
+QuestFix(100033, {title="Arena: Inscrição"})
 QuestFix(1465, {title="A busca de Vahlarriel"})
 QuestFix(1921, {title="Coletando materiais"})
 QuestFix(1961, {title="Coletando materiais"})
@@ -1211,6 +1226,92 @@ QuestFix(1783, {
 QuestFix(1843, {
     c="Obrigado, $n. Estas manoplas são meu melhor trabalho. Fique com elas. Ao usá-las, você honra a mim e aos meus ancestrais."
 })
+
+-- Parte 11: revisão final das missões iniciais de Durotar. Além do texto,
+-- estes overrides removem quebras geradas como "\\n" literal no cliente.
+QuestFix(784, {
+    title="Derrote os Traidores",
+    p="Você tem suas ordens, $n. A segurança de Durotar está em jogo. Cumpra a tarefa diante de você ou baixe a cabeça de vergonha.\n\nMostre sua honra e derrote os humanos da Bastilha Tiragarde."
+})
+QuestFix(786, {
+    o="Destrua os três conjuntos de Planos de Ataque no Penedo de Kolkar, perto da Aldeia Sen'jin.",
+    p="Os centauros têm sido uma ameaça constante para a Horda. Não podemos tolerar a intenção deles de sitiar nossa terra."
+})
+QuestFix(790, {
+    p="Ah... meu pai sempre disse que eu nunca conseguiria muita coisa. Agora, prostrado sob uma árvore enquanto minha vida se esvai, temo que ele estivesse certo.\n\nAo menos quero morrer sabendo que meu último inimigo também está morto."
+})
+QuestFix(791, {
+    p="Lutei com orgulho ao lado do Chefe Guerreiro durante a conquista destas terras. Minha pele ainda carrega as cicatrizes daquela batalha.\n\nQuando a necessidade nos obrigou a formar uma aliança com humanos e elfos para derrotar Arquimonde, meu machado e meu grito de guerra ajudaram a defender a honra da Horda.\n\nHoje, minha posição como vigia e provedor me dá um novo motivo de orgulho."
+})
+QuestFix(792, {
+    title="Familiares Torpes",
+    o="Mate 8 Familiares Torpes e retorne a Zureta Vista-longa, em frente ao Covil."
+})
+QuestFix(805, {
+    c="Hum... seu relatório chegou em uma hora ruim. A Lâmina Ardente ainda não foi vista na Aldeia Sen'jin, mas sua corrupção se espalhou pela costa e alcançou as Ilhas do Eco.\n\nOs orcs são amigos honrados dos trolls Lançanegra. Queremos ajudá-los, mas agora também precisamos de ajuda."
+})
+QuestFix(806, {
+    d="Não podemos permitir que a Lâmina Ardente se estabeleça em Durotar! Precisamos destruí-la antes que esse mal se espalhe!\n\nConduzi minhas próprias investigações e descobri que Bulho Tempesnigra, um bruxo goblin da Lâmina Ardente, acampou no Desfiladeiro do Trovão, a noroeste. Lá, ele e seus servos sectários espalham o caos.\n\nEncontre Bulho, derrote-o e traga-me sua garra."
+})
+QuestFix(809, {
+    d="Desde a última grande guerra, quando a Legião Ardente foi derrotada, busco sinais de corrupção demoníaca entre os orcs. O colar que você trouxe confirma meus temores.\n\nEle pertence à Lâmina Ardente, um culto reunido em torno de um artefato demoníaco chamado Semente Demoníaca. O objeto está nos Sertões, no alto do Morro do Medo, e precisa ser destruído.\n\nVá ao Posto Remoto, na fronteira oeste de Durotar, e fale com meu assistente Ak'Zeloth. Ele dará as próximas instruções."
+})
+QuestFix(812, {
+    title="Em Busca da Cura",
+    c="$n, você salvou minha vida. Obrigado.\n\nAceite isto. Espero que seja útil em suas viagens ou ao menos renda algumas moedas. Pelo que contou, Kor'ghan ainda me fará passar por muitos rituais até que eu prove meu valor."
+})
+QuestFix(813, {
+    title="Em Busca do Antídoto",
+    d="Os Caudaçonhas estão entre os escorpídeos mais mortais de Durotar. Rhinag foi imprudente ao caçá-los sem levar o antídoto, mas agora não é hora de repreendê-lo.\n\nTraga-me Vesículas de Veneno dos caudaçonhas próximos à entrada de Orgrimmar. Com elas, prepararei o antídoto.\n\nDepressa, $n. Um dos nossos precisa de ajuda.",
+    p="Seja qual for a criatura que pretende caçar, estude-a e compreenda seu comportamento. Esse conhecimento pode salvar sua vida.",
+    c="Aqui está o antídoto, $n. Leve-o a Rhinag o mais rápido possível e tenha cuidado."
+})
+QuestFix(815, {
+    title="Quebrando Alguns Ovos",
+    d="Bah! Quase me esqueci de preparar o café da manhã.\n\n$n, traga-me alguns Ovos de Açoitacauda. Precisarei de pelo menos três para a refeição de amanhã.\n\nOs açoitacaudas Garrasangre são ferozes e costumam proteger seus ovos até a morte. Procure por eles nas Ilhas do Eco, a sudeste da Aldeia Sen'jin."
+})
+QuestFix(816, {title="Perdido, mas Não Esquecido"})
+QuestFix(817, {
+    d="Muitas das peles que usamos vêm dos tigres de Durotar, $n. Cobertores, armaduras e tendas: há muitos motivos para caçarmos essas feras e também para permitirmos que prosperem.\n\nNossa população cresceu e os estoques já não atendem às necessidades do povo. Traga-me 4 Peles de Tigre de Durotar. Você encontrará os animais nas ilhas ao sul daqui.",
+    p="Lembro-me da minha primeira caça ao tigre, $n. Permaneci imóvel nas sombras da maior Ilha do Eco durante quase um dia inteiro, observando e esperando.\n\nMeus músculos estavam retesados e eu estava pronto para atacar quando o tigre finalmente mordeu a isca.",
+    c="Estou satisfeito, $n. Com sua ajuda, nosso povo estará protegido e não passará frio quando a estação mudar.\n\nObrigado."
+})
+QuestFix(826, {
+    d="Zalazane vive nas Ilhas do Eco, que um dia foram nosso lar. De lá, ele envia seus seguidores para enfeitiçar nosso povo e aumentar seu domínio.\n\nIsso precisa terminar. Derrote Zalazane e os trolls submetidos ao poder dele. Traga-me a cabeça do traidor como prova de sua queda.",
+    o="Derrote Zalazane, mate 8 Trolls Vodu e 8 Trolls Enfeitiçados e leve a Cabeça de Zalazane ao Mestre Gadrin.",
+    p="Zalazane ainda vive, $n. Nosso povo não estará livre enquanto ele controlar as ilhas.",
+    c="Zalazane caiu. Agora a tribo Lançanegra pode voltar a dormir em paz.\n\nObrigado, $n. Nosso povo tem uma grande dívida com você."
+})
+QuestFix(827, {
+    o="Reúna Colares Calcinantes dos sectários da Rocha da Caveira e leve-os a Margoz, no acampamento dele."
+})
+QuestFix(829, {
+    d="Os Colares Calcinantes que você trouxe são instrumentos demoníacos poderosos. Descobrir a origem deles está além das minhas habilidades como xamã; precisaremos de um bruxo para estudá-los.\n\nLeve um dos colares a Neeru Cortafogo. Ele afirma usar seus poderes contra os demônios e diz que sua pesquisa sobre o oculto é inofensiva. Seja verdade ou mentira, precisamos da ajuda dele contra a seita demoníaca de Durotar.\n\nVocê encontrará Neeru no Antro das Sombras, em Orgrimmar."
+})
+QuestFix(835, {
+    p="Você não imaginaria isso vindo de Gasganete, mas ele sempre soube avaliar a situação. 'Não tenha medo de dar um passo grande', dizia ele.\n\nAs harpias continuarão atacando as caravanas enquanto não fizermos alguma coisa a respeito."
+})
+QuestFix(837, {
+    p="Embora tenham alguma inteligência e organização, ainda me surpreende que os javatuscos tenham conquistado e mantido tanto território em Kalimdor. Talvez sejam adversários mais astutos do que eu imaginava."
+})
+QuestFix(1505, {
+    c="Olá, jovem. Veio em busca de treinamento, não é?"
+})
+QuestFix(1524, {
+    d="Você já tem poder suficiente para empunhar o Totem do Fogo, mas isso não significa que esteja pronto.\n\nÀs margens do Rio Furiaustral, antes que ele alcance o Grande Oceano, há uma trilha oculta que leva a um dos picos mais altos de Durotar. Suba até o Altar da Chama Latente, vigiado por Telf Joolam.\n\nLeve esta tocha até ele. Acenda-a no braseiro do altar e retorne; então cuidarei para que você receba o Totem do Fogo.",
+    p="Saudações, $n. Você encontrou o Altar da Chama Latente. Somente aqueles que conhecem as artes xamânicas descobrem os segredos deste lugar e o poder que ele guarda. Sou o guardião do altar e não posso permitir que qualquer pessoa se aproxime.",
+    c="Ah, perdoe-me, $n. Não percebi que você carregava a tocha. É um prazer conhecê-lo.\n\nMuitos aventureiros chegam até aqui procurando tesouros perdidos ou criaturas místicas, mas encontram apenas um altar aparentemente vazio. Nós conhecemos a verdade, não é?\n\nEste lugar guarda um grande segredo dos membros comuns da Horda. Para nós, ele é sagrado."
+})
+QuestFix(4402, {
+    title="A Surpresa de Maçã do Cacto do Galgar",
+    d="O calor no Vale das Provações é intenso.\n\n<Galgar enxuga o suor da testa.>\n\nSe eu tivesse algumas Maçãs do Cacto, poderia preparar minha famosa surpresa. Nada refresca tão depressa quanto um pedaço daquela delícia.\n\nTraga-me 6 Maçãs do Cacto e prepararei algumas porções para suas aventuras. Elas crescem perto dos cactos espalhados pelo vale.",
+    o="Leve 6 Maçãs do Cacto a Galgar, no Vale das Provações."
+})
+QuestFix(6384, {
+    o="Compre uma viagem de mantícora para Orgrimmar com Devrak e entregue as Carnes de Zargh a Gryshka."
+})
+QuestFix(6385, {o="Entregue a Carta de Gryshka a Doras, em Orgrimmar."})
+QuestFix(6386, {o="Compre uma viagem de mantícora para a Encruzilhada com Doras e entregue a Carta de Gryshka a Zargh."})
 
 
 -- Zonas iniciais de Burning Crusade que entram naturalmente no 1-30.

@@ -626,7 +626,7 @@ local function BuildWindow()
 
     local version = header:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
     version:SetPoint("RIGHT", header, "RIGHT", -46, 3)
-    version:SetText("v" .. tostring((GetAddOnMetadata and GetAddOnMetadata(ADDON_NAME or "AscensionPTBR", "Version")) or "1.5.1"))
+    version:SetText("v" .. tostring((GetAddOnMetadata and GetAddOnMetadata(ADDON_NAME or "AscensionPTBR", "Version")) or "1.5.2"))
 
     local close = CreateFrame("Button", nil, header, "UIPanelCloseButton")
     close:SetPoint("TOPRIGHT", 2, 2)
@@ -795,5 +795,10 @@ SLASH_ASCENSIONPTBROPTIONS2 = "/aptbropcoes"
 SLASH_ASCENSIONPTBROPTIONS3 = "/aptbroptions"
 SlashCmdList.ASCENSIONPTBROPTIONS = function(msg)
     msg = type(msg) == "string" and msg:match("^%s*(.-)%s*$") or ""
+    local command = msg:lower()
+    if command == "diagnostico" or command == "diagnóstico" or command == "diag" then
+        if A.RunDiagnostics then A.RunDiagnostics() end
+        return
+    end
     A.OpenOptions(msg ~= "" and msg or nil)
 end

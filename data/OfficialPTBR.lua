@@ -303,7 +303,7 @@ local OfficialCharacterStatExtras = {
     ["CR_CRIT_SPELL_TOOLTIP"] = "Chance de causar dano adicional com feitiços.\nAcerto crítico %s (+%.2f%% de chance de acerto crítico)",
     ["CR_CRIT_TOOLTIP"] = "Chance de aumentar a eficácia de ataques e curas\n\nAcerto Crítico: %s [+%.2f%%]",
     ["CR_DODGE_TOOLTIP"] = "Esquiva de %d acrescenta %.2f%% à chance de Esquiva\n|cff888888(Antes do decréscimo de eficiência)|r",
-    ["CR_EXPERTISE_TOOLTIP"] = "Reduz em %s a chance de seus golpes serem esquivados ou aparados\nÍndice de aptidão %s (+%.2F%% de aptidão)",
+    ["CR_EXPERTISE_TOOLTIP"] = "Reduz em %s a chance de seus golpes serem esquivados ou aparados\nÍndice de aptidão %s (+%.2f%% de aptidão)",
     ["CR_HASTE_RATING_TOOLTIP"] = "Aceleração %d (%.2f%% de aceleração)",
     ["CR_HIT_MELEE_TOOLTIP"] = "Aumenta a chance de acerto de ataques corpo a corpo contra alvos de nível %d em %.2f%%.",
     ["CR_HIT_RANGED_TOOLTIP"] = "Aumenta a chance de acertar um ataque de longo alcance em um alvo de nível %d em %.2f%%.",
@@ -2746,4 +2746,3 @@ A.OfficialCreatureTypes = {
     ["Totem"] = "Totem",
     ["Undead"] = "Morto-vivo",
 }
-

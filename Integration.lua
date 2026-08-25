@@ -681,21 +681,7 @@ EnsureDetailsClassColors()
             end
         end
 
-        if not EnumerateFrames then return nil end
-        local frame = EnumerateFrames()
-        local checked = 0
-        while frame and checked < 1200 do
-            checked = checked + 1
-            if Visible(frame) then
-                local parent = frame.GetParent and frame:GetParent()
-                -- Começa por raízes para não percorrer a mesma árvore dezenas de vezes.
-                if parent == UIParent or parent == nil then
-                    local _, hits = CollectTree(frame, 320)
-                    if hits >= 2 then return frame end
-                end
-            end
-            frame = EnumerateFrames(frame)
-        end
+        return nil
     end
 
     local function TranslateGameMenu()
@@ -1158,25 +1144,7 @@ end)()
             end
         end
 
-        -- Fallback so roda quando a tela de Provas esta sendo aberta ou no
-        -- comando de diagnostico. Nunca fica enumerando frames durante gameplay.
-        if not EnumerateFrames then return nil end
-        local frame = EnumerateFrames()
-        local checked = 0
-        while frame and checked < 1400 do
-            checked = checked + 1
-            if Visible(frame) then
-                local parent = frame.GetParent and frame:GetParent()
-                if parent == UIParent or parent == nil then
-                    local hits = Probe(frame, 260)
-                    if hits >= 2 then
-                        cachedRoot = frame
-                        return frame
-                    end
-                end
-            end
-            frame = EnumerateFrames(frame)
-        end
+        return nil
     end
 
     local function HookRoot(root)

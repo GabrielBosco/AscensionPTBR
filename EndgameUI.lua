@@ -34,8 +34,6 @@ local widgetHooked = setmetatable({}, { __mode = "k" })
 local rootHooked = setmetatable({}, { __mode = "k" })
 local roots = setmetatable({}, { __mode = "k" })
 local togglesHooked = {}
-local discoveryDone = false
-local globalNamesScanned = false
 
 local function ReadText(obj)
     if not (obj and obj.GetText) then return nil end
@@ -290,54 +288,24 @@ local KNOWN_ROOTS = {
     "AscensionArenaFrame", "ArenaWindow", "BattlegroundFrame",
 }
 
-local function HookKnownRoots(scanGlobals)
+local function HookKnownRoots()
     for i = 1, #KNOWN_ROOTS do
         local root = _G[KNOWN_ROOTS[i]]
         if root then HookRoot(root) end
     end
 
-    -- Alguns builds mudam o nome global. Esse scan da tabela global e raro:
-    -- login, diagnostico ou carregamento de um addon com nome relacionado.
-    if not scanGlobals or globalNamesScanned then return end
-    globalNamesScanned = true
-    for name, obj in pairs(_G) do
-        if type(name) == "string" and type(obj) == "table" and NameLooksEndgame(name) then
-            if obj.GetChildren or obj.GetRegions or obj.HookScript then HookRoot(obj) end
-        end
-    end
 end
 
-local function DiscoverFrames(force)
-    if discoveryDone and not force then return 0 end
-    discoveryDone = true
-    globalNamesScanned = false
-    HookKnownRoots(true)
-    if not EnumerateFrames then return 0 end
-
-    local frame = EnumerateFrames()
-    local checked, found = 0, 0
-    while frame and checked < 2600 do
-        checked = checked + 1
-        local named = CandidateName(frame)
-        local parent = frame.GetParent and frame:GetParent()
-        local topLevel = parent == UIParent or parent == nil
-        local looksRight = named
-        if not looksRight and topLevel and Visible(frame) then
-            looksRight = Probe(frame, 260) >= 3
-        end
-        if looksRight then
-            HookRoot(frame)
-            found = found + 1
-            if Visible(frame) then RefreshRoot(frame) end
-        end
-        frame = EnumerateFrames(frame)
-    end
+local function DiscoverFrames()
+    HookKnownRoots()
+    local found = 0
+    for _ in pairs(roots) do found = found + 1 end
     return found
 end
 
 local function RefreshAll()
     if not Enabled() then return 0 end
-    HookKnownRoots(false)
+    HookKnownRoots()
     local changed = 0
     for root in pairs(roots) do
         if Visible(root) and IsEndgameRoot(root) then
@@ -401,26 +369,22 @@ ev:RegisterEvent("ADDON_LOADED")
 ev:SetScript("OnEvent", function(_, event, addonName)
     InstallHooks()
     if event == "PLAYER_ENTERING_WORLD" then
-        discoveryDone = false
-        globalNamesScanned = false
-        HookKnownRoots(true)
-        After("aptbr-endgame-discover", 1.0, function() DiscoverFrames(false) end)
+        HookKnownRoots()
+        After("aptbr-endgame-discover", 1.0, DiscoverFrames)
     else
-        HookKnownRoots(false)
+        HookKnownRoots()
         if type(addonName) == "string" and NameLooksEndgame(addonName) then
-            globalNamesScanned = false
-            HookKnownRoots(true)
+            HookKnownRoots()
         end
     end
 end)
 
 InstallHooks()
-HookKnownRoots(false)
+HookKnownRoots()
 
 SLASH_APTBRENDGAME1 = "/aptbrendgame"
 SlashCmdList["APTBRENDGAME"] = function()
-    discoveryDone = false
-    local found = DiscoverFrames(true)
+    local found = DiscoverFrames()
     local changed = RefreshAll()
     if DEFAULT_CHAT_FRAME then
         DEFAULT_CHAT_FRAME:AddMessage(string.format(

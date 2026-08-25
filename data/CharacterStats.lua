@@ -76,7 +76,6 @@ A.CharacterStatExact = {
     ["Spell Crit"] = "Crítico com feitiços",
     ["Spell Crit Chance"] = "Chance de crítico com feitiços",
     ["Mana Regen."] = "Regen. de mana",
-    ["Mana Regen"] = "Regen. de mana",
     ["Acceleration"] = "Aceleração",
 
     ["Increases attack power with melee weapons."] =
@@ -936,7 +935,13 @@ local function TranslateCharacterStatGeneric(text)
     local core = text:gsub("\194\160", " "):gsub("^%s+", ""):gsub("%s+$", "")
 
     -- Rótulo + valor, incluindo frações/percentuais usados pelo painel custom.
-    local label, suffix = core:match("^(.-)(:%s*.+)$")
+    -- O valor depois de ":" precisa ser numérico. GameTooltip é reutilizado
+    -- pelos slots do personagem e pode produzir textos como "Power: Leather Pants"
+    -- durante a troca de contexto; aceitar qualquer sufixo fazia o item aparecer no C.
+    local label, suffix = core:match("^(.-)(:%s*[%+%-]?%d[%d%.,/%-%% ]*)$")
+    if not label then
+        label, suffix = core:match("^(.-)(:%s*|c%x%x%x%x%x%x%x%x[%+%-]?%d[%d%.,/%-%% ]*|r)$")
+    end
     local labelPT = label and CharacterStatPhrase(label)
     if labelPT then return labelPT .. suffix end
     label, suffix = core:match("^(.-)(%s+[%+%-]?[%d%.,]+%%?.*)$")
@@ -1122,7 +1127,10 @@ function A.TranslateCharacterStatLine(text)
         -- Alguns painéis customizados juntam rótulo e valor no mesmo FontString
         -- (ex.: "Strength: 37" ou "Hit Rating 1/31"). Traduz apenas quando a
         -- parte esquerda é um atributo conhecido, preservando o valor exatamente.
-        local label, suffix = text:match("^(.-)(:%s*.+)$")
+        local label, suffix = text:match("^(.-)(:%s*[%+%-]?%d[%d%.,/%-%% ]*)$")
+        if not label then
+            label, suffix = text:match("^(.-)(:%s*|c%x%x%x%x%x%x%x%x[%+%-]?%d[%d%.,/%-%% ]*|r)$")
+        end
         local ptLabel = label and A.CharacterStatExact[label]
         if ptLabel then translated = ptLabel .. suffix end
         if not translated then

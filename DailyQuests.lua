@@ -15,8 +15,6 @@ local lastSeen = setmetatable({}, { __mode = "k" })
 local stableOverlays = setmetatable({}, { __mode = "k" })
 local stableHooked = setmetatable({}, { __mode = "k" })
 local stableActive = setmetatable({}, { __mode = "k" })
-local globalScanDone = false
-local scanCount = 0
 
 local STABLE_LABELS = {
     ["Rewards"] = "Recompensas",
@@ -276,16 +274,6 @@ local explicitRootNames = {
     "PathToAscensionFrame", "PathToAscensionQuestFrame", "PathOfAscensionFrame",
 }
 
-local function LooksLikeBoardName(name)
-    if type(name) ~= "string" then return false end
-    local low = name:lower()
-    if low:find("callboard", 1, true) or low:find("call_board", 1, true) then return true end
-    if low:find("dailyquest", 1, true) or low:find("daily_quest", 1, true) then return true end
-    if low:find("weeklyquest", 1, true) or low:find("weekly_quest", 1, true) then return true end
-    if low:find("questboard", 1, true) or low:find("quest_board", 1, true) then return true end
-    return low:find("heroes", 1, true) and low:find("call", 1, true) and true or false
-end
-
 local function QueueWalk(root)
     if not root or not IsShown(root) then return end
 
@@ -308,21 +296,10 @@ local function HookRoot(root)
     end
 end
 
-local function DiscoverRoots(forceGlobalScan)
+local function DiscoverRoots()
     local added = 0
     for i = 1, #explicitRootNames do
         if AddRoot(_G[explicitRootNames[i]]) then added = added + 1 end
-    end
-
-    -- Fallback só uma vez. Nunca fazemos pairs(_G) ao abrir o mural.
-    if forceGlobalScan or (#roots == 0 and not globalScanDone) then
-        globalScanDone = true
-        scanCount = scanCount + 1
-        for name, value in pairs(_G) do
-            if LooksLikeBoardName(name) and (type(value) == "table" or type(value) == "userdata") then
-                if AddRoot(value) then added = added + 1 end
-            end
-        end
     end
 
     for i = 1, #roots do HookRoot(roots[i]) end
@@ -331,7 +308,7 @@ end
 
 local function Refresh(reason)
     if not Enabled() then return false end
-    DiscoverRoots(reason == "slash")
+    DiscoverRoots()
 
     local found = false
     for i = 1, #roots do
@@ -385,10 +362,10 @@ end)
 
 SLASH_APTBRDAILY1 = "/aptbrdaily"
 SlashCmdList["APTBRDAILY"] = function()
-    DiscoverRoots(true)
+    DiscoverRoots()
     Refresh("slash")
     if DEFAULT_CHAT_FRAME then
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r: Quadro de Chamados sincronizado. Frames encontrados: "
-            .. tostring(#roots) .. "; buscas globais: " .. tostring(scanCount) .. ".")
+            .. tostring(#roots) .. "; buscas globais: 0.")
     end
 end

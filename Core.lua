@@ -1,6 +1,7 @@
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
 AES.Perf = AES.Perf or {}
+AES.Diagnostics = AES.Diagnostics or {}
 
 AES.SpellNameEN2ES = AES.SpellNameEN2ES or {}
 AES.NameToIDs      = AES.NameToIDs or {}
@@ -52,6 +53,88 @@ AES.QuestTrackerNameEN2PT = {
     ["Gem of Pythas"] = "Gema de Pítias",
     ["Gem of Serpentis"] = "Gema de Serpentis",
     ["Maur Grimtotem"] = "Mauren Temível Totem",
+    -- Objetivos e itens exibidos separadamente pelo tracker de Durotar.
+    ["Durotar Tiger Fur"] = "Pele de Tigre de Durotar",
+    ["Durotar Tiger Furs"] = "Peles de Tigre de Durotar",
+    ["Durator Tiger Fur"] = "Pele de Tigre de Durotar",
+    ["Intact Makrura Eye"] = "Olho de Makrura Intacto",
+    ["Intact Makrura Eyes"] = "Olhos de Makrura Intactos",
+    ["Crawler Mucus"] = "Muco de Rastejante",
+    ["Attack Plan: Valley of Trials"] = "Plano de Ataque: Vale das Provações",
+    ["Attack Plan: Sen'jin Village"] = "Plano de Ataque: Aldeia Sen'jin",
+    ["Attack Plan: Orgrimmar"] = "Plano de Ataque: Orgrimmar",
+    ["Zalazane's Head"] = "Cabeça de Zalazane",
+    ["Minshina's Skull"] = "Crânio de Minshina",
+    ["Search the centaur camp for clues to the flower's properties"] =
+        "Procure no acampamento dos centauros pistas sobre as propriedades da flor",
+    ["Search the centaur camp for clues to the flower's properties."] =
+        "Procure no acampamento dos centauros pistas sobre as propriedades da flor.",
+    ["Search the centaur camp for clues to the flower’s properties"] =
+        "Procure no acampamento dos centauros pistas sobre as propriedades da flor",
+    ["Search the centaur camp for clues to the flower’s properties."] =
+        "Procure no acampamento dos centauros pistas sobre as propriedades da flor.",
+    ["Visit an Innkeeper and select \"Make this inn your home.\""] =
+        "Visite um Estalajadeiro e selecione \"Faça desta estalagem o seu lar\".",
+    ["Visit an Innkeeper and select 'Make this inn your home.'"] =
+        "Visite um Estalajadeiro e selecione 'Faça desta estalagem o seu lar'.",
+    ["Visit an Innkeeper and select Make this inn your home."] =
+        "Visite um Estalajadeiro e selecione 'Faça desta estalagem o seu lar'.",
+    ["Make this inn your home"] = "Faça desta estalagem o seu lar",
+    -- Vale das Provações, Aldeia Sen'jin e Monte Navalha.
+    ["Mottled Boar"] = "Javali Mosqueado",
+    ["Mottled Boars"] = "Javalis Mosqueados",
+    ["Scorpid Worker Tail"] = "Cauda de Escorpídeo Operário",
+    ["Scorpid Worker Tails"] = "Caudas de Escorpídeo Operário",
+    ["Canvas Scrap"] = "Retalho de Lona",
+    ["Canvas Scraps"] = "Retalhos de Lona",
+    ["Vile Familiar"] = "Familiar Torpe",
+    ["Vile Familiars"] = "Familiares Torpes",
+    ["Burning Blade Medallion"] = "Medalhão da Lâmina Ardente",
+    ["Sarkoth's Mangled Claw"] = "Garra Dilacerada de Sarkoth",
+    ["Fizzle's Claw"] = "Garra de Bulho",
+    ["Kron's Amulet"] = "Amuleto de Kron",
+    ["Eye of Burning Shadow"] = "Olho da Sombra Ardente",
+    ["Admiral Proudmoore's Orders"] = "Ordens do Almirante Proudmore",
+    ["Example Collar"] = "Colar de Amostra",
+    ["Venomtail Antidote"] = "Antídoto para Caudaçonha",
+    ["Ukor's Burden"] = "Fardo de Ulkor",
+    ["Cactus Apple"] = "Maçã do Cacto",
+    ["Cactus Apples"] = "Maçãs do Cacto",
+    ["Taillasher Egg"] = "Ovo de Açoitacauda",
+    ["Taillasher Eggs"] = "Ovos de Açoitacauda",
+    ["Searing Collar"] = "Colar Calcinante",
+    ["Searing Collars"] = "Colares Calcinantes",
+    ["Venomtail Poison Sac"] = "Vesícula de Veneno de Caudaçonha",
+    ["Venomtail Poison Sacs"] = "Vesículas de Veneno de Caudaçonha",
+    ["Kul Tiras Sailor"] = "Marinheiro de Kul Tiraz",
+    ["Kul Tiras Sailors"] = "Marinheiros de Kul Tiraz",
+    ["Kul Tiras Marine"] = "Fuzileiro de Kul Tiraz",
+    ["Kul Tiras Marines"] = "Fuzileiros de Kul Tiraz",
+    ["Lieutenant Benedict"] = "Tenente Bento",
+    ["Hexed Troll"] = "Troll Enfeitiçado",
+    ["Hexed Trolls"] = "Trolls Enfeitiçados",
+    ["Voodoo Troll"] = "Troll Vodu",
+    ["Voodoo Trolls"] = "Trolls Vodu",
+    ["Burning Blade Cultist"] = "Sectário da Lâmina Ardente",
+    ["Burning Blade Cultists"] = "Sectários da Lâmina Ardente",
+    ["Burning Blade Thug"] = "Bandido da Lâmina Ardente",
+    ["Burning Blade Thugs"] = "Bandidos da Lâmina Ardente",
+    ["Bloodtalon Taillasher"] = "Açoitacauda Garrasangre",
+    ["Bloodtalon Taillashers"] = "Açoitacaudas Garrasangre",
+    ["Sack of Supplies"] = "Saco de Suprimentos",
+    ["Sacks of Supplies"] = "Sacos de Suprimentos",
+    ["Dustwind Savage"] = "Selvagem Sopravento",
+    ["Dustwind Savages"] = "Selvagens Sopravento",
+    ["Dustwind Storm Witch"] = "Bruxa da Tempestade Sopravento",
+    ["Dustwind Storm Witches"] = "Bruxas da Tempestade Sopravento",
+    ["Razormane Quilboar"] = "Javatusco Crinavalha",
+    ["Razormane Quilboars"] = "Javatuscos Crinavalha",
+    ["Razormane Scout"] = "Batedor Crinavalha",
+    ["Razormane Scouts"] = "Batedores Crinavalha",
+    ["Razormane Dustrunner"] = "Levanta-poeira Crinavalha",
+    ["Razormane Dustrunners"] = "Levanta-poeira Crinavalha",
+    ["Razormane Battleguard"] = "Guarda de Batalha Crinavalha",
+    ["Razormane Battleguards"] = "Guardas de Batalha Crinavalha",
 }
 AES.UnitName       = AES.UnitName or {}
 AES.UnitNameEN     = AES.UnitNameEN or {}
@@ -176,6 +259,25 @@ AES.ApplySafeGlobalStrings = function()
     if not (db and db.ui) then return 0 end
     local applied = 0
     for key, value in pairs(AES.GlobalStrings or {}) do
+        local ok = AES.SafeSetGlobalString and AES.SafeSetGlobalString(key, value)
+        if ok then applied = applied + 1 end
+    end
+    return applied
+end
+
+-- Blizzard_Calendar só cria seus globals quando é aberto pela primeira vez.
+-- Aplica esse subconjunto no ADDON_LOADED e também alimenta a tradução por
+-- texto para rótulos que já tenham sido desenhados antes desse evento.
+AES.ApplyCalendarGlobalStrings = function()
+    if not (db and db.ui) then return 0 end
+    local applied = 0
+    local byEnglish = AES.UIStringsByEN
+    for key, value in pairs(AES.CalendarGlobalStrings or {}) do
+        local english = type(key) == "string" and rawget(_G, key) or nil
+        if type(english) == "string" and english ~= "" and type(byEnglish) == "table" then
+            local prior = byEnglish[english]
+            if prior == nil or prior == value then byEnglish[english] = value end
+        end
         local ok = AES.SafeSetGlobalString and AES.SafeSetGlobalString(key, value)
         if ok then applied = applied + 1 end
     end
@@ -1201,13 +1303,48 @@ local QUEST_TOOLTIP_STATIC = {
     ["Requirements:"] = "Requisitos:",
 }
 
+-- Variantes custom que o servidor escreve diretamente nos botoes do diario.
+-- Mantidas separadas do indice principal para nao depender do questID retornado
+-- pela versao custom da API.
+local QUEST_TITLE_EXACT = {
+    ["Area: Registration"] = "Arena: Inscrição",
+    ["Arena: Registration"] = "Arena: Inscrição",
+}
+
+-- Os botoes do diario podem receber o texto antes de ADDON_LOADED terminar.
+-- Prepara somente o indice titulo EN -> PT ja na carga do Core; o bootstrap
+-- completo continua montando os demais indices normalmente mais abaixo.
+local function EnsureQuestTitleTextIndex()
+    if type(AES.QuestTitleEN2ES) == "table" and next(AES.QuestTitleEN2ES) then
+        return AES.QuestTitleEN2ES
+    end
+
+    local index = {}
+    for id, english in pairs(AES.QuestTitleEN or {}) do
+        local translated = AES.QuestTitle and AES.QuestTitle[id]
+        if type(english) == "string" and english ~= ""
+            and type(translated) == "string" and translated ~= "" then
+            local prior = index[english]
+            if prior == nil then
+                index[english] = translated
+            elseif prior ~= translated then
+                index[english] = false
+            end
+        end
+    end
+    AES.QuestTitleEN2ES = index
+    return index
+end
+EnsureQuestTitleTextIndex()
+
 -- NPC e tracker às vezes entregam só o título formatado, sem questID.
 local function TranslateQuestTitleText(text, depth)
     if type(text) ~= "string" or text == "" then return nil end
     depth = depth or 0
     if depth > 5 then return nil end
 
-    local translated = AES.QuestTitleEN2ES and AES.QuestTitleEN2ES[text]
+    local titleIndex = EnsureQuestTitleTextIndex()
+    local translated = QUEST_TITLE_EXACT[text] or titleIndex[text]
     if translated and translated ~= false then
         return AES.QuestRenderPT and AES.QuestRenderPT(translated) or translated
     end
@@ -1253,6 +1390,18 @@ local function TranslateQuestTitleText(text, depth)
     body = text:match("^(.-)%s+%-%s+[Cc]ompleted%s*$")
     pt = body and TranslateQuestTitleText(body, depth + 1)
     if pt then return pt .. " - Concluída" end
+
+    body = text:match("^(.-)%s*%([Dd]ungeon%)%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " (Masmorra)" end
+
+    body = text:match("^(.-)%s*%([Rr]aid%)%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " (Raide)" end
+
+    body = text:match("^(.-)%s*%([Gg]roup%)%s*$")
+    pt = body and TranslateQuestTitleText(body, depth + 1)
+    if pt then return pt .. " (Grupo)" end
 
     local first, rest = text:match("^([^\n]+)(\n.+)$")
     pt = first and TranslateQuestTitleText(first, depth + 1)
@@ -1366,6 +1515,7 @@ local function TranslateQuestTooltipText(text)
 
     local direct = (AES.QuestUIExact and AES.QuestUIExact[text])
         or QUEST_TOOLTIP_STATIC[text]
+        or (AES.QuestTrackerNameEN2PT and AES.QuestTrackerNameEN2PT[text])
         or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[text])
         or (AES.QuestObjectivePartEN2PT and AES.QuestObjectivePartEN2PT[text])
         or (AES.QuestRuntimeTextNormalized and AES.QuestRuntimeTextNormalized[text])
@@ -1490,6 +1640,7 @@ local function TranslateQuestTooltipText(text)
     local prefix, body = text:match("^(%s*[-•]%s*)(.-)%s*$")
     if body and body ~= "" then
         local translated = (AES.QuestUIExact and AES.QuestUIExact[body])
+            or (AES.QuestTrackerNameEN2PT and AES.QuestTrackerNameEN2PT[body])
             or (AES.QuestObjectiveEN2PT and AES.QuestObjectiveEN2PT[body])
             or (AES.QuestObjectivePartEN2PT and AES.QuestObjectivePartEN2PT[body])
             or (AES.QuestTextEN2PT and AES.QuestTextEN2PT[body])
@@ -2743,6 +2894,17 @@ local function FrameExcluded(obj)
             return true
         end
         if okn and nm then
+            -- Nomes de itens dos slots do C são dados internos do PaperDoll,
+            -- não textos da interface. Traduzir essas FontStrings faz o nome
+            -- ultrapassar o botão e atravessar a coluna de atributos.
+            if nm:match("^Character.+Slot$")
+                or nm:match("^Inspect.+Slot$")
+                or nm:match("^PaperDoll.+Slot$")
+                or nm:match("^AscensionCharacter.+Slot$")
+                or nm:find("EquipmentSlot", 1, true) then
+                excludeCache[obj] = true
+                return true
+            end
             for _, pat in ipairs(EXCLUDED_PAT) do
                 if nm:find(pat, 1, true) then
                     excludeCache[obj] = true
@@ -2757,38 +2919,6 @@ local function FrameExcluded(obj)
     return false
 end
 AES.FrameExcluded = FrameExcluded
-
-local function RetranslateStaticUI()
-    if not db or not db.ui then return end
-    local frame = EnumerateFrames()
-    while frame do
-        if FrameExcluded(frame) then
-            frame = EnumerateFrames(frame)
-        else
-            local esEntrada = frame.IsObjectType and frame:IsObjectType("EditBox")
-            if not esEntrada then
-                -- Nao mexe em painel oculto. Alem de economizar CPU, evita contaminar
-                -- previamente frames seguros que so serao usados depois (como o LootFrame).
-                local okvis, vis = pcall(function() return frame:IsVisible() end)
-                if okvis and vis then
-                    local ok, regions = pcall(function() return { frame:GetRegions() } end)
-                    if ok and regions then
-                        for _, r in ipairs(regions) do
-                            if r and r.IsObjectType and r:IsObjectType("FontString") then
-                                local t = r:GetText()
-                                if t and t ~= "" then
-                                    local es = TranslateStaticText(t)
-                                    if es and es ~= t then ApplyStaticFontString(r, t, es) end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-            frame = EnumerateFrames(frame)
-        end
-    end
-end
 
 local function PrimeStaticSubtree(root, depth)
     if not root or FrameExcluded(root) then return end
@@ -2892,7 +3022,7 @@ local function HookStaticPanels()
                             "AscensionLFGFrame", "AscensionPVEFrame", "AscensionPVPFrame",
                             "AscensionRulesetFrame", "PathToAscensionFrame",
                             "WarmodeMapFrame", "AscensionWeeklyKeystoneFrame",
-                            "ChannelFrame",
+                            "ChannelFrame", "CalendarFrame",
 
                             "CharacterAdvancement", "CharacterAdvancementFrame", "AscensionCharacterAdvancement",
                             "ClassTalentFrame", "RaceTalentFrame", "RacialTalentFrame",
@@ -2920,6 +3050,7 @@ AES.Perf.IsRelevantUILoad = function(name)
         or name == "Blizzard_TradeSkillUI"
         or name == "Blizzard_AuctionUI"
         or name == "Blizzard_TalentUI"
+        or name == "Blizzard_Calendar"
 end
 
 local staticWatcher = CreateFrame("Frame")
@@ -2927,6 +3058,9 @@ staticWatcher:RegisterEvent("ADDON_LOADED")
 staticWatcher:RegisterEvent("PLAYER_ENTERING_WORLD")
 staticWatcher:SetScript("OnEvent", function(_, event, name)
     if event == "PLAYER_ENTERING_WORLD" or AES.Perf.IsRelevantUILoad(name) then
+        if name == "Blizzard_Calendar" and AES.ApplyCalendarGlobalStrings then
+            pcall(AES.ApplyCalendarGlobalStrings)
+        end
         pcall(HookStaticPanels)
     end
 end)
@@ -3347,12 +3481,9 @@ end
 local function TranslateCharacterStatText(text)
     if type(text) ~= "string" or text == "" then return nil end
 
-    -- Tooltips do C reutilizam várias frases de atributo dos itens. Reaproveita
-    -- exatamente o mesmo parser para manter nomenclatura e não duplicar trabalho.
-    local itemStat = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(text))
-        or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(text))
-    if itemStat and itemStat ~= text then return itemStat end
-
+    -- O painel C usa somente o parser de atributos. Parsers de item não entram
+    -- aqui: GameTooltip é reutilizado pelo cliente e misturar os dois contextos
+    -- fazia linhas de equipamentos aparecerem como se fossem status do personagem.
     local statLine = AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(text)
     if statLine and statLine ~= text then return statLine end
 
@@ -3377,9 +3508,7 @@ local function TranslateCharacterStatText(text)
             line = text:sub(pos)
         end
 
-        local translated = (AES.TranslateItemEffectLine and AES.TranslateItemEffectLine(line))
-            or (AES.TranslateItemStatLine and AES.TranslateItemStatLine(line))
-            or (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(line))
+        local translated = (AES.TranslateCharacterStatLine and AES.TranslateCharacterStatLine(line))
             or MatchLinePatterns(line) or TranslateStaticText(line)
         if translated and translated ~= line then
             line = translated
@@ -3400,6 +3529,7 @@ local charStatFSFastCache = setmetatable({}, { __mode = "k" })
 local charStatTooltips = setmetatable({}, { __mode = "k" })
 local inCharStatFSHook = false
 local charStatsActive = false
+local LooksLikeCharacterStatTooltip
 
 local function IsCharacterPanelObject(obj)
     local depth = 0
@@ -3417,15 +3547,46 @@ local function IsCharacterPanelObject(obj)
     return false
 end
 
--- Owner anônimo existe no Ascension; confere só quando aparece, nunca por frame.
-local function IsCharPanelTooltip(tip)
-    if not tip then return false end
-    if charStatTooltips[tip] then return true end
-    local owner = tip.GetOwner and tip:GetOwner()
-    return IsCharacterPanelObject(owner)
+-- Slots de equipamento pertencem à árvore do CharacterFrame, mas seus
+-- tooltips nunca são status. A verificação pelo owner funciona antes mesmo de
+-- GameTooltip:GetItem() ser preenchido, fechando a janela de corrida do cliente.
+local function IsEquipmentSlotTooltip(tip)
+    local owner = tip and tip.GetOwner and tip:GetOwner()
+    if not owner then return false end
+
+    local name = owner.GetName and owner:GetName()
+    if name and (name:match("^Character.+Slot$")
+        or name:match("^Inspect.+Slot$")
+        or name:match("^PaperDoll.+Slot$")
+        or name:find("EquipmentSlot", 1, true)) then
+        return true
+    end
+
+    -- Addons de interface podem trocar o nome do botão, mas normalmente
+    -- preservam o ID do slot e o link do equipamento do jogador.
+    if type(GetInventoryItemLink) == "function" and owner.GetID then
+        local okID, slotID = pcall(owner.GetID, owner)
+        if okID and type(slotID) == "number" and slotID >= 1 and slotID <= 19 then
+            local okLink, link = pcall(GetInventoryItemLink, "player", slotID)
+            if okLink and link then return true end
+        end
+    end
+    return false
 end
 
-local function LooksLikeCharacterStatTooltip(tip)
+-- Owner anônimo existe no Ascension; confere só quando aparece, nunca por frame.
+local function IsCharPanelTooltip(tip)
+    if not (tip and charStatsActive) then return false end
+    if IsEquipmentSlotTooltip(tip) then return false end
+    if charStatTooltips[tip] then return true end
+    local owner = tip.GetOwner and tip:GetOwner()
+    -- Estar dentro do CharacterFrame não basta: slots de equipamento também são
+    -- filhos desse painel. Exige conteúdo reconhecido como atributo para não
+    -- classificar o tooltip de um item equipado como tooltip de status.
+    return IsCharacterPanelObject(owner) and LooksLikeCharacterStatTooltip(tip)
+end
+
+LooksLikeCharacterStatTooltip = function(tip)
     -- Tooltips de atributos do painel custom podem ter owner anônimo e o painel
     -- pode viver fora da árvore do CharacterFrame. Para não confundir tooltip de
     -- ITEM com tooltip do C, a detecção olha só as duas primeiras linhas e exige
@@ -3447,12 +3608,38 @@ local function LooksLikeCharacterStatTooltip(tip)
     return false
 end
 
+local function HasConcreteTooltipContent(tip)
+    if not tip then return false end
+    for _, getter in ipairs({ "GetItem", "GetSpell", "GetUnit" }) do
+        if type(tip[getter]) == "function" then
+            local ok, first, second = pcall(tip[getter], tip)
+            if ok and (first ~= nil or second ~= nil) then return true end
+        end
+    end
+    return false
+end
+
 local function MarkCharacterStatTooltip(tip)
-    if IsCharPanelTooltip(tip) or LooksLikeCharacterStatTooltip(tip) then
+    -- GameTooltip pode trocar de atributo para item sem um OnHide intermediário.
+    -- Se já houver conteúdo concreto, ele pertence ao pipeline normal do tooltip.
+    if HasConcreteTooltipContent(tip) or IsEquipmentSlotTooltip(tip) then
+        charStatTooltips[tip] = nil
+        return false
+    end
+    if charStatsActive and LooksLikeCharacterStatTooltip(tip) then
         charStatTooltips[tip] = true
         return true
     end
     return false
+end
+
+local function ClearCharacterStatTooltip(tip)
+    if not (tip and charStatTooltips[tip]) then return end
+    charStatTooltips[tip] = nil
+    if AES.Runtime then
+        AES.Runtime.Cancel("character-stat-tooltip:" .. tostring(tip) .. ":early")
+        AES.Runtime.Cancel("character-stat-tooltip:" .. tostring(tip) .. ":late")
+    end
 end
 
 local function IsCharacterStatFontString(fs)
@@ -3504,6 +3691,10 @@ end
 
 local function TranslateCharacterStatTooltip(tip)
     if not (AES.CharacterUIEnabled() and tip and tip.GetName) then return end
+    if HasConcreteTooltipContent(tip) or IsEquipmentSlotTooltip(tip) then
+        ClearCharacterStatTooltip(tip)
+        return
+    end
     local name = tip:GetName()
     if not name then return end
 
@@ -3589,13 +3780,22 @@ local function HookTooltip(tip)
         end)
     end
     if tip:HasScript("OnTooltipSetSpell") then
-        tip:HookScript("OnTooltipSetSpell", OnSpellTooltip)
+        tip:HookScript("OnTooltipSetSpell", function(t)
+            ClearCharacterStatTooltip(t)
+            OnSpellTooltip(t)
+        end)
     end
     if tip:HasScript("OnTooltipSetItem") then
-        tip:HookScript("OnTooltipSetItem", OnItemTooltip)
+        tip:HookScript("OnTooltipSetItem", function(t)
+            ClearCharacterStatTooltip(t)
+            OnItemTooltip(t)
+        end)
     end
     if tip:HasScript("OnTooltipSetUnit") then
-        tip:HookScript("OnTooltipSetUnit", OnUnitTooltip)
+        tip:HookScript("OnTooltipSetUnit", function(t)
+            ClearCharacterStatTooltip(t)
+            OnUnitTooltip(t)
+        end)
     end
 end
 
@@ -3755,8 +3955,37 @@ local function ResolveQuestIDByPanels(title)
 end
 AES.ResolveQuestIDByPanels = ResolveQuestIDByPanels
 
+local function QuestUIWritable(object)
+    if not object then return false end
+    if object.IsForbidden then
+        local ok, forbidden = pcall(object.IsForbidden, object)
+        if ok and forbidden then return false end
+    end
+    if not (InCombatLockdown and InCombatLockdown()) then return true end
+
+    local current = object
+    for _ = 1, 12 do
+        if not current then break end
+        if current.IsProtected then
+            local ok, protected = pcall(current.IsProtected, current)
+            if ok and protected then
+                AES.Diagnostics.protectedDeferrals = (AES.Diagnostics.protectedDeferrals or 0) + 1
+                AES.Diagnostics.questProtectedSkips = (AES.Diagnostics.questProtectedSkips or 0) + 1
+                AES.Diagnostics.lastProtectedDeferral = "SetText/quest-ui"
+                return false
+            end
+        end
+        local ok, parent = pcall(function()
+            return current.GetParent and current:GetParent()
+        end)
+        current = ok and parent or nil
+    end
+    return true
+end
+
 local function QuestGuardSet(fs, es, en)
     if not (fs and es and en) then return end
+    if not QuestUIWritable(fs) then return end
     local shown = fs.GetText and fs:GetText()
     if not shown or shown == "" then return end
     if not GuardEq(shown, en) then return end
@@ -3878,13 +4107,14 @@ local function CachedQuestUIText(text)
 end
 
 local function HookQuestUIFS(fs)
-    if not (fs and fs.SetText) or questUIFSHooked[fs] then return end
+    if not (fs and fs.SetText) or questUIFSHooked[fs] or not QuestUIWritable(fs) then return end
     questUIFSHooked[fs] = true
     for _, method in ipairs({ "SetText", "SetFormattedText" }) do
         if fs[method] then
             pcall(hooksecurefunc, fs, method, function(self)
                 if inQuestUIFSHook or not (db and db.quests) then return end
                 if self.IsVisible and not self:IsVisible() then return end
+                if not QuestUIWritable(self) then return end
                 local text = self.GetText and self:GetText()
                 local pt = text and CachedQuestUIText(text)
                 if pt and pt ~= text then
@@ -3912,7 +4142,9 @@ local function WalkQuestUI(root, depth, seen)
                 HookQuestUIFS(region)
                 local text = region.GetText and region:GetText()
                 local pt = text and CachedQuestUIText(text)
-                if pt and pt ~= text then pcall(region.SetText, region, pt) end
+                if pt and pt ~= text and QuestUIWritable(region) then
+                    pcall(region.SetText, region, pt)
+                end
             end
         end
     end
@@ -3968,7 +4200,9 @@ local function TranslateQuestChrome()
             end
             local text = object.GetText and object:GetText()
             local pt = text and CachedQuestUIText(text)
-            if pt and pt ~= text and object.SetText then pcall(object.SetText, object, pt) end
+            if pt and pt ~= text and object.SetText and QuestUIWritable(object) then
+                pcall(object.SetText, object, pt)
+            end
         end
     end
 end
@@ -4049,25 +4283,6 @@ local function TranslateQuestItemButtons()
         end
     end
 end
-
-;(function()
-    local function wrapRewardInfo(name)
-        local original = _G[name]
-        if type(original) ~= "function" then return end
-        _G[name] = function(...)
-            local itemName, texture, count, quality, usable = original(...)
-            if db and db.items and type(itemName) == "string" then
-                local translated = AES.TranslateItemNameText and AES.TranslateItemNameText(itemName)
-                if translated then itemName = translated end
-            end
-            return itemName, texture, count, quality, usable
-        end
-    end
-    wrapRewardInfo("GetQuestItemInfo")
-    wrapRewardInfo("GetQuestLogChoiceInfo")
-    wrapRewardInfo("GetQuestLogRewardInfo")
-    wrapRewardInfo("GetQuestLogRequiredItemInfo")
-end)()
 
 -- Loja usa link/ID quando tem. Não sobrescreve API global do mercador.
 do
@@ -4452,26 +4667,6 @@ end
 AES.TranslateGossipGreeting = TranslateGossipGreeting
 
 do
-    local function PackGossipResults(...)
-        return { n = select("#", ...), ... }
-    end
-
-    local originalGetGossipOptions = type(GetGossipOptions) == "function" and GetGossipOptions or nil
-    if originalGetGossipOptions then
-        GetGossipOptions = function(...)
-            local values = PackGossipResults(originalGetGossipOptions(...))
-            if db and db.gossip then
-                for i = 1, values.n do
-                    if type(values[i]) == "string" then
-                        local pt = GossipLookup(values[i])
-                        if pt then values[i] = pt end
-                    end
-                end
-            end
-            return unpack(values, 1, values.n)
-        end
-    end
-
     if type(GossipFrameUpdate) == "function" then
         pcall(hooksecurefunc, "GossipFrameUpdate", TranslateGossipGreeting)
     end
@@ -4555,243 +4750,79 @@ if ChatFrame_AddMessageEventFilter then
     end
 end
 
-local origGetTitleText = type(GetTitleText) == "function" and GetTitleText or nil
-
-local function CurrentQuestID()
-    local id = GetQuestID and tonumber(GetQuestID())
-    if id and id ~= 0 then return id end
-    local t = origGetTitleText and origGetTitleText()
-    if t and t ~= "" and AES.QuestTitleEN2ID then
-        id = AES.QuestTitleEN2ID[t]
-        if id then return id end
-    end
-    return nil
-end
-
-local function WrapQuestGetter(name, field)
-    local orig = _G[name]
-    if type(orig) ~= "function" then return end
-    _G[name] = function(...)
-        local en = orig(...)
-        if not (db and db.quests) or type(en) ~= "string" or en == "" then
-            return en
-        end
-        local exactID = GetQuestID and tonumber(GetQuestID())
-        if exactID == 0 then exactID = nil end
-        local id = exactID or CurrentQuestID()
-        local qd = id and AES.QuestData and AES.QuestData[id]
-        local es = qd and qd[field]
-        local guard = qd and qd[field .. "EN"]
-        if exactID and es then
-            return QuestRenderES(es)
-        end
-        if not (es and guard and GuardEq(en, guard)) then
-
-            local t = origGetTitleText and origGetTitleText()
-            local rid = t and ResolveQuestIDByShown(t, en, { field })
-            if rid then id = rid end
-            qd = id and AES.QuestData and AES.QuestData[id]
-            es = qd and qd[field]
-            guard = qd and qd[field .. "EN"]
-        end
-        if es and guard and GuardEq(en, guard) then
-            return QuestRenderES(es)
-        end
-
-        if db and id and qd and es then
-            -- Divergência de texto é telemetria de desenvolvimento, não SavedVariable.
-            -- Guardar o texto inteiro por quest/field fazia o arquivo salvo crescer para sempre.
-            AES.Perf.questDriftCount = (AES.Perf.questDriftCount or 0) + 1
-        end
-        return en
-    end
-end
-WrapQuestGetter("GetQuestText", "d")
-WrapQuestGetter("GetObjectiveText", "o")
-WrapQuestGetter("GetProgressText", "p")
-WrapQuestGetter("GetRewardText", "c")
-
-if origGetTitleText then
-    GetTitleText = function(...)
-        local en = origGetTitleText(...)
-        if not (db and db.quests) or type(en) ~= "string" or en == "" then
-            return en
-        end
-
-        local pt = TranslateQuestTitleText(en)
-        if pt then return pt end
-        return en
-    end
-end
-
-for _, name in ipairs({ "GetGossipText", "GetGreetingText" }) do
-    local orig = _G[name]
-    if type(orig) == "function" then
-        _G[name] = function(...)
-            local en = orig(...)
-            if not (db and db.gossip) or type(en) ~= "string" then return en end
-            return GossipLookup(en) or en
-        end
-    end
-end
-
-local function WrapTitleList(fname)
-    local orig = _G[fname]
-    if type(orig) ~= "function" then return end
-    _G[fname] = function(...)
-        local r = { orig(...) }
-        if db and db.quests and AES.QuestTitleEN2ES then
-            for i = 1, #r do
-                if type(r[i]) == "string" then
-                    local pt = TranslateQuestTitleText(r[i])
-                    if pt then r[i] = pt end
-                end
-            end
-        end
-        return unpack(r)
-    end
-end
-WrapTitleList("GetGossipAvailableQuests")
-WrapTitleList("GetGossipActiveQuests")
-
-local function WrapTitleGetter(fname)
-    local orig = _G[fname]
-    if type(orig) ~= "function" then return end
-    _G[fname] = function(...)
-        local t = orig(...)
-        if db and db.quests and type(t) == "string" and AES.QuestTitleEN2ES then
-            local pt = TranslateQuestTitleText(t)
-            if pt then return pt end
-        end
-        return t
-    end
-end
-WrapTitleGetter("GetAvailableTitle")
-WrapTitleGetter("GetActiveTitle")
-
 local origGetQuestLogTitle = type(GetQuestLogTitle) == "function" and GetQuestLogTitle or nil
+local questLogTitleHooked = setmetatable({}, { __mode = "k" })
+local questLogTitleBusy = false
+local questLogTitlePassPending = false
 
--- Build sem questID no log: título + texto servem pra desempatar.
-local function QuestDataFromLogIndex(index, shown, field)
-    index = tonumber(index)
-    if not (index and index > 0 and origGetQuestLogTitle) then return nil end
+local function ReadQuestLogTitle(index)
+    if not origGetQuestLogTitle then return nil, nil end
     local title, _, _, _, _, _, _, _, questID = origGetQuestLogTitle(index)
-    questID = tonumber(questID)
-    local qd = questID and AES.QuestData and AES.QuestData[questID]
-    if qd then return qd, questID end
-
-    if type(title) ~= "string" or title == "" then return nil end
-    questID = (AES.QuestTitleEN2ID and AES.QuestTitleEN2ID[title])
-        or (AES.QuestTitleES2ID and AES.QuestTitleES2ID[title]) or nil
-    if questID == false then questID = nil end
-    if not questID and shown and field then
-        questID = ResolveQuestIDByShown(title, shown, { field })
-    end
-    qd = questID and AES.QuestData and AES.QuestData[questID]
-    return qd, questID
+    return title, questID
 end
 
-local function TranslateQuestLogText(text, index, field)
-    if not (db and db.quests) or type(text) ~= "string" or text == "" then
-        return text
+local function SetQuestLogTitle(button, translated)
+    if not (button and translated and translated ~= "") then return false end
+    local shown = button.GetText and button:GetText()
+    if shown == translated then return true end
+    if not QuestUIWritable(button) then
+        questLogTitlePassPending = true
+        return false
     end
 
-    local qd = QuestDataFromLogIndex(index, text, field)
-    if qd then
-        local pt = qd[field]
-        if pt then return QuestRenderES(pt) end
-    end
-
-    if field == "o" and AES.QuestObjectiveEN2PT then
-        local pt = AES.QuestObjectiveEN2PT[text]
-        if pt and pt ~= false then return QuestRenderES(pt) end
-    end
-    return text
+    questLogTitleBusy = true
+    local ok = pcall(button.SetText, button, translated)
+    questLogTitleBusy = false
+    return ok
 end
 
-local origGetQuestLogQuestText = type(GetQuestLogQuestText) == "function"
-    and GetQuestLogQuestText or nil
-if origGetQuestLogQuestText then
-    GetQuestLogQuestText = function(...)
-        local description, objectives = origGetQuestLogQuestText(...)
-        -- No 3.3.5 essa API costuma vir sem argumento e usa a quest selecionada.
-        local requestedIndex = select(1, ...)
-        local index = tonumber(requestedIndex)
-        if not index or index <= 0 then
-            local selectedIndex = GetQuestLogSelection and GetQuestLogSelection() or nil
-            index = tonumber(selectedIndex)
-        end
-        description = TranslateQuestLogText(description, index, "d")
-        objectives = TranslateQuestLogText(objectives, index, "o")
-        return description, objectives
-    end
-end
-
-local origGetQuestLogLeaderBoard = type(GetQuestLogLeaderBoard) == "function"
-    and GetQuestLogLeaderBoard or nil
-local questLeaderboardCache = {}
-local questLeaderboardCacheCount = 0
-local QUEST_LEADERBOARD_CACHE_LIMIT = 1024
-
-if origGetQuestLogLeaderBoard then
-    GetQuestLogLeaderBoard = function(...)
-        local text, objectiveType, finished = origGetQuestLogLeaderBoard(...)
-        if not (db and db.quests) or type(text) ~= "string" or text == "" then
-            return text, objectiveType, finished
-        end
-
-        local questIndex = select(2, ...)
-        local cacheKey = tostring(questIndex or "") .. "\031" .. text
-        local cached = questLeaderboardCache[cacheKey]
-        if cached ~= nil then
-            return cached ~= false and cached or text, objectiveType, finished
-        end
-
-        local trackerPT = CachedQuestUIText(text)
-        if not trackerPT then
-            local qd = QuestDataFromLogIndex(questIndex, text, "o")
-            if qd and qd.oEN and GuardEq(text, qd.oEN) then
-                trackerPT = qd.o and QuestRenderES(qd.o) or nil
+local function HookQuestLogTitleButton(button)
+    if not (button and button.SetText) or questLogTitleHooked[button] then return end
+    questLogTitleHooked[button] = true
+    if hooksecurefunc then
+        pcall(hooksecurefunc, button, "SetText", function(self)
+            if questLogTitleBusy or not (db and db.quests) then return end
+            local shown = self.GetText and self:GetText()
+            local translated = shown and TranslateQuestTitleText(shown)
+            if translated and translated ~= shown then
+                SetQuestLogTitle(self, translated)
             end
-        end
-
-        if questLeaderboardCacheCount >= QUEST_LEADERBOARD_CACHE_LIMIT then
-            questLeaderboardCache = {}
-            questLeaderboardCacheCount = 0
-        end
-        questLeaderboardCache[cacheKey] = trackerPT or false
-        questLeaderboardCacheCount = questLeaderboardCacheCount + 1
-
-        return trackerPT or text, objectiveType, finished
-    end
-end
-
-if origGetQuestLogTitle then
-    GetQuestLogTitle = function(...)
-        local title, level, tag, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID =
-            origGetQuestLogTitle(...)
-        if db and db.quests and type(title) == "string" and title ~= "" then
-            local pt = questID and AES.QuestTitle and AES.QuestTitle[tonumber(questID)]
-            if not pt then pt = TranslateQuestTitleText(title) end
-            if pt then title = pt end
-        end
-        return title, level, tag, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID
+        end)
     end
 end
 
 local function TranslateQuestLogTitles()
     if not (db and db.quests) then return end
+    if not (InCombatLockdown and InCombatLockdown()) then
+        questLogTitlePassPending = false
+    end
     local offset = FauxScrollFrame_GetOffset and QuestLogListScrollFrame
         and FauxScrollFrame_GetOffset(QuestLogListScrollFrame) or 0
     for i = 1, 25 do
         local button = _G["QuestLogTitle" .. i]
         local index = offset + i
-        if button and button.GetText and button:IsShown() and origGetQuestLogTitle then
-            local en, _, _, _, _, _, _, _, questID = origGetQuestLogTitle(index)
+        if button and button.GetText and button:IsShown() then
+            HookQuestLogTitleButton(button)
+            local en, questID = ReadQuestLogTitle(index)
             local pt = questID and AES.QuestTitle and AES.QuestTitle[questID]
             if not pt and en then pt = TranslateQuestTitleText(en) end
-            if pt and button:GetText() ~= pt then pcall(button.SetText, button, pt) end
+            if not pt then pt = TranslateQuestTitleText(button:GetText()) end
+            if pt then SetQuestLogTitle(button, pt) end
         end
+    end
+end
+AES.TranslateQuestLogTitles = TranslateQuestLogTitles
+
+local function QueueQuestLogTitlePass(delay)
+    if AES.Runtime then
+        AES.Runtime.After("quest-log-title-pass", delay or 0.06, function()
+            if db and db.quests and QuestLogFrame and QuestLogFrame.IsVisible
+                and QuestLogFrame:IsVisible() then
+                pcall(TranslateQuestLogTitles)
+            end
+        end)
+    else
+        pcall(TranslateQuestLogTitles)
     end
 end
 
@@ -4801,18 +4832,32 @@ if type(QuestLog_Update) == "function" then
             and QuestLogFrame:IsVisible()) then return end
         TranslateQuestLogTitles()
         pcall(WalkQuestUI, QuestLogFrame, 0, {})
+        QueueQuestLogTitlePass(0.08)
     end)
 end
 if QuestLogFrame and QuestLogFrame.HookScript then
     QuestLogFrame:HookScript("OnShow", function()
         TranslateQuestLogTitles()
         TranslateQuestChrome()
+        QueueQuestLogTitlePass(0.08)
     end)
 end
 
+local questLogTitleWatcher = CreateFrame("Frame")
+for _, event in ipairs({ "QUEST_LOG_UPDATE", "QUEST_ACCEPTED", "QUEST_REMOVED",
+                          "PLAYER_REGEN_ENABLED" }) do
+    pcall(questLogTitleWatcher.RegisterEvent, questLogTitleWatcher, event)
+end
+questLogTitleWatcher:SetScript("OnEvent", function(self, event)
+    if not (db and db.quests and QuestLogFrame and QuestLogFrame.IsVisible
+        and QuestLogFrame:IsVisible()) then return end
+    if event == "PLAYER_REGEN_ENABLED" and not questLogTitlePassPending then return end
+    pcall(TranslateQuestLogTitles)
+    QueueQuestLogTitlePass(0.08)
+end)
+
 local questTrackerRoots = setmetatable({}, { __mode = "k" })
 local questTrackerRootHooked = setmetatable({}, { __mode = "k" })
-local questTrackerLastDiscovery = -1
 AES.Perf.questTrackerFontStrings = AES.Perf.questTrackerFontStrings
     or setmetatable({}, { __mode = "k" })
 AES.Perf.questTrackerFastPasses = AES.Perf.questTrackerFastPasses or 0
@@ -4834,7 +4879,9 @@ local function WalkQuestTracker(root, depth)
                 HookQuestTrackerFS(region)
                 local text = region.GetText and region:GetText()
                 local pt = text and CachedQuestUIText(text)
-                if pt and pt ~= text then pcall(region.SetText, region, pt) end
+                if pt and pt ~= text and QuestUIWritable(region) then
+                    pcall(region.SetText, region, pt)
+                end
             end
         end
     end
@@ -4867,30 +4914,6 @@ end
 
 local function DiscoverQuestTrackerRoots(fullScan)
     AddKnownQuestTrackerRoots()
-    if not fullScan then return end
-
-    local now = GetTime and GetTime() or 0
-    if questTrackerLastDiscovery >= 0 and now - questTrackerLastDiscovery < 1.0 then return end
-    questTrackerLastDiscovery = now
-
-    for name, frame in pairs(_G) do
-        if type(name) == "string" then
-            local lower = name:lower()
-            local looksLikeTracker =
-                (lower:find("quest", 1, true)
-                    and (lower:find("watch", 1, true)
-                        or lower:find("objective", 1, true)
-                        or lower:find("tracker", 1, true)))
-                or (lower:find("objective", 1, true) and lower:find("tracker", 1, true))
-            if looksLikeTracker then
-                local frameType = type(frame)
-                if (frameType == "table" or frameType == "userdata")
-                    and frame.GetRegions and frame.GetChildren then
-                    questTrackerRoots[frame] = true
-                end
-            end
-        end
-    end
 end
 
 -- Depois do primeiro passeio, os FontStrings se traduzem pelo próprio SetText.
@@ -4904,7 +4927,9 @@ local function TranslateQuestTrackers(forceTree)
             if not fs.IsVisible or fs:IsVisible() then
                 local text = fs.GetText and fs:GetText()
                 local pt = text and CachedQuestUIText(text)
-                if pt and pt ~= text then pcall(fs.SetText, fs, pt) end
+                if pt and pt ~= text and QuestUIWritable(fs) then
+                    pcall(fs.SetText, fs, pt)
+                end
             end
         end
 
@@ -4923,7 +4948,7 @@ AES.TranslateQuestTrackers = TranslateQuestTrackers
 local questTrackerWatcher = CreateFrame("Frame")
 for _, event in ipairs({ "ADDON_LOADED", "PLAYER_ENTERING_WORLD",
                           "QUEST_WATCH_UPDATE", "QUEST_ACCEPTED", "QUEST_REMOVED",
-                          "QUEST_WATCH_LIST_CHANGED" }) do
+                          "QUEST_WATCH_LIST_CHANGED", "PLAYER_REGEN_ENABLED" }) do
     pcall(questTrackerWatcher.RegisterEvent, questTrackerWatcher, event)
 end
 
@@ -5883,8 +5908,11 @@ frame:SetScript("OnEvent", function(self, event, arg1)
         if AES.ApplySafeGlobalStrings then pcall(AES.ApplySafeGlobalStrings) end
         if AES.RepairTooltipColors then pcall(AES.RepairTooltipColors) end
         if AES.ApplyWorldNpcNameplates then pcall(AES.ApplyWorldNpcNameplates) end
-        RetranslateStaticUI()
         HookStaticPanels()
+        if QuestLogFrame and QuestLogFrame.IsVisible and QuestLogFrame:IsVisible() then
+            pcall(TranslateQuestLogTitles)
+            QueueQuestLogTitlePass(0.12)
+        end
 
         local acf = _G["AscensionCharacterFrame"]
         if acf and acf.HookScript and not AES._charHooked then
@@ -6101,6 +6129,10 @@ frame:SetScript("OnEvent", function(self, event, arg1)
 
     ApplyQuestGlobalStrings()
     TranslateQuestChrome()
+    if QuestLogFrame and QuestLogFrame.IsVisible and QuestLogFrame:IsVisible() then
+        pcall(TranslateQuestLogTitles)
+        QueueQuestLogTitlePass(0.08)
+    end
 
     HookTooltip(GameTooltip)
     HookTooltip(ItemRefTooltip)
@@ -6131,6 +6163,10 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             and (name:find("Ascension", 1, true) or name:find("Blizzard_", 1, true))
             and AES.ApplySafeGlobalStrings then
             pcall(AES.ApplySafeGlobalStrings)
+        end
+        if name == "Blizzard_Calendar" and AES.ApplyCalendarGlobalStrings then
+            pcall(AES.ApplyCalendarGlobalStrings)
+            pcall(HookStaticPanels)
         end
         if name == "Blizzard_AchievementUI" then
             HookAchievementUI()
@@ -6209,8 +6245,9 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         if AES.CheckForUpdates then AES.CheckForUpdates() end
         return
     elseif msg == "atualizar" or msg == "refresh" then
-        RetranslateStaticUI()
-        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r interface retraduzida.")
+        HookStaticPanels()
+        if AES.RefreshCharacterUI then pcall(AES.RefreshCharacterUI, true) end
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r painéis conhecidos retraduzidos.")
         return
     elseif msg ~= "" then
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ff99AscensionPTBR|r comandos: feitiços, itens, npcs, missões, diálogos, conquistas, interface, chat, erros, voz ptbr, voz ingles, verificar e atualizar.")
@@ -6223,18 +6260,72 @@ SlashCmdList["ASCENSIONPTBR"] = function(msg)
         status(db.quests), status(db.gossip), status(db.achievements), status(db.ui)))
 end
 
-SLASH_APTBRDIAG1 = "/aptbrdiag"
-SlashCmdList["APTBRDIAG"] = function()
+function AES.RunDiagnostics()
     local memoryKB = collectgarbage and collectgarbage("count") or 0
     local taskCount = 0
     if AES.Runtime and AES.Runtime.tasks then
         for _ in pairs(AES.Runtime.tasks) do taskCount = taskCount + 1 end
     end
+    local moduleCount = 0
+    if AES.Runtime and AES.Runtime.modules then
+        for _ in pairs(AES.Runtime.modules) do moduleCount = moduleCount + 1 end
+    end
+    local trackerRoots, trackerTexts = 0, 0
+    for _ in pairs(questTrackerRoots) do trackerRoots = trackerRoots + 1 end
+    for _ in pairs(AES.Perf.questTrackerFontStrings or {}) do trackerTexts = trackerTexts + 1 end
     local skipped = AES.Perf and tonumber(AES.Perf.globalStringFormatSkips) or 0
     local drift = AES.Perf and tonumber(AES.Perf.questDriftCount) or 0
+    local diag = AES.Diagnostics or {}
+    local char = AES.GetCharacterUIDiagnostics and AES.GetCharacterUIDiagnostics() or {}
+    local world = AES.GetWorldNameDiagnostics and AES.GetWorldNameDiagnostics() or {}
+    local activeFeatures = {}
+    for _, info in ipairs({
+        { "spells", "feitiços" }, { "items", "itens" }, { "units", "NPCs" },
+        { "quests", "missões" }, { "gossip", "diálogos" }, { "chat", "chat" },
+        { "ui", "interface" }, { "characterUI", "C" }, { "worldNames", "placas" },
+        { "voice", "vozes" },
+    }) do
+        if not db or db[info[1]] ~= false then activeFeatures[#activeFeatures + 1] = info[2] end
+    end
+    local tooltipName = "nenhum"
+    for _, name in ipairs({ "GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "ShoppingTooltip2" }) do
+        local tip = _G[name]
+        if tip and tip.IsVisible and tip:IsVisible() then
+            tooltipName = tip.GetName and tip:GetName() or "tooltip sem nome"
+            break
+        end
+    end
+    local version = GetAddOnMetadata and GetAddOnMetadata("AscensionPTBR", "Version") or "1.5.1"
+    local combat = InCombatLockdown and InCombatLockdown() and "SIM" or "NÃO"
+    local lastError = tostring(diag.lastRuntimeError or "nenhum")
+    if #lastError > 180 then lastError = lastError:sub(1, 177) .. "..." end
+
     DEFAULT_CHAT_FRAME:AddMessage(format(
-        "|cff33ff99AscensionPTBR|r diagnóstico: memória Lua %.1f MB | tarefas=%d | formatos protegidos=%d | divergências de quest=%d",
-        (tonumber(memoryKB) or 0) / 1024, taskCount, skipped or 0, drift or 0))
+        "|cff33ff99AscensionPTBR|r diagnóstico v%s | combate=%s | memória Lua=%.1f MB",
+        tostring(version), combat, (tonumber(memoryKB) or 0) / 1024))
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "  módulos=%d | tarefas=%d | cache de quests=%d | cache de padrões=%d",
+        moduleCount, taskCount, tonumber(questUITextCacheCount) or 0,
+        tonumber(AES.Perf.linePatternCacheCount) or 0))
+    DEFAULT_CHAT_FRAME:AddMessage("  ativos: " .. table.concat(activeFeatures, ", "))
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "  rastreador: raízes=%d textos=%d | painel C=%s raízes=%d | tooltip=%s | pendentes=%d",
+        trackerRoots, trackerTexts, tostring(char.panel or "nenhum"),
+        tonumber(char.roots) or 0, tooltipName, tonumber(char.pending) or 0))
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "  nameplates=%d cacheNPC=%d | ações adiadas=%d | skips de quest=%d",
+        tonumber(world.plates) or 0, tonumber(world.roleIDs) or 0,
+        tonumber(diag.protectedDeferrals) or 0, tonumber(diag.questProtectedSkips) or 0))
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "  último bloqueio=%s (%s) | última ação protegida=%s",
+        tostring(diag.lastBlockedFunction or "nenhum"), tostring(diag.lastBlockedEvent or "sem evento"),
+        tostring(diag.lastProtectedDeferral or diag.lastProtectedAction or "nenhuma")))
+    DEFAULT_CHAT_FRAME:AddMessage(format(
+        "  erros do scheduler=%d | último erro=%s | formatos protegidos=%d | divergências de quest=%d",
+        tonumber(diag.runtimeErrorCount) or 0, lastError, skipped or 0, drift or 0))
 end
 
-AscensionPTBR.__firma = "AscensionPTBR/1.5.1/AscensionES-1.5.9/2026-08-24"
+SLASH_APTBRDIAG1 = "/aptbrdiag"
+SlashCmdList["APTBRDIAG"] = AES.RunDiagnostics
+
+AscensionPTBR.__firma = "AscensionPTBR/1.5.2/AscensionES-1.5.9/2026-08-24"

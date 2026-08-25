@@ -17836,6 +17836,67 @@ Q[8928]={d="O núcleo vai render o suficiente pra fazer o dispositivo aqui rodar
 Q[8929]={d="Bem, agora só temos pôr à prova a invenção do goblin. Dizem que Anthion foi abatido pelas legiões de mortos-vivos de Stratholme ao tentar passar pelos portões da cidade.\n\nTente usar o dispositivo lá e veja se consegue descobrir o que Anthion sabia.",dEN="Well, nothing left for us to do but try out the goblin's invention. Word has it that Anthion was mowed down by the undead legions of Stratholme as he tried to enter its gates.\\n\\nTry using the device there and find out whatever Anthion knew.",o="Use o Revelador Extradimensional de Fantasmas na entrada de Stratholme e fale com o fantasma de Anthion Harmon.",oEN="Use the Extra-Dimensional Ghost Revealer at the entrance to Stratholme and speak with the ghost of Anthion Harmon.",c="Deliana pediu que você me procurasse? Farei o possível para ajudar, mas antes preciso lhe pedir um grande favor.",cEN="Deliana had you contact me? I'll do my best to help you, but first I must ask a great favor of you."}
 end)(AscensionPTBR.QuestData)
 
+-- Revisões manuais de textos claramente corrompidos no snapshot original.
+-- Aplicadas uma vez no carregamento, sem busca em tempo de jogo e sem arquivo novo.
+do
+local Q = AscensionPTBR.QuestData
+local function PatchQuest(id, fields)
+    local quest = Q and Q[id]
+    if not quest then return end
+    for key, value in pairs(fields) do quest[key] = value end
+end
+
+PatchQuest(25001, {
+    d="Você partiu em uma missão para levar um arco a um Guardião do Bosque que vive na Clareira da Lua. O arco, forjado com os melhores materiais, demonstra sua determinação e habilidade, mas ainda não está completo.\n\nA etapa final da jornada é receber a bênção dos druidas. Somente então ele se tornará uma arma verdadeiramente poderosa, capaz de defender seus aliados e derrotar seus inimigos.\n\nLeve o arco ao Guardião Remulos. Ele o imbuirá com a magia da floresta e a sabedoria dos antigos druidas, transformando-o em um verdadeiro instrumento do equilíbrio entre a vida e a morte.\n\nTenha cuidado durante a viagem: o caminho até a Clareira da Lua é traiçoeiro. Ainda assim, a força do arco e a bênção dos druidas estarão com você.",
+    o="Leve o Arco Não Encantado até Remulos, na Clareira da Lua.",
+    p="Então você deseja receber a bênção da natureza? Que assim seja.",
+    c="Então você deseja receber a bênção da natureza? Que assim seja.",
+})
+
+PatchQuest(49984, {
+    o="Leia o Incunábulo Proibido e procure Patal, o Louco, no Vale Norte.",
+    p="Os sussurros ficam mais intensos quando você se aproxima, $n. Você trouxe o Incunábulo Proibido? Os Deuses Antigos marcaram você como seu porta-voz.",
+    c="Sssim, $n... os sussurros disseram que você viria. Poderes além da compreensão mortal marcaram você para servir a verdades que mentes inferiores não conseguem compreender. Os Deuses Antigos sorriem para você.\n\nA loucura é apenas clareza sem amarras, jovem sectário. Abrace o caos e deixe que ele transforme você em algo... maior.",
+})
+
+PatchQuest(51007, {
+    o="Leia o Incunábulo Proibido e procure Clippo Doomwhistle, no Vale Cristálgida.",
+    p="As vozes da montanha ficam mais intensas quando você se aproxima, $n. Você trouxe o Incunábulo Proibido? Os Deuses Antigos ecoam por estes salões de pedra.",
+})
+
+PatchQuest(51010, {
+    d="Um poder ancestral flui por esta tabuleta, $n. As runas gravadas nela são mais antigas do que nossos salões mais antigos, esculpidas por mãos que moldaram as próprias montanhas. Depois de ver você enfrentar aqueles lobos, sei que tamanho conhecimento traz uma grande responsabilidade.",
+    o="Leia a Inscrição Rúnica e procure Murmon Fuseforge, no Vale Cristálgida.",
+})
+
+PatchQuest(52000, {
+    d="Pediram que eu mostrasse isto a você, jovem bárbaro. Parece ser uma tabuleta primeva gravada com runas de guerra órquicas que pulsam com uma fúria quase incontida. A pedra irradia força selvagem e parece ter vindo de Mu'kaka, que ensina o caminho do Bárbaro no Vale das Provas. Leia-a antes de continuar suas tarefas por aqui.",
+    p="Sinto a fúria primeva despertando dentro de você, guerreiro. Então deseja aprender o caminho do Bárbaro, dominando a ira e o combate selvagem?",
+})
+
+PatchQuest(53006, {
+    d="Pediram que eu mostrasse isto a você, jovem. Parece ser uma antiga tabuleta de osso gravada com símbolos necromânticos que pulsam com poder mortífero. A arte de comandar os mortos é natural para quem já experimentou a própria morte. Ela parece ter vindo de Dornall Plagueweaver, mestre dessas artes em Plangemortis. Leia-a antes de continuar suas tarefas por aqui.",
+    p="O frio da morte acompanha seus passos, $n. Você trouxe o Códice da Morte? Os segredos da necromancia aguardam aqueles que se mostrarem dignos.",
+})
+
+PatchQuest(55104, {
+    d="$n, até as pedras ancestrais sussurraram seu nome durante a caçada. As antigas tradições despertam quando você passa.\n\nGo'hro, guardião das tradições mais antigas, deixou esta Pedra Rúnica para você. Cada marca foi gravada antes que o primeiro xamã falasse com os elementos e antes que o primeiro druida cantasse para a natureza. O caminho do Mestre de Runas é a forma de poder mais antiga conhecida por nosso povo.\n\nProcure-o na Aldeia Narache. Ele ensinará você a inscrever a própria realidade.",
+    o="Procure Go'hro na Aldeia Narache.",
+    p="O poder rúnico emana de você, $n. Você trouxe a Pedra Rúnica Taurena? Inscrições ancestrais aguardam.",
+})
+
+PatchQuest(77725, {
+    d="A busca pelo Conhecimento Proibido oferece muitas recompensas. Persiga seus inimigos com a mesma ambição ardente com que busca o conhecimento!",
+    o="Obtenha o Conhecimento Proibido com Theldurin.",
+})
+
+PatchQuest(175257, {
+    o="Obtenha uma Joia do Olho Intacta nas cabeças esculpidas do Palácio Hierático e ofereça-a no altar.",
+    p="Uma sombra quase imperceptível paira ao lado do altar. Poderia ser qualquer coisa.",
+    c="<O ar se dobra sobre o altar. O espírito encara você sem expressão.>\n\nUma Joia do Olho intacta. Um olhar mutilado. Um tributo de quem deseja contemplar o Outro Lado.\n\n<Patlazar inclina a cabeça.>\n\nFale, forasteiro. Que dívida traz sua sombra a este palácio?",
+})
+end
+
 function AscensionPTBR.BuildQuestRuntimeIndex()
     AscensionPTBR.QuestRuntimeTextByID = {}
     AscensionPTBR.QuestRuntimeTextNormalized = {}

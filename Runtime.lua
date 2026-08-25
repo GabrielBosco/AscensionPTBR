@@ -5,9 +5,11 @@ AscensionPTBR = AES
 
 AES.Runtime = AES.Runtime or {}
 AES.Perf = AES.Perf or {}
+AES.Diagnostics = AES.Diagnostics or {}
 
 local Runtime = AES.Runtime
 local Perf = AES.Perf
+local Diagnostics = AES.Diagnostics
 
 
 -- Um scheduler só. Nada de criar OnUpdate novo pra cada coisinha.
@@ -16,6 +18,9 @@ Runtime.clock = Runtime.clock or 0
 Runtime.frame = Runtime.frame or CreateFrame("Frame")
 
 local function ReportError(err)
+    Diagnostics.runtimeErrorCount = (Diagnostics.runtimeErrorCount or 0) + 1
+    Diagnostics.lastRuntimeError = tostring(err or "erro desconhecido")
+    Diagnostics.lastRuntimeErrorAt = time and time() or 0
     if geterrorhandler then
         local handler = geterrorhandler()
         if handler then handler(err) end
@@ -179,7 +184,18 @@ end
 Runtime.moduleEventFrame = Runtime.moduleEventFrame or CreateFrame("Frame")
 Runtime.moduleEventFrame:RegisterEvent("ADDON_LOADED")
 Runtime.moduleEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-Runtime.moduleEventFrame:SetScript("OnEvent", function(_, event, arg1)
+pcall(Runtime.moduleEventFrame.RegisterEvent, Runtime.moduleEventFrame, "ADDON_ACTION_BLOCKED")
+pcall(Runtime.moduleEventFrame.RegisterEvent, Runtime.moduleEventFrame, "ADDON_ACTION_FORBIDDEN")
+Runtime.moduleEventFrame:SetScript("OnEvent", function(_, event, arg1, arg2)
+    if event == "ADDON_ACTION_BLOCKED" or event == "ADDON_ACTION_FORBIDDEN" then
+        if arg1 == "AscensionPTBR" then
+            Diagnostics.blockedCount = (Diagnostics.blockedCount or 0) + 1
+            Diagnostics.lastBlockedEvent = event
+            Diagnostics.lastBlockedFunction = tostring(arg2 or "UNKNOWN()")
+            Diagnostics.lastBlockedAt = time and time() or 0
+        end
+        return
+    end
     if event == "ADDON_LOADED" then
         if type(arg1) ~= "string" then return end
         -- Qualquer addon pode criar ou recriar frames depois do AscensionPTBR.

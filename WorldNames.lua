@@ -5,6 +5,7 @@
 local AES = AscensionPTBR or {}
 AscensionPTBR = AES
 AES.WorldNamesV12 = true
+AES.Diagnostics = AES.Diagnostics or {}
 
 local hookedNames = setmetatable({}, { __mode = "k" })
 local nameGuards = setmetatable({}, { __mode = "k" })
@@ -1139,6 +1140,7 @@ local SOCIAL_CVARS = {
 local bindingOwner = CreateFrame("Frame")
 local toggleButton = CreateFrame("Button", "AscensionPTBRToggleCombatNameplates", UIParent)
 local bindingKeys = {}
+local plateBindingsPending = false
 
 if toggleButton then
     if toggleButton.SetSize then pcall(toggleButton.SetSize, toggleButton, 1, 1) end
@@ -1164,8 +1166,17 @@ if toggleButton and toggleButton.SetScript then
 end
 
 local function ClearPlateBindingOverrides()
+    if InCombatLockdown and InCombatLockdown() then
+        plateBindingsPending = true
+        AES.Diagnostics.protectedDeferrals = (AES.Diagnostics.protectedDeferrals or 0) + 1
+        AES.Diagnostics.lastProtectedDeferral = "ClearOverrideBindings/nameplates"
+        return false
+    end
+    AES.Diagnostics.lastProtectedAction = "ClearOverrideBindings/nameplates"
     if bindingOwner and ClearOverrideBindings then pcall(ClearOverrideBindings, bindingOwner) end
     for k in pairs(bindingKeys) do bindingKeys[k] = nil end
+    plateBindingsPending = false
+    return true
 end
 
 local function AddBindingKeysForAction(action)
@@ -1177,15 +1188,34 @@ local function AddBindingKeysForAction(action)
 end
 
 local function ApplyPlateBindingOverrides()
+    if InCombatLockdown and InCombatLockdown() then
+        plateBindingsPending = true
+        AES.Diagnostics.protectedDeferrals = (AES.Diagnostics.protectedDeferrals or 0) + 1
+        AES.Diagnostics.lastProtectedDeferral = "SetOverrideBindingClick/nameplates"
+        return false
+    end
     ClearPlateBindingOverrides()
     if not (Enabled() and not ExternalNameplateAddon()) then return false end
     if not (SetOverrideBindingClick and toggleButton) then return false end
 
     AddBindingKeysForAction("NAMEPLATES")
     for key in pairs(bindingKeys) do
+        AES.Diagnostics.lastProtectedAction = "SetOverrideBindingClick/nameplates:" .. tostring(key)
         pcall(SetOverrideBindingClick, bindingOwner, false, key, "AscensionPTBRToggleCombatNameplates")
     end
+    plateBindingsPending = false
     return next(bindingKeys) ~= nil
+end
+
+function AES.GetWorldNameDiagnostics()
+    local plateCount = 0
+    for _ in pairs(knownPlates) do plateCount = plateCount + 1 end
+    return {
+        plates = plateCount,
+        roleIDs = roleCacheByIDCount,
+        roleGUIDs = roleCacheByGUIDCount,
+        pendingBinding = plateBindingsPending and true or false,
+    }
 end
 
 local function RestoreSocialCVars()
@@ -1285,6 +1315,7 @@ events:RegisterEvent("PLAYER_TARGET_CHANGED")
 events:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
 events:RegisterEvent("PLAYER_LOGOUT")
 pcall(events.RegisterEvent, events, "UPDATE_BINDINGS")
+pcall(events.RegisterEvent, events, "PLAYER_REGEN_ENABLED")
 
 -- Se outro addon de nameplates entrar depois, devolvemos CVars/opções e passamos
 -- para modo passivo para não disputar layout nem atalhos com ElvUI/Kui/Plater/etc.
@@ -1306,6 +1337,8 @@ events:SetScript("OnEvent", function(_, event, arg1)
         ApplyToUnit("mouseover")
     elseif event == "UPDATE_BINDINGS" then
         ApplyPlateBindingOverrides()
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        if plateBindingsPending then ApplyPlateBindingOverrides() end
     elseif event == "ADDON_LOADED" then
         if ExternalNameplateAddon() then
             RestoreSocialCVars()
